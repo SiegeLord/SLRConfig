@@ -45,19 +45,19 @@ fn is_naked_string_middle(c: char) -> bool
 	is_naked_string_border(c) || c == ' '
 }
 
-fn is_newline(c: char) -> bool
-{
-	c == '\n' || c == '\r'
-}
-
 struct Source<'l>
 {
 	source: &'l str,
 	chars: CharOffsets<'l>,
+	
 	cur_char: Option<char>,
 	cur_pos: uint,
+	
 	next_char: Option<char>,
 	next_pos: uint,
+	
+	at_newline: bool,
+	ignore_next_newline: bool,
 }
 
 impl<'l> Source<'l>
@@ -74,6 +74,8 @@ impl<'l> Source<'l>
 				cur_pos: 0,
 				next_char: None,
 				next_pos: 0,
+				at_newline: false,
+				ignore_next_newline: false,
 			};
 		src.bump();
 		src.bump();
@@ -98,6 +100,10 @@ impl<'l> Source<'l>
 				self.next_char = None;
 			},
 		}
+		
+		self.at_newline = self.cur_char == Some('\n') || self.cur_char == Some('\r');
+		self.ignore_next_newline = self.cur_char == Some('\r') && self.next_char == Some('\n');
+		
 		self.cur_char
 	}
 }
@@ -171,9 +177,9 @@ impl<'l> Lexer<'l>
 		{
 			return false;
 		}
-		for c in self.source
+		for _ in self.source
 		{
-			if is_newline(c)
+			if self.source.at_newline
 			{
 				break;
 			}
@@ -364,7 +370,7 @@ fn main()
 	let src = r#######"
 	
 	
-	r" " = root[heh]
+	r" " = root["heh"]
 	
 	
 	"#######;

@@ -3,7 +3,7 @@ str = r#"sdasds#"#
 a = root[heh]
 
 b = {
-
+	e = "slr"
 }
 
 c = [1, 2, 3]

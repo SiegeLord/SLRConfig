@@ -8,6 +8,6 @@ authors = [ "SiegeLord <slabode@aim.com>" ]
 name = "lexer"
 path = "src/lib.rs"
 
-[[bin]]
+[[example]]
 name = "lexer_test"
 path = "src/lexer_test.rs"

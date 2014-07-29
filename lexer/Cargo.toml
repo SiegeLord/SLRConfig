@@ -4,6 +4,10 @@ name = "lexer"
 version = "0.0.0"
 authors = [ "SiegeLord <slabode@aim.com>" ]
 
-[[bin]]
+[[lib]]
 name = "lexer"
-path = "src/lexer.rs"
+path = "src/lib.rs"
+
+[[bin]]
+name = "lexer_test"
+path = "src/lexer_test.rs"

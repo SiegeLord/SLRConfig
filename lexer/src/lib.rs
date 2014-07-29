@@ -2,13 +2,13 @@ use std::char::is_whitespace;
 use std::str::{mod, CharOffsets};
 
 #[deriving(Show, Clone)]
-struct Token<'l>
+pub struct Token<'l>
 {
-	kind: TokenKind<'l>
+	pub kind: TokenKind<'l>
 }
 
 #[deriving(PartialEq, Show, Clone)]
-enum TokenKind<'l>
+pub enum TokenKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
@@ -52,6 +52,7 @@ fn is_newline(c: char) -> bool
 
 struct Source<'l>
 {
+	filename: &'l str,
 	source: &'l str,
 	chars: CharOffsets<'l>,
 	
@@ -70,12 +71,13 @@ struct Source<'l>
 
 impl<'l> Source<'l>
 {
-	fn new(source: &'l str) -> Source<'l>
+	fn new(filename: &'l str, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
 		let mut src = 
 			Source
 			{
+				filename: filename,
 				source: source,
 				chars: chars,
 				cur_char: None,
@@ -181,7 +183,7 @@ impl<'l> Iterator<char> for Source<'l>
 	}
 }
 
-struct Lexer<'l>
+pub struct Lexer<'l>
 {	
 	source: Source<'l>,
 	cur_token: Option<Result<Token<'l>, Error>>,
@@ -189,9 +191,9 @@ struct Lexer<'l>
 }
 
 #[deriving(Show, Clone)]
-struct Error
+pub struct Error
 {
-	text: String
+	pub text: String
 }
 
 impl Error
@@ -207,12 +209,12 @@ impl Error
 
 impl<'l> Lexer<'l>
 {
-	fn new(source: &'l str) -> Lexer<'l>
+	pub fn new(filename: &'l str, source: &'l str) -> Lexer<'l>
 	{
 		let mut lex = 
 			Lexer
 			{
-				source: Source::new(source),
+				source: Source::new(filename, source),
 				cur_token: None,
 				next_token: None,
 			};
@@ -232,7 +234,7 @@ impl<'l> Lexer<'l>
 		col_str.push_char('^');
 		
 		let source = str::replace(source, "\t", "    ");
-		Error::new(format!("{}:{}: error: {}\n{}\n{}\n", line + 1, col, msg, source, col_str))
+		Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", self.source.filename, line + 1, col, msg, source, col_str))
 	}
 
 	fn skip_whitespace<'m>(&'m mut self) -> bool
@@ -436,7 +438,7 @@ impl<'l> Lexer<'l>
 		})
 	}
 
-	fn advance_token<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	pub fn advance_token<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
 		if self.cur_token.as_ref().map_or(true, |res| res.is_ok())
 		{
@@ -449,26 +451,5 @@ impl<'l> Lexer<'l>
 		}
 		
 		self.cur_token.clone()
-	}
-}
-
-fn main()
-{
-	let src = r#######"
-	
-	r#" #"# = root["heh"]
-	
-	
-	"#######;
-	let mut lexer = Lexer::new(src);
-	
-	loop
-	{
-		let tok = lexer.advance_token();
-		if tok.as_ref().map_or(true, |res| { res.as_ref().map_err(|err| print!("{}", err.text)).ok(); res.is_err() })
-		{
-			break;
-		}
-		println!("{}", tok);
 	}
 }

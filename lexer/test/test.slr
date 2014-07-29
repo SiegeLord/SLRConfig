@@ -1,0 +1,9 @@
+str = r#"sdasds#"#
+
+a = root[heh]
+
+b = {
+
+}
+
+c = [1, 2, 3]

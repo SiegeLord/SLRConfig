@@ -1,3 +1,5 @@
+// This file is released into Public Domain.
+
 extern crate lexer;
 
 use lexer::Lexer;

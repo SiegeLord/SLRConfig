@@ -36,7 +36,7 @@ fn is_naked_string_border(c: char) -> bool
 	c != '$' &&
 	c != ',' &&
 	c != '~' &&
-	c != '"' && //geany bug: "
+	c != '"' &&
 	c != '#'
 }
 

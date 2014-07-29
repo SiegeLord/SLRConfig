@@ -1,5 +1,5 @@
 use std::char::is_whitespace;
-use std::str::CharOffsets;
+use std::str::{mod, CharOffsets};
 
 #[deriving(Show, Clone)]
 struct Token<'l>
@@ -36,13 +36,18 @@ fn is_naked_string_border(c: char) -> bool
 	c != '$' &&
 	c != ',' &&
 	c != '~' &&
-	c != '"' &&
+	c != '"' && //geany bug: "
 	c != '#'
 }
 
 fn is_naked_string_middle(c: char) -> bool
 {
 	is_naked_string_border(c) || c == ' '
+}
+
+fn is_newline(c: char) -> bool
+{
+	c == '\n' || c == '\r'
 }
 
 struct Source<'l>
@@ -56,8 +61,11 @@ struct Source<'l>
 	next_char: Option<char>,
 	next_pos: uint,
 	
+	line_start_pos: uint,
 	at_newline: bool,
 	ignore_next_newline: bool,
+	
+	line_ends: Vec<uint>,
 }
 
 impl<'l> Source<'l>
@@ -74,12 +82,59 @@ impl<'l> Source<'l>
 				cur_pos: 0,
 				next_char: None,
 				next_pos: 0,
+				line_start_pos: 0,
 				at_newline: false,
 				ignore_next_newline: false,
+				line_ends: vec![]
 			};
 		src.bump();
 		src.bump();
 		src
+	}
+
+	fn get_line<'l>(&'l self, line: uint) -> &'l str
+	{
+		if line > self.line_ends.len() + 1
+		{
+			fail!("Trying to get an unvisited line!");
+		}
+		let start = if line == 0
+		{
+			0
+		}
+		else
+		{
+			self.line_ends[line - 1]
+		};
+		let start = match self.source.slice_from(start).chars().position(|c| !is_newline(c))
+		{
+			Some(offset) => start + offset,
+			None => self.source.len()
+		};
+		let end = match self.source.slice_from(start).chars().position(|c| is_newline(c))
+		{
+			Some(end) => end + start,
+			None => self.source.len()
+		};
+
+		self.source.slice(start, end)
+	}
+
+	fn get_cur_col(&self) -> uint
+	{
+		if self.cur_pos >= self.line_start_pos
+		{
+			self.cur_pos - self.line_start_pos
+		}
+		else
+		{
+			0
+		}
+	}
+	
+	fn get_cur_line(&self) -> uint
+	{
+		self.line_ends.len()
 	}
 
 	fn bump(&mut self) -> Option<char>
@@ -101,7 +156,17 @@ impl<'l> Source<'l>
 			},
 		}
 		
-		self.at_newline = self.cur_char == Some('\n') || self.cur_char == Some('\r');
+		self.at_newline = self.cur_char.map_or(false, |c| is_newline(c));
+		
+		if self.at_newline
+		{
+			self.line_start_pos = self.cur_pos + 1;
+			if !self.ignore_next_newline
+			{
+				self.line_ends.push(self.cur_pos);
+			}
+		}
+		
 		self.ignore_next_newline = self.cur_char == Some('\r') && self.next_char == Some('\n');
 		
 		self.cur_char
@@ -153,6 +218,21 @@ impl<'l> Lexer<'l>
 			};
 		lex.advance_token();
 		lex
+	}
+
+	fn error(&self, line: uint, col: uint, msg: &str) -> Error
+	{
+		let source = self.source.get_line(line);
+		let num_tabs = source.slice_to(col).chars().filter(|&c| c == '\t').count();
+		let mut col_str = String::with_capacity(col + 1);
+		if col > 0
+		{
+			col_str.grow(col + num_tabs * 3, ' ');
+		}
+		col_str.push_char('^');
+		
+		let source = str::replace(source, "\t", "    ");
+		Error::new(format!("{}:{}: error: {}\n{}\n{}\n", line + 1, col, msg, source, col_str))
 	}
 
 	fn skip_whitespace<'m>(&'m mut self) -> bool
@@ -247,9 +327,11 @@ impl<'l> Lexer<'l>
 		{
 			return None;
 		}
+		let start_col = self.source.get_cur_col();
+		let start_line = self.source.get_cur_line();
 		// +1 to skip the leading 'r'
 		let mut start_pos = self.source.cur_pos + 1;
-		let mut end_pos;
+		let mut end_pos = start_pos;
 		let mut num_leading_hashes = 0u;
 		for c in self.source
 		{
@@ -265,37 +347,40 @@ impl<'l> Lexer<'l>
 					start_pos += 1;
 					break;
 				},
-				_ => return Some(Err(Error::new("Unexpected character".to_string()))),
+				_ => return Some(Err(self.error(self.source.get_cur_line(), self.source.get_cur_col(),
+					r#"Unexpected character while parsing raw string literal (expected '#' or '"')"#))),
 			}
 		}
-		'done: loop
+		'done: for c in self.source
 		{
-			match self.source.bump()
+			if c == '"'
 			{
-				Some('"') =>
+				end_pos = self.source.cur_pos;
+				let mut num_trailing_hashes = 0;
+				
+				for c in self.source
 				{
-					end_pos = self.source.cur_pos;
-					let mut num_trailing_hashes = 0;
-					
-					for c in self.source
+					if num_trailing_hashes == num_leading_hashes
 					{
-						if num_trailing_hashes == num_leading_hashes
-						{
-							break 'done;
-						}
-						match c
-						{
-							'#' => num_trailing_hashes += 1,
-							_ => break,
-						}
+						break 'done;
 					}
-				},
-				None => return Some(Err(Error::new("Unexpected EOF".to_string()))),
-				_ => (),
+					match c
+					{
+						'#' => num_trailing_hashes += 1,
+						_ => break,
+					}
+				}
 			}
 		}
 		
-		Some(Ok(Token{ kind: RawString(self.source.source.slice(start_pos, end_pos)) }))
+		if self.source.cur_char.is_none()
+		{
+			Some(Err(self.error(start_line, start_col, "Unexpected EOF while looking for the end of this raw string literal")))
+		}
+		else
+		{
+			Some(Ok(Token{ kind: RawString(self.source.source.slice(start_pos, end_pos)) }))
+		}
 	}
 	
 	fn eat_escaped_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
@@ -304,6 +389,8 @@ impl<'l> Lexer<'l>
 		{
 			return None;
 		}
+		let start_col = self.source.get_cur_col();
+		let start_line = self.source.get_cur_line();
 		// +1 to skip the leading '"'
 		let start_pos = self.source.cur_pos + 1;
 		let mut last_is_slash = false;
@@ -317,7 +404,7 @@ impl<'l> Lexer<'l>
 		}
 		if self.source.cur_char.is_none()
 		{
-			return Some(Err(Error::new("Unexpected EOF".to_string())));
+			return Some(Err(self.error(start_line, start_col, "Unexpected EOF while looking for the end of this escaped string literal")))
 		}
 		let contents = self.source.source.slice(start_pos, self.source.cur_pos);
 		// Skip the trailing "
@@ -369,8 +456,7 @@ fn main()
 {
 	let src = r#######"
 	
-	
-	r" " = root["heh"]
+	r#" #"# = root["heh"]
 	
 	
 	"#######;
@@ -379,10 +465,10 @@ fn main()
 	loop
 	{
 		let tok = lexer.advance_token();
-		println!("{}", tok);
-		if tok.as_ref().map_or(true, |res| res.is_err())
+		if tok.as_ref().map_or(true, |res| { res.as_ref().map_err(|err| print!("{}", err.text)).ok(); res.is_err() })
 		{
 			break;
 		}
+		println!("{}", tok);
 	}
 }

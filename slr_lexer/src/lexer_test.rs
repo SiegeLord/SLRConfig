@@ -1,8 +1,8 @@
 // This file is released into Public Domain.
 
-extern crate lexer;
+extern crate slr_lexer;
 
-use lexer::Lexer;
+use slr_lexer::Lexer;
 use std::os;
 use std::io::File;
 use std::path::Path;

@@ -14,6 +14,6 @@ install:
   - sudo ./rust-nightly-x86_64-unknown-linux-gnu/install.sh
   - sudo ./cargo-nightly/install.sh
 script:
-  - cd lexer
+  - cd slr_lexer
   - cargo test
-  - ./target/test/lexer_test test/test.slr
+  - ./target/test/lexer_test ../test/test.slr

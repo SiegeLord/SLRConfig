@@ -29,6 +29,18 @@ pub enum TokenKind<'l>
 	Eof
 }
 
+impl<'l> TokenKind<'l>
+{
+	pub fn is_string(&self) -> bool
+	{
+		match *self
+		{
+			EscapedString(_) | RawString (_) => true,
+			_ => false
+		}
+	}
+}
+
 fn is_naked_string_border(c: char) -> bool
 {
 	!is_whitespace(c) &&
@@ -190,8 +202,8 @@ impl<'l> Iterator<char> for Source<'l>
 pub struct Lexer<'l>
 {	
 	source: Source<'l>,
-	cur_token: Option<Result<Token<'l>, Error>>,
-	next_token: Option<Result<Token<'l>, Error>>,
+	pub cur_token: Option<Result<Token<'l>, Error>>,
+	pub next_token: Option<Result<Token<'l>, Error>>,
 }
 
 #[deriving(Show, Clone)]

@@ -1,9 +1,10 @@
 str = r#"sdasds#"#
+baz = bar
 
-a = root[heh]
-
-b = {
-	e = "slr"
-}
-
-c = [1, 2, 3]
+# a = root[heh]
+# 
+# b = {
+#     e = "slr"
+# }
+# 
+# c = [1, 2, 3]

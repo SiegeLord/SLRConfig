@@ -1,0 +1,17 @@
+[package]
+
+name = "slr_config"
+version = "0.0.0"
+authors = [ "SiegeLord <slabode@aim.com>" ]
+
+[[lib]]
+name = "slr_config"
+path = "src/lib.rs"
+
+[[example]]
+name = "slr_test"
+path = "src/slr_test.rs"
+
+[dependencies.slr_lexer]
+
+path = "../slr_lexer"

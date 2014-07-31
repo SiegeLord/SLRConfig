@@ -222,7 +222,7 @@ impl<'l> Lexer<'l>
 				cur_token: None,
 				next_token: None,
 			};
-		lex.advance_token();
+		lex.next();
 		lex
 	}
 
@@ -442,7 +442,7 @@ impl<'l> Lexer<'l>
 		})
 	}
 
-	pub fn advance_token<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	pub fn next<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
 		if self.cur_token.as_ref().map_or(true, |res| res.is_ok())
 		{

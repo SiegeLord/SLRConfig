@@ -23,7 +23,7 @@ fn main()
 	
 	loop
 	{
-		let tok = lexer.advance_token();
+		let tok = lexer.next();
 		match tok.as_ref()
 		{
 			Some(res) =>

@@ -13,13 +13,14 @@ Comment Line = '#'
 {Raw String 0 Chars} = {Printable} + {Whitespace} - ["]
 
 {Naked String Middle} = {Printable} - {Whitespace} - [#='['']'{}$",~] + [' ']
-{Naked String Start} = {Naked String Middle} - [' ']
+{Naked String Border} = {Naked String Middle} - [' ']
 
 ! -------------------------------------------------
 ! Terminals
 ! -------------------------------------------------
 
-NakedString = {Naked String Start} {Naked String Middle}*
+NakedString = {Naked String Border} {Naked String Middle}* {Naked String Border}
+              | {Naked String Border}
 
 EscapedString = '"' ( {Escaped String Chars} | '\' {Printable} | '\' {Newline} )* '"'
 

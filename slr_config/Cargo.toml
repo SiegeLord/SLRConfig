@@ -4,7 +4,7 @@ name = "slr_config"
 version = "0.0.0"
 authors = [ "SiegeLord <slabode@aim.com>" ]
 
-[[lib]]
+[lib]
 name = "slr_config"
 path = "src/lib.rs"
 

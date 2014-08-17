@@ -19,5 +19,5 @@ fn main()
 	
 	let src = File::open(&Path::new(filename)).unwrap().read_to_string().unwrap();
 	
-	parse_source(filename.as_slice(), src.as_slice());
+	parse_source(filename.as_slice(), src.as_slice()).map_err(|e| print!("{}", e.text));
 }

@@ -4,7 +4,7 @@ name = "slr_lexer"
 version = "0.0.0"
 authors = [ "SiegeLord <slabode@aim.com>" ]
 
-[[lib]]
+[lib]
 name = "slr_lexer"
 path = "src/lib.rs"
 

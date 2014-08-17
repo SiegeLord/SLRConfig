@@ -10,28 +10,50 @@ use lex::{Lexer, Token, Error};
 
 use std::collections::hashmap::HashMap;
 
+pub trait GetError
+{
+	fn get_error(&self) -> Error;
+}
+
+impl GetError for Error
+{
+	fn get_error(&self) -> Error
+	{
+		self.clone()
+	}
+}
+
 pub trait Visitor<'l, E>
 {
-	fn start_string_entry(&mut self, name: Token<'l>) -> Result<(), E>;
-	fn start_table_entry(&mut self, name: Token<'l>) -> Result<(), E>;
-	fn start_array_entry(&mut self, name: Token<'l>) -> Result<(), E>;
+	fn assignment(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+	fn append_string(&mut self, string: Token<'l>) -> Result<(), E>;
+	fn start_table(&mut self) -> Result<(), E>;
+	fn end_table(&mut self) -> Result<(), E>;
 }
 
 impl<'l> Visitor<'l, Error> for ()
 {
-	fn start_string_entry(&mut self, name: Token<'l>) -> Result<(), Error>
+	fn assignment(&mut self, path: &[Token<'l>]) -> Result<(), Error>
 	{
-		println!("Started string: {}", name);
+		println!("Start assignment: {}", path);
+		Ok(())
+	}
+	
+	fn append_string(&mut self, string: Token<'l>) -> Result<(), Error>
+	{
+		println!("String appended: {}", string);
 		Ok(())
 	}
 
-	fn start_table_entry(&mut self, name: Token<'l>) -> Result<(), Error>
+	fn start_table(&mut self) -> Result<(), Error>
 	{
+		println!("Started table");
 		Ok(())
 	}
-
-	fn start_array_entry(&mut self, name: Token<'l>) -> Result<(), Error>
+	
+	fn end_table(&mut self) -> Result<(), Error>
 	{
+		println!("Ended table");
 		Ok(())
 	}
 }
@@ -39,7 +61,8 @@ impl<'l> Visitor<'l, Error> for ()
 struct Parser<'l, 'm, V>
 {
 	lexer: Lexer<'l>,
-	visitor: &'m mut V
+	visitor: &'m mut V,
+	path: Vec<Token<'l>>,
 }
 
 macro_rules! get_token
@@ -73,46 +96,148 @@ macro_rules! expect_token
 	}
 }
 
-impl<'l, 'm, E, V: Visitor<'l, E>> Parser<'l, 'm, V>
+macro_rules! try
 {
-	fn parse_table_contents(&mut self) -> Result<(), Error>
+	($e: expr) =>
 	{
-		loop
+		match $e
 		{
-			match get_token!(self.lexer.next())
-			{
-				Some(cur_tok) =>
-				{
-					if !cur_tok.kind.is_string()
-					{
-						return Error::from_span(&self.lexer, cur_tok.span, "Expected string");
-					}
-					let next_tok = expect_token!(self.lexer.next(), Error::from_span(&self.lexer, cur_tok.span, "Unexpected EOF"));
-					if next_tok.kind != lex::Assign
-					{
-						return Error::from_span(&self.lexer, next_tok.span, "Expected '='");
-					}
-					let third_token = expect_token!(self.lexer.next(), Error::from_span(&self.lexer, next_tok.span, "Unexpected EOF"));
-					if third_token.kind.is_string()
-					{
-						self.visitor.start_string_entry(cur_tok);
-					}
-					else
-					{
-						return Error::from_span(&self.lexer, third_token.span, "Expected string");
-					}
-				},
-				None => return Ok(())
-			}
+			Ok(ok) => ok,
+			Err(err) => return Err(err.get_error())
 		}
-		//~ unreachable!();
+	}
+}
+
+impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
+{
+	fn parse_table_contents(&mut self, look_for_brace: bool) -> Result<(), Error>
+	{
+		while try!(self.parse_table_element())
+		{
+		}
+		
+		match get_token!(self.lexer.cur_token)
+		{
+			Some(tok) =>
+			{
+				if tok.kind == lex::RightBrace && look_for_brace
+				{
+					Ok(())
+				}
+				else
+				{
+					Error::from_span(&self.lexer, tok.span, "Expected assignment or expansion.")
+				}
+			}
+			None => Ok(())
+		}
+	}
+
+	fn parse_table_element(&mut self) -> Result<bool, Error>
+	{
+		Ok(try!(self.parse_assignment()))
+	}
+	
+	fn parse_assignment(&mut self) -> Result<bool, Error>
+	{
+		if !try!(self.parse_index_expr())
+		{
+			return Ok(false)
+		}
+		
+		try!(self.visitor.assignment(self.path.as_slice()));
+		
+		let assign = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, self.path.last().unwrap().span, "Unexpected EOF parsing assignment"));
+		if assign.kind != lex::Assign
+		{
+			return Error::from_span(&self.lexer, assign.span, "Expected '='");
+		}
+		self.lexer.next();
+		
+		if !try!(self.parse_expr())
+		{
+			let cur_token = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, assign.span, "Unexpected EOF parsing assignment"));
+			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or '~'");
+		}
+		Ok(true)
+	}
+
+	fn parse_index_expr(&mut self) -> Result<bool, Error>
+	{
+		let token = expect_token!(self.lexer.cur_token, Ok(false));
+		if token.kind.is_string()
+		{
+			self.path.clear();
+			self.path.push(token);
+			self.lexer.next();
+			Ok(true)
+		}
+		else
+		{
+			Ok(false)
+		}
+	}
+	
+	fn parse_expr(&mut self) -> Result<bool, Error>
+	{
+		Ok(try!(self.parse_no_delete_expr()))
+	}
+	
+	fn parse_no_delete_expr(&mut self) -> Result<bool, Error>
+	{
+		if try!(self.parse_string_expr())
+		{
+			Ok(true)
+		}
+		else
+		{
+			let brace = expect_token!(self.lexer.cur_token, Ok(false));
+			if brace.kind != lex::LeftBrace
+			{
+				return Ok(false);
+			}
+			self.lexer.next();
+			try!(self.visitor.start_table());
+			try!(self.parse_table_contents(true));
+			
+			let brace = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, brace.span, "Unexpected EOF parsing a table"));
+			if brace.kind != lex::RightBrace
+			{
+				return Error::from_span(&self.lexer, brace.span, "Expected '}'");
+			}
+			self.lexer.next();
+			
+			try!(self.visitor.end_table());
+			Ok(true)
+		}
+	}
+	
+	fn parse_string_expr(&mut self) -> Result<bool, Error>
+	{
+		Ok(try!(self.parse_string_source()))
+	}
+	
+	fn parse_string_source(&mut self) -> Result<bool, Error>
+	{
+		let token = expect_token!(self.lexer.cur_token, Ok(false));
+		if token.kind.is_string()
+		{
+			self.visitor.append_string(token);
+			self.lexer.next();
+			Ok(true)
+		}
+		else
+		{
+			Ok(false)
+		}
 	}
 }
 
 pub fn parse_source<'l>(filename: &'l str, source: &'l str) -> Result<(), Error>
 {
 	let mut lexer = Lexer::new(filename, source);
+	lexer.next();
 	let mut visitor = ();
-	let mut parser = Parser{ lexer: lexer, visitor: &mut visitor };
-	parser.parse_table_contents()
+	let mut parser = Parser{ lexer: lexer, visitor: &mut visitor, path: vec![] };
+	parser.parse_table_contents(false)
 }

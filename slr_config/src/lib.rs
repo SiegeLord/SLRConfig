@@ -58,7 +58,7 @@ impl<'l> Visitor<'l, Error> for ()
 	}
 }
 
-struct Parser<'l, 'm, V>
+struct Parser<'l, 'm, V: 'm>
 {
 	lexer: Lexer<'l>,
 	visitor: &'m mut V,

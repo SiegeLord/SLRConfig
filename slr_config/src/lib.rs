@@ -176,8 +176,29 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		{
 			self.path.clear();
 			self.path.push(token);
-			self.lexer.next();
-			Ok(true)
+			loop
+			{
+				let start_token = expect_token!(self.lexer.next(), Ok(true));
+				if start_token.kind != lex::LeftBracket
+				{
+					return Ok(true);
+				}
+				
+				let path_token = expect_token!(self.lexer.next(),
+					Error::from_span(&self.lexer, start_token.span, "Expected a string literal to continue this index expression, but got EOF"));
+				if !path_token.kind.is_string()
+				{
+					return Error::from_span(&self.lexer, start_token.span, "Expected a string literal");
+				}
+				self.path.push(path_token);
+				
+				let end_token = expect_token!(self.lexer.next(),
+					Error::from_span(&self.lexer, start_token.span, "Expected a ']' to finish this index expression, but got EOF"));
+				if end_token.kind != lex::RightBracket
+				{
+					return Error::from_span(&self.lexer, end_token.span, "Expected a ']'");
+				}
+			}
 		}
 		else
 		{

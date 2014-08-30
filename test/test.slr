@@ -11,6 +11,8 @@ b =
 	}
 }
 
+sez = $root[b][e]
+
 # a = root[heh]
 # 
 # 

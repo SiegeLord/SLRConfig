@@ -19,6 +19,7 @@ Comment Line = '#'
 ! Terminals
 ! -------------------------------------------------
 
+! FIXME: Missing escapes
 NakedString = {Naked String Border} {Naked String Middle}* {Naked String Border}
               | {Naked String Border}
 

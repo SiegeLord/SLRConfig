@@ -1,5 +1,6 @@
 str = r#"sdasds#"#
 baz = bar\=bar
+baz2 = $baz
 
 b = 
 {

@@ -391,9 +391,9 @@ impl<'l> Lexer<'l>
 		}
 		
 		let start_pos = self.source.cur_pos;
-		self.source.bump();
 		let mut end_pos = self.source.cur_pos;
 		let mut last_is_border = true;
+		let mut escape_next = false;
 		loop
 		{
 			if last_is_border
@@ -405,9 +405,18 @@ impl<'l> Lexer<'l>
 			{
 				Some(c) =>
 				{
-					if is_naked_string_border(c)
+					if escape_next
 					{
 						last_is_border = true;
+						escape_next = false;
+					}
+					else if is_naked_string_border(c)
+					{
+						last_is_border = true;
+						if c == '\\'
+						{
+							escape_next = true;
+						}
 					}
 					else if is_naked_string_middle(c)
 					{
@@ -425,6 +434,12 @@ impl<'l> Lexer<'l>
 			}
 			self.source.bump();
 		}
+
+		if escape_next
+		{
+			/* Got EOF while trying to escape it... */
+			return Some(Error::from_pos(self, end_pos, "Unexpected EOF while parsing escape in naked string literal."));
+		}
 		
 		let contents = self.source.source.slice(start_pos, end_pos);
 		let span = Span{ start: start_pos, len: end_pos - start_pos };
@@ -432,7 +447,7 @@ impl<'l> Lexer<'l>
 		{
 			"root" => Root,
 			"import" => Import,
-			_ => RawString(contents),
+			_ => EscapedString(contents),
 		};
 		Some(Ok(Token::new(kind, span)))
 	}

@@ -1,5 +1,5 @@
 str = r#"sdasds#"#
-baz = bar
+baz = bar\=bar
 
 b = 
 {

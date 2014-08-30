@@ -154,7 +154,8 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		
 		try!(self.visitor.start_assignment(self.path.as_slice()));
 		
-		let assign = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, self.path.last().unwrap().span, "Unexpected EOF parsing assignment"));
+		let assign = expect_token!(self.lexer.cur_token,
+			Error::from_span(&self.lexer, self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
 		if assign.kind != lex::Assign
 		{
 			return Error::from_span(&self.lexer, assign.span, "Expected '='");
@@ -163,7 +164,8 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		
 		if !try!(self.parse_expr())
 		{
-			let cur_token = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, assign.span, "Unexpected EOF parsing assignment"));
+			let cur_token = expect_token!(self.lexer.cur_token,
+				Error::from_span(&self.lexer, assign.span, "Expected a RHS to finish this assignment, but got EOF"));
 			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or '~'");
 		}
 		Ok(true)

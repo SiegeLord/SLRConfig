@@ -222,7 +222,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		let token = expect_token!(self.lexer.cur_token, Ok(false));
 		if token.kind.is_string()
 		{
-			self.visitor.append_string(token);
+			try!(self.visitor.append_string(token));
 			self.lexer.next();
 			Ok(true)
 		}

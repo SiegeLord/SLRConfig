@@ -162,6 +162,7 @@ impl<'l> Source<'l>
 		self.source.slice(start, end)
 	}
 
+	#[allow(dead_code)]
 	fn get_cur_col(&self) -> uint
 	{
 		if self.cur_pos >= self.line_start_pos
@@ -173,7 +174,8 @@ impl<'l> Source<'l>
 			0
 		}
 	}
-	
+
+	#[allow(dead_code)]
 	fn get_cur_line(&self) -> uint
 	{
 		self.line_ends.len()
@@ -209,7 +211,7 @@ impl<'l> Source<'l>
 			Found(n) => n,
 			NotFound(n) => n
 		};
-		let (start, end) = self.get_line_start_end(line);
+		let (start, _) = self.get_line_start_end(line);
 		if pos < start
 		{
 			fail!("Position less than line start (somehow got a position inside a newline!)")

@@ -172,7 +172,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	fn parse_index_expr(&mut self) -> Result<bool, Error>
 	{
 		let token = expect_token!(self.lexer.cur_token, Ok(false));
-		if token.kind.is_string()
+		if token.kind.is_string() || token.kind == lex::Root || token.kind == lex::Import
 		{
 			self.path.clear();
 			self.path.push(token);

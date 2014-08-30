@@ -440,7 +440,7 @@ impl<'l> Lexer<'l>
 		if escape_next
 		{
 			/* Got EOF while trying to escape it... */
-			return Some(Error::from_pos(self, end_pos, "Unexpected EOF while parsing escape in naked string literal."));
+			return Some(Error::from_pos(self, end_pos, "Unexpected EOF while parsing escape in naked string literal"));
 		}
 		
 		let contents = self.source.source.slice(start_pos, end_pos);

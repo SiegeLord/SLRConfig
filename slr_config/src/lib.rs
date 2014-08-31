@@ -338,7 +338,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.start_table());
 			try!(self.parse_table_contents(false));
 			
-			let brace = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Expected '}' to finish this table, but got EOF"));
+			let brace = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Unterminated table"));
 			if brace.kind != lex::RightBrace
 			{
 				return Error::from_span(&self.lexer, brace.span, "Expected '}'");
@@ -354,7 +354,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.start_array());
 			try!(self.parse_array_contents());
 			
-			let bracket = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Expected ']' to finish this array, but got EOF"));
+			let bracket = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Unterminated array"));
 			if bracket.kind != lex::RightBracket
 			{
 				return Error::from_span(&self.lexer, bracket.span, "Expected ',' or ']'");

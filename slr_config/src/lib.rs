@@ -143,6 +143,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	fn parse_table_element(&mut self) -> Result<bool, Error>
 	{
 		Ok(try!(self.parse_assignment()))
+		// TODO: Expansion
 	}
 	
 	fn parse_assignment(&mut self) -> Result<bool, Error>
@@ -211,6 +212,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	fn parse_expr(&mut self) -> Result<bool, Error>
 	{
 		Ok(try!(self.parse_no_delete_expr()))
+		// TODO: Deletion
 	}
 	
 	fn parse_no_delete_expr(&mut self) -> Result<bool, Error>
@@ -240,11 +242,13 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.end_table());
 			Ok(true)
 		}
+		// TODO: Array contents
 	}
 	
 	fn parse_string_expr(&mut self) -> Result<bool, Error>
 	{
 		Ok(try!(self.parse_string_source()))
+		// TODO: expansions
 	}
 	
 	fn parse_string_source(&mut self) -> Result<bool, Error>

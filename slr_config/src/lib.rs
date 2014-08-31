@@ -26,6 +26,7 @@ impl GetError for Error
 pub trait Visitor<'l, E>
 {
 	fn start_assignment(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+	fn end_assignment(&mut self) -> Result<(), E>;
 	fn append_string(&mut self, string: Token<'l>) -> Result<(), E>;
 	fn expand(&mut self, path: &[Token<'l>]) -> Result<(), E>;
 	fn start_table(&mut self) -> Result<(), E>;
@@ -37,7 +38,13 @@ impl<'l> Visitor<'l, Error> for ()
 {
 	fn start_assignment(&mut self, path: &[Token<'l>]) -> Result<(), Error>
 	{
-		println!("Start assignment: {}", path);
+		println!("Started assignment: {}", path);
+		Ok(())
+	}
+
+	fn end_assignment(&mut self) -> Result<(), Error>
+	{
+		println!("Ended assignment");
 		Ok(())
 	}
 
@@ -176,6 +183,9 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 				Error::from_span(&self.lexer, assign.span, "Expected a RHS to finish this assignment, but got EOF"));
 			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or 'delete'");
 		}
+		
+		try!(self.visitor.end_assignment());
+		
 		Ok(true)
 	}
 

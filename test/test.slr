@@ -15,7 +15,6 @@ sez = $root[b][e]
 sez = delete
 sez = a ~ $root[bez]
 
-# a = root[heh]
-# 
-# 
-# c = [1, 2, 3]
+a = $root[heh]
+c = [1, 2, 3]
+arr = [1, {a = b}, a = {}, b = [], {}]

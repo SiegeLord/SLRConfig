@@ -275,7 +275,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.start_table());
 			try!(self.parse_table_contents(true));
 			
-			let brace = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, brace.span, "Unexpected EOF parsing a table"));
+			let brace = expect_token!(self.lexer.cur_token, Error::from_span(&self.lexer, brace.span, "Expected '}' to finish parsing this table, but got EOF"));
 			if brace.kind != lex::RightBrace
 			{
 				return Error::from_span(&self.lexer, brace.span, "Expected '}'");

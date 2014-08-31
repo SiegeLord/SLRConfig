@@ -270,8 +270,32 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	
 	fn parse_string_expr(&mut self) -> Result<bool, Error>
 	{
-		Ok(try!(self.parse_string_source()))
-		// TODO: expansions
+		let mut last_span = None;
+		loop
+		{
+			if !try!(self.parse_string_source())
+			{
+				match last_span
+				{
+					Some(span) =>
+					{
+						return Error::from_span(&self.lexer, span, "Expected a string source to finish this concatenation, but got EOF");
+					}
+					None =>
+					{
+						return Ok(false)
+					}
+				}
+			}
+			
+			let expand = expect_token!(self.lexer.cur_token, Ok(true));
+			if expand.kind != lex::Tilde
+			{
+				return Ok(true);
+			}
+			self.lexer.next();
+			last_span = Some(expand.span);
+		}
 	}
 	
 	fn parse_string_source(&mut self) -> Result<bool, Error>

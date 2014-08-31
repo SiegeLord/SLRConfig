@@ -13,6 +13,7 @@ b =
 
 sez = $root[b][e]
 sez = delete
+sez = a ~ $root[bez]
 
 # a = root[heh]
 # 

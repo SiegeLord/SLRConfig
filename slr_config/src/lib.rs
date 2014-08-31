@@ -162,9 +162,10 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		{
 			Ok(true)
 		}
-		else try!(self.parse_expansion())
+		else if try!(self.parse_expansion())
 		{
 			try!(self.visitor.insert_path(self.path.as_slice()));
+			Ok(true)
 		}
 		else
 		{

@@ -53,7 +53,7 @@ RawString2 = 'r{{"' {Raw String Chars}* '"}}'
                 |  '{' <TableContents> '}'
                 |  '[' <ArrayContents> ']'
 
-<Expr> ::= <NoDeleteExpr> |  '~'
+<Expr> ::= <NoDeleteExpr> |  'delete'
 
 ! Statements
 <Assignment> ::= <IndexExpr> '=' <Expr>

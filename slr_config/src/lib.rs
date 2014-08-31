@@ -30,6 +30,7 @@ pub trait Visitor<'l, E>
 	fn expand(&mut self, path: &[Token<'l>]) -> Result<(), E>;
 	fn start_table(&mut self) -> Result<(), E>;
 	fn end_table(&mut self) -> Result<(), E>;
+	fn delete(&mut self) -> Result<(), E>;
 }
 
 impl<'l> Visitor<'l, Error> for ()
@@ -61,6 +62,12 @@ impl<'l> Visitor<'l, Error> for ()
 	fn end_table(&mut self) -> Result<(), Error>
 	{
 		println!("Ended table");
+		Ok(())
+	}
+
+	fn delete(&mut self) -> Result<(), Error>
+	{
+		println!("Delete");
 		Ok(())
 	}
 }
@@ -167,7 +174,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		{
 			let cur_token = expect_token!(self.lexer.cur_token,
 				Error::from_span(&self.lexer, assign.span, "Expected a RHS to finish this assignment, but got EOF"));
-			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or '~'");
+			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or 'delete'");
 		}
 		Ok(true)
 	}
@@ -211,8 +218,24 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	
 	fn parse_expr(&mut self) -> Result<bool, Error>
 	{
-		Ok(try!(self.parse_no_delete_expr()))
-		// TODO: Deletion
+		if try!(self.parse_no_delete_expr())
+		{
+			Ok(true)
+		}
+		else
+		{
+			let token = expect_token!(self.lexer.cur_token, Ok(false));
+			if token.kind == lex::Delete
+			{
+				try!(self.visitor.delete())
+				self.lexer.next();
+				Ok(true)
+			}
+			else
+			{
+				Ok(false)
+			}
+		}
 	}
 	
 	fn parse_no_delete_expr(&mut self) -> Result<bool, Error>

@@ -34,6 +34,7 @@ pub enum TokenKind<'l>
 	RawString(&'l str),
 	Root,
 	Import,
+	Delete,
 	Assign,
 	LeftBracket,
 	RightBracket,
@@ -449,6 +450,7 @@ impl<'l> Lexer<'l>
 		{
 			"root" => Root,
 			"import" => Import,
+			"delete" => Delete,
 			_ => EscapedString(contents),
 		};
 		Some(Ok(Token::new(kind, span)))

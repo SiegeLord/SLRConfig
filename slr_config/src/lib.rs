@@ -25,32 +25,34 @@ impl GetError for Error
 
 pub trait Visitor<'l, E>
 {
-	fn start_assignment(&mut self, path: &[Token<'l>]) -> Result<(), E>;
-	fn end_assignment(&mut self) -> Result<(), E>;
-	fn append_string(&mut self, string: Token<'l>) -> Result<(), E>;
-	fn expand(&mut self, path: &[Token<'l>]) -> Result<(), E>;
 	fn start_table(&mut self) -> Result<(), E>;
 	fn end_table(&mut self) -> Result<(), E>;
+	
+	fn assign_element(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+	fn insert_path(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+
 	fn delete(&mut self) -> Result<(), E>;
+	fn append_string(&mut self, string: Token<'l>) -> Result<(), E>;
+	fn append_path(&mut self, path: &[Token<'l>]) -> Result<(), E>;
 }
 
 impl<'l> Visitor<'l, Error> for ()
 {
-	fn start_assignment(&mut self, path: &[Token<'l>]) -> Result<(), Error>
+	fn assign_element(&mut self, path: &[Token<'l>]) -> Result<(), Error>
 	{
 		println!("Started assignment: {}", path);
 		Ok(())
 	}
 
-	fn end_assignment(&mut self) -> Result<(), Error>
+	fn insert_path(&mut self, path: &[Token<'l>]) -> Result<(), Error>
 	{
-		println!("Ended assignment");
+		println!("Inserted path: {}", path);
 		Ok(())
 	}
 
-	fn expand(&mut self, path: &[Token<'l>]) -> Result<(), Error>
+	fn append_path(&mut self, path: &[Token<'l>]) -> Result<(), Error>
 	{
-		println!("Expanded: {}", path);
+		println!("Path appended: {}", path);
 		Ok(())
 	}
 	
@@ -156,8 +158,18 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 
 	fn parse_table_element(&mut self) -> Result<bool, Error>
 	{
-		Ok(try!(self.parse_assignment()))
-		// TODO: Expansion
+		if try!(self.parse_assignment())
+		{
+			Ok(true)
+		}
+		else try!(self.parse_expansion())
+		{
+			try!(self.visitor.insert_path(self.path.as_slice()));
+		}
+		else
+		{
+			Ok(false)
+		}
 	}
 	
 	fn parse_assignment(&mut self) -> Result<bool, Error>
@@ -167,7 +179,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			return Ok(false)
 		}
 		
-		try!(self.visitor.start_assignment(self.path.as_slice()));
+		try!(self.visitor.assign_element(self.path.as_slice()));
 		
 		let assign = expect_token!(self.lexer.cur_token,
 			Error::from_span(&self.lexer, self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
@@ -183,8 +195,6 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 				Error::from_span(&self.lexer, assign.span, "Expected a RHS to finish this assignment, but got EOF"));
 			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or 'delete'");
 		}
-		
-		try!(self.visitor.end_assignment());
 		
 		Ok(true)
 	}
@@ -319,7 +329,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		}
 		else if try!(self.parse_expansion())
 		{
-			try!(self.visitor.expand(self.path.as_slice()));
+			try!(self.visitor.append_path(self.path.as_slice()));
 			Ok(true)
 		}
 		else

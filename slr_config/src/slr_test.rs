@@ -19,5 +19,6 @@ fn main()
 	
 	let src = File::open(&filename).unwrap().read_to_string().unwrap();
 	
-	parse_source(&filename, src.as_slice()).map_err(|e| print!("{}", e.text));
+	let mut visitor = ();
+	parse_source(&filename, src.as_slice(), &mut visitor).map_err(|e| print!("{}", e.text));
 }

@@ -497,7 +497,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	}
 }
 
-pub fn parse_source<'l>(filename: &'l str, source: &'l str) -> Result<(), Error>
+pub fn parse_source<'l>(filename: &'l Path, source: &'l str) -> Result<(), Error>
 {
 	let mut lexer = Lexer::new(filename, source);
 	lexer.next();

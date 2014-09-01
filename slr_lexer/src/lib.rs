@@ -85,7 +85,7 @@ fn is_newline(c: char) -> bool
 
 struct Source<'l>
 {
-	filename: &'l str,
+	filename: &'l Path,
 	source: &'l str,
 	chars: CharOffsets<'l>,
 	
@@ -106,7 +106,7 @@ struct Source<'l>
 
 impl<'l> Source<'l>
 {
-	fn new(filename: &'l str, source: &'l str) -> Source<'l>
+	fn new(filename: &'l Path, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
 		let mut src = 
@@ -301,7 +301,7 @@ impl Error
 		col_str.push_char('^');
 		
 		let source = str::replace(source, "\t", "    ");
-		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", lexer.source.filename, line + 1, col, msg, source, col_str)))
+		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", lexer.source.filename.display(), line + 1, col, msg, source, col_str)))
 	}
 
 	pub fn from_span<'l, T>(lexer: &Lexer<'l>, span: Span, msg: &str) -> Result<T, Error>
@@ -333,14 +333,14 @@ impl Error
 		}
 		
 		let source = str::replace(source, "\t", "    ");
-		Err(Error::new(format!("{}:{}:{} - {}:{}: error: {}\n{}\n{}\n", lexer.source.filename, start_line + 1, start_col, end_line + 1, end_col,
+		Err(Error::new(format!("{}:{}:{} - {}:{}: error: {}\n{}\n{}\n", lexer.source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
 			msg, source, col_str)))
 	}
 }
 
 impl<'l> Lexer<'l>
 {
-	pub fn new(filename: &'l str, source: &'l str) -> Lexer<'l>
+	pub fn new(filename: &'l Path, source: &'l str) -> Lexer<'l>
 	{
 		let mut lex = 
 			Lexer

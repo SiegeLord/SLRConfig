@@ -23,6 +23,68 @@ impl GetError for Error
 	}
 }
 
+#[deriving(Clone, Show)]
+pub struct ConfigString<'l>
+{
+	pub kind: StringKind<'l>,
+	pub span: lex::Span,
+}
+
+#[deriving(Clone, Show)]
+pub enum StringKind<'l>
+{
+	EscapedString(&'l str),
+	RawString(&'l str),
+	Root,
+	Import,
+}
+
+impl<'l> ConfigString<'l>
+{
+	fn from_token(tok: Token<'l>) -> ConfigString<'l>
+	{
+		let kind = match tok.kind
+		{
+			lex::EscapedString(s) => EscapedString(s),
+			lex::RawString(s) => RawString(s),
+			lex::Root => Root,
+			lex::Import => Import,
+			_ => fail!("Invalid token passed to visitor! {}", tok.kind)
+		};
+
+		ConfigString{ kind: kind, span: tok.span }
+	}
+
+	pub fn to_string(&self) -> String
+	{
+		match self.kind
+		{
+			RawString(s) => s.to_string(),
+			Root => "root".to_string(),
+			Import => "import".to_string(),
+			EscapedString(s) =>
+			{
+				/* Benchmarking has shown this to be faster than computing the exact size. */
+				let lb = s.len() - s.chars().filter(|&c| c == '\\').count();
+				let mut ret = String::with_capacity(lb);
+				let mut take_next = false;
+				
+				for c in s.chars()
+				{
+					if c == '\\' && !take_next
+					{
+						take_next = true;
+						continue;
+					}
+					take_next = false;
+					ret.push_char(c);
+				}
+				ret
+			}
+		}
+	}
+}
+
 pub trait Visitor<'l, E>
 {
 	fn start_table(&mut self) -> Result<(), E>;
@@ -31,36 +93,36 @@ pub trait Visitor<'l, E>
 	fn start_array(&mut self) -> Result<(), E>;
 	fn end_array(&mut self) -> Result<(), E>;
 	
-	fn assign_element(&mut self, path: &[Token<'l>]) -> Result<(), E>;
-	fn insert_path(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), E>;
+	fn insert_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), E>;
 	fn array_element(&mut self) -> Result<(), E>;
 
 	fn delete(&mut self) -> Result<(), E>;
-	fn append_string(&mut self, string: Token<'l>) -> Result<(), E>;
-	fn append_path(&mut self, path: &[Token<'l>]) -> Result<(), E>;
+	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), E>;
+	fn append_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), E>;
 }
 
 impl<'l> Visitor<'l, Error> for ()
 {
-	fn assign_element(&mut self, path: &[Token<'l>]) -> Result<(), Error>
+	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
 		println!("Started assignment: {}", path);
 		Ok(())
 	}
 
-	fn insert_path(&mut self, path: &[Token<'l>]) -> Result<(), Error>
+	fn insert_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
 		println!("Inserted path: {}", path);
 		Ok(())
 	}
 
-	fn append_path(&mut self, path: &[Token<'l>]) -> Result<(), Error>
+	fn append_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
 		println!("Path appended: {}", path);
 		Ok(())
 	}
 	
-	fn append_string(&mut self, string: Token<'l>) -> Result<(), Error>
+	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), Error>
 	{
 		println!("String appended: {}", string);
 		Ok(())
@@ -107,7 +169,7 @@ struct Parser<'l, 'm, V: 'm>
 {
 	lexer: Lexer<'l>,
 	visitor: &'m mut V,
-	path: Vec<Token<'l>>,
+	path: Vec<ConfigString<'l>>,
 }
 
 macro_rules! get_token
@@ -270,7 +332,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		if token.kind.is_string() || token.kind == lex::Root || token.kind == lex::Import
 		{
 			self.path.clear();
-			self.path.push(token);
+			self.path.push(ConfigString::from_token(token));
 			loop
 			{
 				let start_token = try_eof!(self.lexer.next(), Ok(true));
@@ -285,7 +347,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 				{
 					return Error::from_span(&self.lexer, start_token.span, "Expected a string literal");
 				}
-				self.path.push(path_token);
+				self.path.push(ConfigString::from_token(path_token));
 				
 				let end_token = try_eof!(self.lexer.next(),
 					Error::from_span(&self.lexer, start_token.span, "Expected a ']' to finish this index expression, but got EOF"));
@@ -405,7 +467,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
 		if token.kind.is_string()
 		{
-			try!(self.visitor.append_string(token));
+			try!(self.visitor.append_string(ConfigString::from_token(token)));
 			self.lexer.next();
 			Ok(true)
 		}

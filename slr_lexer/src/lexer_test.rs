@@ -15,11 +15,11 @@ fn main()
 		fail!("Pass a file to test with");
 	}
 	
-	let filename = args[1].as_slice();
+	let filename = Path::new(args[1].as_slice());
 	
-	let src = File::open(&Path::new(filename)).unwrap().read_to_string().unwrap();
+	let src = File::open(&filename).unwrap().read_to_string().unwrap();
 	
-	let mut lexer = Lexer::new(filename.as_slice(), src.as_slice());
+	let mut lexer = Lexer::new(&filename, src.as_slice());
 	
 	loop
 	{

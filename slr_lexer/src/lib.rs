@@ -83,7 +83,7 @@ fn is_newline(c: char) -> bool
 	c == '\n' || c == '\r'
 }
 
-struct Source<'l>
+pub struct Source<'l>
 {
 	filename: &'l Path,
 	source: &'l str,
@@ -106,7 +106,7 @@ struct Source<'l>
 
 impl<'l> Source<'l>
 {
-	fn new(filename: &'l Path, source: &'l str) -> Source<'l>
+	pub fn new(filename: &'l Path, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
 		let mut src = 
@@ -220,7 +220,7 @@ impl<'l> Source<'l>
 		(line, pos - start)
 	}
 
-	fn bump(&mut self) -> Option<char>
+	pub fn bump(&mut self) -> Option<char>
 	{
 		self.cur_char = self.next_char;
 		self.cur_pos = self.next_pos;
@@ -287,54 +287,54 @@ impl Error
 		}
 	}
 
-	pub fn from_pos<'l, T>(lexer: &Lexer<'l>, pos: uint, msg: &str) -> Result<T, Error>
+	pub fn from_pos<'l, T>(source: &Source<'l>, pos: uint, msg: &str) -> Result<T, Error>
 	{
-		let (line, col) = lexer.source.get_line_col_from_pos(pos);
+		let (line, col) = source.get_line_col_from_pos(pos);
 
-		let source = lexer.source.get_line(line);
+		let source_line = source.get_line(line);
 		let mut col_str = String::with_capacity(col + 1);
 		if col > 0
 		{
-			let num_tabs = source.slice_to(col).chars().filter(|&c| c == '\t').count();
+			let num_tabs = source_line.slice_to(col).chars().filter(|&c| c == '\t').count();
 			col_str.grow(col + num_tabs * 3, ' ');
 		}
 		col_str.push_char('^');
 		
-		let source = str::replace(source, "\t", "    ");
-		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", lexer.source.filename.display(), line + 1, col, msg, source, col_str)))
+		let source_line = str::replace(source_line, "\t", "    ");
+		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str)))
 	}
 
-	pub fn from_span<'l, T>(lexer: &Lexer<'l>, span: Span, msg: &str) -> Result<T, Error>
+	pub fn from_span<'l, T>(source: &Source<'l>, span: Span, msg: &str) -> Result<T, Error>
 	{
-		let (start_line, start_col) = lexer.source.get_line_col_from_pos(span.start);
-		let (end_line, end_col) = lexer.source.get_line_col_from_pos(span.start + span.len - 1);
+		let (start_line, start_col) = source.get_line_col_from_pos(span.start);
+		let (end_line, end_col) = source.get_line_col_from_pos(span.start + span.len - 1);
 		
-		let source = lexer.source.get_line(start_line);
+		let source_line = source.get_line(start_line);
 		let end_col = if start_line == end_line
 		{
 			end_col
 		}
 		else
 		{
-			source.len() - 1
+			source_line.len() - 1
 		};
 		
 		let mut col_str = String::with_capacity(end_col);
 		if start_col > 0
 		{
-			let num_start_tabs = source.slice_to(start_col).chars().filter(|&c| c == '\t').count();
+			let num_start_tabs = source_line.slice_to(start_col).chars().filter(|&c| c == '\t').count();
 			col_str.grow(start_col + num_start_tabs * 3, ' ');
 		}
 		col_str.push_char('^');
 		if end_col > start_col + 1
 		{
-			let num_end_tabs = source.slice(start_col, end_col).chars().filter(|&c| c == '\t').count();
+			let num_end_tabs = source_line.slice(start_col, end_col).chars().filter(|&c| c == '\t').count();
 			col_str.grow(end_col - start_col + num_end_tabs * 3, '~');
 		}
 		
-		let source = str::replace(source, "\t", "    ");
-		Err(Error::new(format!("{}:{}:{} - {}:{}: error: {}\n{}\n{}\n", lexer.source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
-			msg, source, col_str)))
+		let source_line = str::replace(source_line, "\t", "    ");
+		Err(Error::new(format!("{}:{}:{} - {}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
+			msg, source_line, col_str)))
 	}
 }
 
@@ -351,6 +351,11 @@ impl<'l> Lexer<'l>
 			};
 		lex.next();
 		lex
+	}
+
+	pub fn get_source(&self) -> &Source<'l>
+	{
+		&self.source
 	}
 
 	fn skip_whitespace<'m>(&'m mut self) -> bool
@@ -441,7 +446,7 @@ impl<'l> Lexer<'l>
 		if escape_next
 		{
 			/* Got EOF while trying to escape it... */
-			return Some(Error::from_pos(self, end_pos, "Unexpected EOF while parsing escape in naked string literal"));
+			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in naked string literal"));
 		}
 		
 		let contents = self.source.source.slice(start_pos, end_pos);
@@ -482,7 +487,7 @@ impl<'l> Lexer<'l>
 					start_pos += 1;
 					break;
 				},
-				_ => return Some(Error::from_pos(self, self.source.span_start,
+				_ => return Some(Error::from_pos(&self.source, self.source.span_start,
 					r#"Unexpected character while parsing raw string literal (expected '#' or '"')"#)),
 			}
 		}
@@ -510,7 +515,7 @@ impl<'l> Lexer<'l>
 		
 		if self.source.cur_char.is_none()
 		{
-			Some(Error::from_pos(self, self.source.span_start, "Unexpected EOF while looking for the end of this raw string literal"))
+			Some(Error::from_pos(&self.source, self.source.span_start, "Unexpected EOF while looking for the end of this raw string literal"))
 		}
 		else
 		{
@@ -538,7 +543,7 @@ impl<'l> Lexer<'l>
 		}
 		if self.source.cur_char.is_none()
 		{
-			return Some(Error::from_pos(self, self.source.span_start,
+			return Some(Error::from_pos(&self.source, self.source.span_start,
 				"Unexpected EOF while looking for the end of this escaped string literal"))
 		}
 		let contents = self.source.source.slice(start_pos, self.source.cur_pos);

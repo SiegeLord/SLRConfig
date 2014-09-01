@@ -234,7 +234,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			{
 				Some(tok) =>
 				{
-					Error::from_span(&self.lexer, tok.span, "Expected assignment or expansion")
+					Error::from_span(self.lexer.get_source(), tok.span, "Expected assignment or expansion")
 				},
 				None => Ok(())
 			}
@@ -309,18 +309,18 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		try!(self.visitor.assign_element(self.path.as_slice()));
 		
 		let assign = try_eof!(self.lexer.cur_token,
-			Error::from_span(&self.lexer, self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
+			Error::from_span(self.lexer.get_source(), self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
 		if assign.kind != lex::Assign
 		{
-			return Error::from_span(&self.lexer, assign.span, "Expected '='");
+			return Error::from_span(self.lexer.get_source(), assign.span, "Expected '='");
 		}
 		self.lexer.next();
 		
 		if !try!(self.parse_expr())
 		{
 			let cur_token = try_eof!(self.lexer.cur_token,
-				Error::from_span(&self.lexer, assign.span, "Expected a RHS to finish this assignment, but got EOF"));
-			return Error::from_span(&self.lexer, cur_token.span, "Expected an expression or 'delete'");
+				Error::from_span(self.lexer.get_source(), assign.span, "Expected a RHS to finish this assignment, but got EOF"));
+			return Error::from_span(self.lexer.get_source(), cur_token.span, "Expected an expression or 'delete'");
 		}
 		
 		Ok(true)
@@ -342,18 +342,18 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 				}
 				
 				let path_token = try_eof!(self.lexer.next(),
-					Error::from_span(&self.lexer, start_token.span, "Expected a string literal to continue this index expression, but got EOF"));
+					Error::from_span(self.lexer.get_source(), start_token.span, "Expected a string literal to continue this index expression, but got EOF"));
 				if !path_token.kind.is_string()
 				{
-					return Error::from_span(&self.lexer, start_token.span, "Expected a string literal");
+					return Error::from_span(self.lexer.get_source(), start_token.span, "Expected a string literal");
 				}
 				self.path.push(ConfigString::from_token(path_token));
 				
 				let end_token = try_eof!(self.lexer.next(),
-					Error::from_span(&self.lexer, start_token.span, "Expected a ']' to finish this index expression, but got EOF"));
+					Error::from_span(self.lexer.get_source(), start_token.span, "Expected a ']' to finish this index expression, but got EOF"));
 				if end_token.kind != lex::RightBracket
 				{
-					return Error::from_span(&self.lexer, end_token.span, "Expected a ']'");
+					return Error::from_span(self.lexer.get_source(), end_token.span, "Expected a ']'");
 				}
 			}
 		}
@@ -400,10 +400,10 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.start_table());
 			try!(self.parse_table_contents(false));
 			
-			let brace = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Unterminated table"));
+			let brace = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), brace_or_bracket.span, "Unterminated table"));
 			if brace.kind != lex::RightBrace
 			{
-				return Error::from_span(&self.lexer, brace.span, "Expected '}'");
+				return Error::from_span(self.lexer.get_source(), brace.span, "Expected '}'");
 			}
 			self.lexer.next();
 			
@@ -416,10 +416,10 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			try!(self.visitor.start_array());
 			try!(self.parse_array_contents());
 			
-			let bracket = try_eof!(self.lexer.cur_token, Error::from_span(&self.lexer, brace_or_bracket.span, "Unterminated array"));
+			let bracket = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), brace_or_bracket.span, "Unterminated array"));
 			if bracket.kind != lex::RightBracket
 			{
-				return Error::from_span(&self.lexer, bracket.span, "Expected ',' or ']'");
+				return Error::from_span(self.lexer.get_source(), bracket.span, "Expected ',' or ']'");
 			}
 			self.lexer.next();
 			
@@ -443,7 +443,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 				{
 					Some(span) =>
 					{
-						return Error::from_span(&self.lexer, span, "Expected a string source to finish this concatenation, but got EOF");
+						return Error::from_span(self.lexer.get_source(), span, "Expected a string source to finish this concatenation, but got EOF");
 					}
 					None =>
 					{

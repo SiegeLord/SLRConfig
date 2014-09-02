@@ -238,7 +238,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			return Ok(false)
 		}
 		
-		try!(self.visitor.assign_element(self.path_kind == Absolute, self.path.as_slice()));
+		try!(self.visitor.assign_element(self.path.as_slice()));
 		
 		let assign = try_eof!(self.lexer.cur_token,
 			Error::from_span(self.lexer.get_source(), self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
@@ -261,7 +261,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	fn parse_index_expr(&mut self, rhs: bool) -> Result<bool, Error>
 	{
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
-		if token.kind.is_string() || token.kind == lex::Root || (rhs && token.kind == lex::Import)
+		if token.kind.is_string() || (rhs && (token.kind == lex::Import || token.kind == lex::Root))
 		{
 			self.path.clear();
 			self.path_kind = match token.kind

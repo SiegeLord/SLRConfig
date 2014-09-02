@@ -76,9 +76,9 @@ impl HashmapVisitor
 
 impl<'l> Visitor<'l, Error> for HashmapVisitor
 {
-	fn assign_element(&mut self, is_absolute: bool, path: &[ConfigString<'l>]) -> Result<(), Error>
+	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Started assignment (absolute: {}): {}", is_absolute, path);
+		println!("Started assignment: {}", path);
 		Ok(())
 	}
 

@@ -26,7 +26,7 @@ pub trait Visitor<'l, E>
 	fn start_array(&mut self) -> Result<(), E>;
 	fn end_array(&mut self) -> Result<(), E>;
 	
-	fn assign_element(&mut self, is_absolute: bool, path: &[ConfigString<'l>]) -> Result<(), E>;
+	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), E>;
 	fn insert_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), E>;
 	fn array_element(&mut self) -> Result<(), E>;
 

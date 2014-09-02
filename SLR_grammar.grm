@@ -55,7 +55,6 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 ! Statements
 <AssignIndex> ::= <String>
               |  <AssignIndex> '[' <String> ']'
-              | 'root'
 
 <Assignment> ::= <AssignIndex> '=' <Expr>
 

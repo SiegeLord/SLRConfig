@@ -11,7 +11,7 @@ b =
 	}
 }
 
-root[sez] = $import[b][e]
+bez = $import[b][e]
 sez = delete
 sez = a ~ $root[bez]
 

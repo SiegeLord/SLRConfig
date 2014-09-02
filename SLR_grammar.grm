@@ -5,36 +5,33 @@ Comment Line = '#'
 ! -------------------------------------------------
 ! Character Sets
 ! -------------------------------------------------
-
-{Escaped String Chars} = {Printable} + {Whitespace} - ["\]
-{Newline} = {CR} + {LF}
                       
 {Raw String Chars} = {Printable} + {Whitespace}
 {Raw String 0 Chars} = {Printable} + {Whitespace} - ["]
 
-{Naked String Middle} = {Printable} - {Whitespace} - [#='['']'{}$",~] + [' ']
-{Naked String Border} = {Naked String Middle} - [' ']
+{String Middle} = {Printable} - {Whitespace} - [#='['']'{}$",~] + [' ']
+{String Border} = {String Middle} - [' ']
 
 ! -------------------------------------------------
 ! Terminals
 ! -------------------------------------------------
 
-! FIXME: Missing escapes
-NakedString = {Naked String Border} {Naked String Middle}* {Naked String Border}
-              | {Naked String Border}
+EscapedString = ({String Border} | '\' {Raw String Chars}) ({String Middle} | '\' {Raw String Chars})* ({String Border} | '\' {Raw String Chars})
+                | ({String Border} | '\' {Raw String Chars})
 
-EscapedString = '"' ( {Escaped String Chars} | '\' {Printable} | '\' {Newline} )* '"'
-
-RawString0 = 'r"' {Raw String 0 Chars}* '"'
-RawString1 = 'r{"' {Raw String Chars}* '"}'
-RawString2 = 'r{{"' {Raw String Chars}* '"}}'
+RawString0 = '"' {Raw String 0 Chars}* '"'
+RawString1 = '{{"' {Raw String Chars}* '"}}'
+RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 
 ! -------------------------------------------------
 ! Rules
 ! -------------------------------------------------
 
+<OptComma> ::= ','
+            |
+
 ! Expressions
-<String> ::= NakedString | EscapedString | RawString0 | RawString1 | RawString2
+<String> ::= EscapedString | RawString0 | RawString1 | RawString2
           
 <IndexExpr> ::= <String>
              |  <IndexExpr> '[' <String> ']'
@@ -63,13 +60,13 @@ RawString2 = 'r{{"' {Raw String Chars}* '"}}'
 <ArrayElements> ::= <ArrayElement>
                  |  <ArrayElements> ',' <ArrayElement>
 
-<ArrayContents> ::= <ArrayElements>
+<ArrayContents> ::= <ArrayElements> <OptComma>
                      |
 
 <TableElement> ::= <Assignment> | <Expansion>
 
 <TableElements> ::= <TableElement>
-                 |  <TableElements> <TableElement>
+                 |  <TableElements> <OptComma> <TableElement>
 
-<TableContents> ::= <TableElements>
+<TableContents> ::= <TableElements> <OptComma>
                      |

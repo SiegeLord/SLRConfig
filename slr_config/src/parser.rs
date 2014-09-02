@@ -67,6 +67,7 @@ impl<'l> ConfigString<'l>
 							'r' => '\r',
 							't' => '\t',
 							'0' => '\0',
+							/* TODO: Unicode escapes */
 							_ => c
 						};
 						escape_next = false;

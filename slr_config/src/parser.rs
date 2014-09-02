@@ -126,6 +126,11 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	{
 		while try!(self.parse_table_element())
 		{
+			let comma = try_eof!(self.lexer.cur_token, Ok(()));
+			if comma.kind == lex::Comma
+			{
+				self.lexer.next();
+			}
 		}
 
 		if !is_root

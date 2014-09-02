@@ -1,4 +1,4 @@
-str = r#"sdasds#"#
+\"str = {{"}}a"}}
 baz = bar\=bar
 baz2 = $baz
 

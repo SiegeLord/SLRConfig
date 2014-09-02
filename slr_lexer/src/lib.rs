@@ -58,7 +58,7 @@ impl<'l> TokenKind<'l>
 	}
 }
 
-fn is_naked_string_border(c: char) -> bool
+fn is_string_border(c: char) -> bool
 {
 	!is_whitespace(c) &&
 	c != '=' &&
@@ -73,14 +73,14 @@ fn is_naked_string_border(c: char) -> bool
 	c != '#'
 }
 
-fn is_naked_string_middle(c: char) -> bool
+fn is_string_middle(c: char) -> bool
 {
-	is_naked_string_border(c) || c == ' '
+	is_string_border(c) || c == ' '
 }
 
 fn is_newline(c: char) -> bool
 {
-	c == '\n' || c == '\r'
+	c == '\n'
 }
 
 pub struct Source<'l>
@@ -97,7 +97,6 @@ pub struct Source<'l>
 	
 	line_start_pos: uint,
 	at_newline: bool,
-	ignore_next_newline: bool,
 	
 	line_ends: Vec<uint>,
 
@@ -121,7 +120,6 @@ impl<'l> Source<'l>
 				next_pos: 0,
 				line_start_pos: 0,
 				at_newline: false,
-				ignore_next_newline: false,
 				line_ends: vec![],
 				span_start: 0,
 			};
@@ -244,13 +242,8 @@ impl<'l> Source<'l>
 		if self.at_newline
 		{
 			self.line_start_pos = self.cur_pos + 1;
-			if !self.ignore_next_newline
-			{
-				self.line_ends.push(self.cur_pos);
-			}
+			self.line_ends.push(self.cur_pos);
 		}
-		
-		self.ignore_next_newline = self.cur_char == Some('\r') && self.next_char == Some('\n');
 		
 		self.cur_char
 	}
@@ -390,10 +383,10 @@ impl<'l> Lexer<'l>
 		true
 	}
 	
-	fn eat_naked_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	fn eat_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
 		//~ println!("naked: {}", self.source.cur_char);
-		if !self.source.cur_char.map_or(false, |c| is_naked_string_border(c))
+		if !self.source.cur_char.map_or(false, |c| is_string_border(c) || c == '\\')
 		{
 			return None;
 		}
@@ -418,7 +411,7 @@ impl<'l> Lexer<'l>
 						last_is_border = true;
 						escape_next = false;
 					}
-					else if is_naked_string_border(c)
+					else if is_string_border(c)
 					{
 						last_is_border = true;
 						if c == '\\'
@@ -426,7 +419,7 @@ impl<'l> Lexer<'l>
 							escape_next = true;
 						}
 					}
-					else if is_naked_string_middle(c)
+					else if is_string_middle(c)
 					{
 						last_is_border = false;
 					}
@@ -446,7 +439,7 @@ impl<'l> Lexer<'l>
 		if escape_next
 		{
 			/* Got EOF while trying to escape it... */
-			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in naked string literal"));
+			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in string literal"));
 		}
 		
 		let contents = self.source.source.slice(start_pos, end_pos);
@@ -463,50 +456,56 @@ impl<'l> Lexer<'l>
 	
 	fn eat_raw_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
-		if self.source.cur_char != Some('r') ||
-			!(self.source.next_char == Some('"') || self.source.next_char == Some('#'))
+		if self.source.cur_char != Some('"') && !(self.source.cur_char == Some('{') && self.source.next_char == Some('{'))
 		{
 			return None;
 		}
 		self.source.start_span();
-		// +1 to skip the leading 'r'
-		let mut start_pos = self.source.cur_pos + 1;
+		let mut start_pos = self.source.cur_pos;
 		let mut end_pos = start_pos;
-		let mut num_leading_hashes = 0u;
-		for c in self.source
+		let mut num_leading_braces = 0u;
+		loop
 		{
-			match c
+			match self.source.cur_char
 			{
-				'#' =>
+				Some(c) =>
 				{
-					num_leading_hashes += 1;
-					start_pos += 1;
-				},
-				'"' =>
-				{
-					start_pos += 1;
-					break;
-				},
-				_ => return Some(Error::from_pos(&self.source, self.source.span_start,
-					r#"Unexpected character while parsing raw string literal (expected '#' or '"')"#)),
+					match c
+					{
+						'{' =>
+						{
+							num_leading_braces += 1;
+							start_pos += 1;
+						},
+						'"' =>
+						{
+							start_pos += 1;
+							break;
+						},
+						_ => return Some(Error::from_pos(&self.source, self.source.span_start,
+							r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#)),
+					}
+				}
+				None => break
 			}
+			self.source.bump();
 		}
 		'done: for c in self.source
 		{
 			if c == '"'
 			{
 				end_pos = self.source.cur_pos;
-				let mut num_trailing_hashes = 0;
+				let mut num_trailing_braces = 0;
 				
 				for c in self.source
 				{
-					if num_trailing_hashes == num_leading_hashes
+					if num_trailing_braces == num_leading_braces
 					{
 						break 'done;
 					}
 					match c
 					{
-						'#' => num_trailing_hashes += 1,
+						'}' => num_trailing_braces += 1,
 						_ => break,
 					}
 				}
@@ -521,35 +520,6 @@ impl<'l> Lexer<'l>
 		{
 			Some(Ok(Token::new(RawString(self.source.source.slice(start_pos, end_pos)), self.source.get_span())))
 		}
-	}
-	
-	fn eat_escaped_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
-	{
-		if self.source.cur_char != Some('"')
-		{
-			return None;
-		}
-		self.source.start_span();
-		// +1 to skip the leading '"'
-		let start_pos = self.source.cur_pos + 1;
-		let mut last_is_slash = false;
-		for c in self.source
-		{
-			if c == '"' && !last_is_slash
-			{
-				break;
-			}
-			last_is_slash = c == '\\' && !last_is_slash;
-		}
-		if self.source.cur_char.is_none()
-		{
-			return Some(Error::from_pos(&self.source, self.source.span_start,
-				"Unexpected EOF while looking for the end of this escaped string literal"))
-		}
-		let contents = self.source.source.slice(start_pos, self.source.cur_pos);
-		// Skip the trailing "
-		self.source.bump();
-		Some(Ok(Token::new(EscapedString(contents), self.source.get_span())))
 	}
 
 	fn eat_char_tokens<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
@@ -583,10 +553,9 @@ impl<'l> Lexer<'l>
 		{
 			while self.skip_whitespace() || self.skip_comments() {}
 			self.cur_token = self.next_token.take();
-			self.next_token = self.eat_char_tokens()
-				.or_else(|| self.eat_raw_string())
-				.or_else(|| self.eat_naked_string())
-				.or_else(|| self.eat_escaped_string());
+			self.next_token = self.eat_raw_string()
+				.or_else(|| self.eat_char_tokens())
+				.or_else(|| self.eat_string());
 		}
 		
 		self.cur_token.clone()

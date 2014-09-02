@@ -514,7 +514,7 @@ impl<'l> Lexer<'l>
 		
 		if self.source.cur_char.is_none()
 		{
-			Some(Error::from_pos(&self.source, self.source.span_start, "Unexpected EOF while looking for the end of this raw string literal"))
+			Some(Error::from_pos(&self.source, self.source.span_start, "Unterminated raw string literal"))
 		}
 		else
 		{

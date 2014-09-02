@@ -1,21 +1,22 @@
-\"str = {{"}}a"}}
-baz = bar\=bar
-baz2 = $baz
+foo = test
 
-b = 
+bar =
 {
-	e = "slr"
-	d =
+	bar_foo = test
+	bar_bar = 
 	{
-		$root[b][e]
+		foo = 
+		{
+			bar_bar_foo_foo = test
+		}
 	}
 }
 
-bez = $import[b][e]
-sez = delete
-sez = a ~ $root[bez]
-
-a = $root[heh], b = $root[heh]
-c = [1, 2, 3]
-arr = [1, {a = b}, a = {}, b = [], {},]
-test = new\nline
+baz = 
+{
+	$root[bar]
+	bar_bar[foo] = 
+	{
+		foo = ""
+	}
+}

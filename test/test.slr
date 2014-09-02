@@ -18,3 +18,4 @@ sez = a ~ $root[bez]
 a = $root[heh], b = $root[heh]
 c = [1, 2, 3]
 arr = [1, {a = b}, a = {}, b = [], {},]
+test = new\nline

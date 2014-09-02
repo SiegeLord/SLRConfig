@@ -30,7 +30,7 @@ impl<'l> Visitor<'l, Error> for ()
 	
 	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), Error>
 	{
-		println!("String appended: {}", string);
+		println!("String appended: {}", string.to_string());
 		Ok(())
 	}
 

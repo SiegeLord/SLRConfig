@@ -55,16 +55,27 @@ impl<'l> ConfigString<'l>
 				/* Benchmarking has shown this to be faster than computing the exact size. */
 				let lb = s.len() - s.chars().filter(|&c| c == '\\').count();
 				dest.reserve(lb);
-				let mut take_next = false;
+				let mut escape_next = false;
 				
-				for c in s.chars()
+				for mut c in s.chars()
 				{
-					if c == '\\' && !take_next
+					if escape_next
 					{
-						take_next = true;
+						c = match c
+						{
+							'n' => '\n',
+							'r' => '\r',
+							't' => '\t',
+							'0' => '\0',
+							_ => c
+						};
+						escape_next = false;
+					}
+					else if c == '\\'
+					{
+						escape_next = true;
 						continue;
 					}
-					take_next = false;
 					dest.push_char(c);
 				}
 			}

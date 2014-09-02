@@ -15,12 +15,18 @@ pub struct ConfigString<'l>
 	pub span: Span,
 }
 
-#[deriving(Clone, Show)]
+#[deriving(Clone, Show, PartialEq)]
 pub enum StringKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
-	Root,
+}
+
+#[deriving(Clone, Show, PartialEq)]
+pub enum PathKind
+{
+	Absolute,
+	Relative,
 	Import,
 }
 
@@ -32,8 +38,6 @@ impl<'l> ConfigString<'l>
 		{
 			lex::EscapedString(s) => EscapedString(s),
 			lex::RawString(s) => RawString(s),
-			lex::Root => Root,
-			lex::Import => Import,
 			_ => fail!("Invalid token passed to visitor! {}", tok.kind)
 		};
 
@@ -45,8 +49,6 @@ impl<'l> ConfigString<'l>
 		match self.kind
 		{
 			RawString(s) => s.to_string(),
-			Root => "root".to_string(),
-			Import => "import".to_string(),
 			EscapedString(s) =>
 			{
 				/* Benchmarking has shown this to be faster than computing the exact size. */
@@ -74,6 +76,7 @@ struct Parser<'l, 'm, V: 'm>
 {
 	lexer: Lexer<'l>,
 	visitor: &'m mut V,
+	path_kind: PathKind,
 	path: Vec<ConfigString<'l>>,
 }
 
@@ -176,7 +179,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		}
 		else if try!(self.parse_expansion())
 		{
-			try!(self.visitor.insert_path(self.path.as_slice()));
+			try!(self.visitor.insert_path(self.path_kind, self.path.as_slice()));
 			Ok(true)
 		}
 		else
@@ -211,12 +214,12 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 	
 	fn parse_assignment(&mut self) -> Result<bool, Error>
 	{
-		if !try!(self.parse_index_expr())
+		if !try!(self.parse_index_expr(false))
 		{
 			return Ok(false)
 		}
 		
-		try!(self.visitor.assign_element(self.path.as_slice()));
+		try!(self.visitor.assign_element(self.path_kind == Absolute, self.path.as_slice()));
 		
 		let assign = try_eof!(self.lexer.cur_token,
 			Error::from_span(self.lexer.get_source(), self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
@@ -236,13 +239,24 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		Ok(true)
 	}
 
-	fn parse_index_expr(&mut self) -> Result<bool, Error>
+	fn parse_index_expr(&mut self, rhs: bool) -> Result<bool, Error>
 	{
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
-		if token.kind.is_string() || token.kind == lex::Root || token.kind == lex::Import
+		if token.kind.is_string() || token.kind == lex::Root || (rhs && token.kind == lex::Import)
 		{
 			self.path.clear();
-			self.path.push(ConfigString::from_token(token));
+			self.path_kind = match token.kind
+			{
+				lex::Root => Absolute,
+				lex::Import => Import,
+				_ => Relative
+			};
+			
+			if self.path_kind == Relative
+			{
+				self.path.push(ConfigString::from_token(token));
+			}
+
 			loop
 			{
 				let start_token = try_eof!(self.lexer.next(), Ok(true));
@@ -383,7 +397,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		}
 		else if try!(self.parse_expansion())
 		{
-			try!(self.visitor.append_path(self.path.as_slice()));
+			try!(self.visitor.append_path(self.path_kind, self.path.as_slice()));
 			Ok(true)
 		}
 		else
@@ -398,7 +412,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		if token.kind == lex::Dollar
 		{
 			self.lexer.next();
-			Ok(try!(self.parse_index_expr()))
+			Ok(try!(self.parse_index_expr(true)))
 		}
 		else
 		{
@@ -411,6 +425,6 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, 
 {
 	let mut lexer = Lexer::new(filename, source);
 	lexer.next();
-	let mut parser = Parser{ lexer: lexer, visitor: visitor, path: vec![] };
+	let mut parser = Parser{ lexer: lexer, visitor: visitor, path_kind: Absolute, path: vec![] };
 	parser.parse_table_contents(true)
 }

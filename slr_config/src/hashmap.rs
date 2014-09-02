@@ -6,25 +6,25 @@ use std::collections::hashmap::HashMap;
 
 use visitor::Visitor;
 use lex::Error;
-use parser::ConfigString;
+use parser::{ConfigString, PathKind};
 
 impl<'l> Visitor<'l, Error> for ()
 {
-	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
+	fn assign_element(&mut self, is_absolute: bool, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Started assignment: {}", path);
+		println!("Started assignment (absolute: {}): {}", is_absolute, path);
 		Ok(())
 	}
 
-	fn insert_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
+	fn insert_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Inserted path: {}", path);
+		println!("Inserted {} path: {}", path_kind, path);
 		Ok(())
 	}
 
-	fn append_path(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
+	fn append_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Path appended: {}", path);
+		println!("Appended {} path: {}", path_kind, path);
 		Ok(())
 	}
 	

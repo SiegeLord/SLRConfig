@@ -53,7 +53,11 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 <Expr> ::= <NoDeleteExpr> |  'delete'
 
 ! Statements
-<Assignment> ::= <IndexExpr> '=' <Expr>
+<AssignIndex> ::= <String>
+              |  <AssignIndex> '[' <String> ']'
+              | 'root'
+
+<Assignment> ::= <AssignIndex> '=' <Expr>
 
 <ArrayElement> ::= <Assignment> | <NoDeleteExpr>
              

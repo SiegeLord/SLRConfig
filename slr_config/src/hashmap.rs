@@ -8,7 +8,73 @@ use visitor::Visitor;
 use lex::Error;
 use parser::{ConfigString, PathKind};
 
-impl<'l> Visitor<'l, Error> for ()
+pub enum ConfigValue
+{
+	Leaf(String),
+	Node(HashMap<String, ConfigElement>),
+}
+
+pub struct ConfigElement
+{
+	value: ConfigValue,
+}
+
+struct PathVector
+{
+	data: Vec<String>,
+	len: uint,
+}
+
+impl PathVector
+{
+	fn new() -> PathVector
+	{
+		PathVector
+		{
+			data: vec![],
+			len: 0,
+		}
+	}
+	
+	fn clear(&mut self)
+	{
+		self.len = 0;
+	}
+
+	fn push(&mut self, path: ConfigString)
+	{
+		if self.len == self.data.len()
+		{
+			self.data.push(String::new());
+		}
+		path.into_string(self.data.get_mut(self.len));
+		self.len += 1;
+	}
+}
+
+pub struct HashmapVisitor
+{
+	root: HashMap<String, ConfigElement>,
+	current_path: PathVector,
+	assign_path: PathVector,
+	assign_path_absolute: bool,
+}
+
+impl HashmapVisitor
+{
+	pub fn new() -> HashmapVisitor
+	{
+		HashmapVisitor
+		{
+			assign_path: PathVector::new(),
+			current_path: PathVector::new(),
+			assign_path_absolute: false,
+			root: HashMap::new(),
+		}
+	}
+}
+
+impl<'l> Visitor<'l, Error> for HashmapVisitor
 {
 	fn assign_element(&mut self, is_absolute: bool, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{

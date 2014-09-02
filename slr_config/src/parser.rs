@@ -44,16 +44,17 @@ impl<'l> ConfigString<'l>
 		ConfigString{ kind: kind, span: tok.span }
 	}
 
-	pub fn to_string(&self) -> String
+	pub fn into_string(&self, dest: &mut String)
 	{
+		dest.clear();
 		match self.kind
 		{
-			RawString(s) => s.to_string(),
+			RawString(s) => dest.push_str(s),
 			EscapedString(s) =>
 			{
 				/* Benchmarking has shown this to be faster than computing the exact size. */
 				let lb = s.len() - s.chars().filter(|&c| c == '\\').count();
-				let mut ret = String::with_capacity(lb);
+				dest.reserve(lb);
 				let mut take_next = false;
 				
 				for c in s.chars()
@@ -64,11 +65,17 @@ impl<'l> ConfigString<'l>
 						continue;
 					}
 					take_next = false;
-					ret.push_char(c);
+					dest.push_char(c);
 				}
-				ret
 			}
 		}
+	}
+	
+	pub fn to_string(&self) -> String
+	{
+		let mut dest = String::new();
+		self.into_string(&mut dest);
+		dest
 	}
 }
 

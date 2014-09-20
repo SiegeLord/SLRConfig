@@ -4,7 +4,7 @@
 
 #![feature(macro_rules, globs)]
 
-extern crate lex = "slr_lexer";
+extern crate "slr_lexer" as lex;
 
 pub use parser::*;
 pub use visitor::*;

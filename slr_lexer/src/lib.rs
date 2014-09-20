@@ -373,8 +373,13 @@ impl<'l> Lexer<'l>
 		{
 			return false;
 		}
-		for _ in self.source
+
+		loop
 		{
+			if self.source.next().is_none()
+			{
+				break;
+			}
 			if self.source.at_newline
 			{
 				break;
@@ -490,8 +495,13 @@ impl<'l> Lexer<'l>
 			}
 			self.source.bump();
 		}
-		'done: for c in self.source
+		'done: loop
 		{
+			let c = match self.source.next()
+			{
+				Some(c) => c,
+				None => break
+			};
 			if c == '"'
 			{
 				end_pos = self.source.cur_pos;

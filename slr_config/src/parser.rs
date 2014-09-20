@@ -3,8 +3,7 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 /* FIXME: Some bug with globs */
-extern crate lex = "slr_lexer";
-
+extern crate "slr_lexer" as lex;
 use lex::{Lexer, Token, Error, Span};
 use visitor::{Visitor, GetError};
 

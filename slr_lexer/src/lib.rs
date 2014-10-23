@@ -291,7 +291,7 @@ impl Error
 			let num_tabs = source_line.slice_to(col).chars().filter(|&c| c == '\t').count();
 			col_str.grow(col + num_tabs * 3, ' ');
 		}
-		col_str.push_char('^');
+		col_str.push('^');
 		
 		let source_line = str::replace(source_line, "\t", "    ");
 		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str)))
@@ -318,7 +318,7 @@ impl Error
 			let num_start_tabs = source_line.slice_to(start_col).chars().filter(|&c| c == '\t').count();
 			col_str.grow(start_col + num_start_tabs * 3, ' ');
 		}
-		col_str.push_char('^');
+		col_str.push('^');
 		if end_col > start_col + 1
 		{
 			let num_end_tabs = source_line.slice(start_col, end_col).chars().filter(|&c| c == '\t').count();

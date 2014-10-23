@@ -76,7 +76,7 @@ impl<'l> ConfigString<'l>
 						escape_next = true;
 						continue;
 					}
-					dest.push_char(c);
+					dest.push(c);
 				}
 			}
 		}

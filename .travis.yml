@@ -12,7 +12,7 @@ install:
 script:
   - cd slr_lexer
   - cargo test
-  - ./target/test/lexer_test ../test/test.slr
+  - ./target/examples/lexer_test ../test/test.slr
   - cd ../slr_config
   - cargo test
-  - ./target/test/slr_test ../test/test.slr
+  - ./target/examples/slr_test ../test/test.slr

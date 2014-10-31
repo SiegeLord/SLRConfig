@@ -132,7 +132,7 @@ impl<'l> Source<'l>
 	{
 		if line > self.line_ends.len() + 1
 		{
-			fail!("Trying to get an unvisited line!");
+			panic!("Trying to get an unvisited line!");
 		}
 		let start = if line == 0
 		{
@@ -213,7 +213,7 @@ impl<'l> Source<'l>
 		let (start, _) = self.get_line_start_end(line);
 		if pos < start
 		{
-			fail!("Position less than line start (somehow got a position inside a newline!)")
+			panic!("Position less than line start (somehow got a position inside a newline!)")
 		}
 		(line, pos - start)
 	}

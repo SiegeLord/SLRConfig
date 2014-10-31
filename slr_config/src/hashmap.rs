@@ -80,7 +80,7 @@ impl PathVector
 		{
 			self.data.push(String::new());
 		}
-		let dest = self.data.get_mut(self.len);
+		let dest = &mut self.data[self.len];
 		dest.clear();
 		path.into_string(dest);
 		self.len += 1;
@@ -92,7 +92,7 @@ impl PathVector
 		{
 			self.data.push(String::new());
 		}
-		let dest = self.data.get_mut(self.len);
+		let dest = &mut self.data[self.len];
 		dest.clear();
 		dest.push_str(path.as_slice());;
 		self.len += 1;

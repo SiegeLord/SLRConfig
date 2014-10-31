@@ -37,7 +37,7 @@ impl<'l> ConfigString<'l>
 		{
 			lex::EscapedString(s) => EscapedString(s),
 			lex::RawString(s) => RawString(s),
-			_ => fail!("Invalid token passed to visitor! {}", tok.kind)
+			_ => panic!("Invalid token passed to visitor! {}", tok.kind)
 		};
 
 		ConfigString{ kind: kind, span: tok.span }

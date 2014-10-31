@@ -12,7 +12,7 @@ fn main()
 	let args = os::args();
 	if args.len() < 2
 	{
-		fail!("Pass a file to test with");
+		panic!("Pass a file to test with");
 	}
 	
 	let filename = Path::new(args[1].as_slice());

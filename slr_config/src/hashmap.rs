@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use std::collections::hashmap::HashMap;
+use std::collections::HashMap;
 use std::slice::Items;
 
 use visitor::Visitor;

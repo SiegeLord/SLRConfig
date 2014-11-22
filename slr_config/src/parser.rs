@@ -7,6 +7,9 @@ extern crate "slr_lexer" as lex;
 use lex::{Lexer, Token, Error, Span};
 use visitor::{Visitor, GetError};
 
+pub use self::StringKind::*;
+pub use self::PathKind::*;
+
 #[deriving(Clone, Show)]
 pub struct ConfigString<'l>
 {

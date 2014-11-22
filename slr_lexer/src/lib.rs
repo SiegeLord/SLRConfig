@@ -2,8 +2,12 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+#![feature(globs)]
+
 use std::char::is_whitespace;
 use std::str::{mod, CharOffsets};
+
+pub use self::TokenKind::*;
 
 #[deriving(Show, Clone)]
 pub struct Span

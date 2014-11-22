@@ -9,6 +9,8 @@ use visitor::Visitor;
 use lex::Error;
 use parser::{ConfigString, PathKind};
 
+pub use self::ConfigElementKind::*;
+
 pub enum ConfigElementKind
 {
 	Value(String),

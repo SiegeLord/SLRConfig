@@ -4,7 +4,6 @@
 
 #![feature(globs)]
 
-use std::char::is_whitespace;
 use std::str::{mod, CharOffsets};
 
 pub use self::TokenKind::*;
@@ -64,7 +63,7 @@ impl<'l> TokenKind<'l>
 
 fn is_string_border(c: char) -> bool
 {
-	!is_whitespace(c) &&
+	!c.is_whitespace() &&
 	c != '=' &&
 	c != '[' &&
 	c != ']' &&
@@ -208,7 +207,7 @@ impl<'l> Source<'l>
 
 	fn get_line_col_from_pos(&self, pos: uint) -> (uint, uint)
 	{
-		use std::slice::{Found, NotFound};
+		use std::slice::BinarySearchResult::{Found, NotFound};
 		let line = match self.line_ends.as_slice().binary_search(|end| end.cmp(&pos))
 		{
 			Found(n) => n,
@@ -357,13 +356,13 @@ impl<'l> Lexer<'l>
 
 	fn skip_whitespace<'m>(&'m mut self) -> bool
 	{
-		if !self.source.cur_char.map_or(false, |c| is_whitespace(c))
+		if !self.source.cur_char.map_or(false, |c| c.is_whitespace())
 		{
 			return false;
 		}
 		for c in self.source
 		{
-			if !is_whitespace(c)
+			if !c.is_whitespace()
 			{
 				break;
 			}

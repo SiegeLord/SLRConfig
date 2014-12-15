@@ -8,14 +8,14 @@ use std::str::{mod, CharOffsets};
 
 pub use self::TokenKind::*;
 
-#[deriving(Show, Clone)]
+#[deriving(Show, Copy, Clone)]
 pub struct Span
 {
 	start: uint,
 	len: uint,
 }
 
-#[deriving(Show, Clone)]
+#[deriving(Show, Copy, Clone)]
 pub struct Token<'l>
 {
 	pub kind: TokenKind<'l>,
@@ -30,7 +30,7 @@ impl<'l> Token<'l>
 	}
 }
 
-#[deriving(PartialEq, Show, Clone)]
+#[deriving(PartialEq, Show, Copy, Clone)]
 pub enum TokenKind<'l>
 {
 	EscapedString(&'l str),

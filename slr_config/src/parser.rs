@@ -10,21 +10,21 @@ use visitor::{Visitor, GetError};
 pub use self::StringKind::*;
 pub use self::PathKind::*;
 
-#[deriving(Clone, Show)]
+#[deriving(Clone, Copy, Show)]
 pub struct ConfigString<'l>
 {
 	pub kind: StringKind<'l>,
 	pub span: Span,
 }
 
-#[deriving(Clone, Show, PartialEq)]
+#[deriving(Clone, Copy, Show, PartialEq)]
 pub enum StringKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
 }
 
-#[deriving(Clone, Show, PartialEq)]
+#[deriving(Clone, Copy, Show, PartialEq)]
 pub enum PathKind
 {
 	Absolute,

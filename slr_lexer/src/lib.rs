@@ -4,7 +4,7 @@
 
 #![feature(globs)]
 
-use std::str::{mod, CharOffsets};
+use std::str::CharIndices;
 
 pub use self::TokenKind::*;
 
@@ -90,7 +90,7 @@ pub struct Source<'l>
 {
 	filename: &'l Path,
 	source: &'l str,
-	chars: CharOffsets<'l>,
+	chars: CharIndices<'l>,
 	
 	cur_char: Option<char>,
 	cur_pos: uint,
@@ -158,7 +158,7 @@ impl<'l> Source<'l>
 		(start, end)
 	}
 
-	fn get_line<'l>(&'l self, line: uint) -> &'l str
+	fn get_line(&self, line: uint) -> &str
 	{
 		let (start, end) = self.get_line_start_end(line);
 		self.source.slice(start, end)
@@ -296,7 +296,7 @@ impl Error
 		}
 		col_str.push('^');
 		
-		let source_line = str::replace(source_line, "\t", "    ");
+		let source_line = source_line.replace("\t", "    ");
 		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str)))
 	}
 
@@ -328,7 +328,7 @@ impl Error
 			col_str.grow(end_col - start_col + num_end_tabs * 3, '~');
 		}
 		
-		let source_line = str::replace(source_line, "\t", "    ");
+		let source_line = source_line.replace("\t", "    ");
 		Err(Error::new(format!("{}:{}:{} - {}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
 			msg, source_line, col_str)))
 	}

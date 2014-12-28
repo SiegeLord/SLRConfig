@@ -319,7 +319,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			let token = try_eof!(self.lexer.cur_token, Ok(false));
 			if token.kind == lex::Delete
 			{
-				try!(self.visitor.delete())
+				try!(self.visitor.delete());
 				self.lexer.next();
 				Ok(true)
 			}

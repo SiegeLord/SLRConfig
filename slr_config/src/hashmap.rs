@@ -3,7 +3,7 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 use std::collections::HashMap;
-use std::slice::Items;
+use std::slice::Iter;
 
 use visitor::Visitor;
 use lex::Error;
@@ -100,7 +100,7 @@ impl PathVector
 		self.len += 1;
 	}
 
-	fn iter<'l>(&'l self) -> Items<'l, String>
+	fn iter<'l>(&'l self) -> Iter<'l, String>
 	{
 		self.data.slice_to(self.len).iter()
 	}

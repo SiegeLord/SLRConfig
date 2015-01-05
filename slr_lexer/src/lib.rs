@@ -3,19 +3,29 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 #![feature(globs)]
+#![feature(associated_types)]
 
 use std::str::CharIndices;
 
 pub use self::TokenKind::*;
 
-#[deriving(Show, Copy, Clone)]
+fn grow_str(string: &mut String, count: uint, ch: char)
+{
+	string.reserve(count);
+	for _ in range(0, count)
+	{
+		string.push(ch);
+	}
+}
+
+#[derive(Show, Copy, Clone)]
 pub struct Span
 {
 	start: uint,
 	len: uint,
 }
 
-#[deriving(Show, Copy, Clone)]
+#[derive(Show, Copy, Clone)]
 pub struct Token<'l>
 {
 	pub kind: TokenKind<'l>,
@@ -30,7 +40,7 @@ impl<'l> Token<'l>
 	}
 }
 
-#[deriving(PartialEq, Show, Copy, Clone)]
+#[derive(PartialEq, Show, Copy, Clone)]
 pub enum TokenKind<'l>
 {
 	EscapedString(&'l str),
@@ -207,11 +217,10 @@ impl<'l> Source<'l>
 
 	fn get_line_col_from_pos(&self, pos: uint) -> (uint, uint)
 	{
-		use std::slice::BinarySearchResult::{Found, NotFound};
-		let line = match self.line_ends.as_slice().binary_search(|end| end.cmp(&pos))
+		let line = match self.line_ends.as_slice().binary_search(&pos)
 		{
-			Found(n) => n,
-			NotFound(n) => n
+			Ok(n) => n,
+			Err(n) => n
 		};
 		let (start, _) = self.get_line_start_end(line);
 		if pos < start
@@ -252,8 +261,9 @@ impl<'l> Source<'l>
 	}
 }
 
-impl<'l> Iterator<char> for Source<'l>
+impl<'l> Iterator for Source<'l>
 {
+	type Item = char;
 	fn next(&mut self) -> Option<char>
 	{
 		self.bump()
@@ -267,7 +277,7 @@ pub struct Lexer<'l>
 	pub next_token: Option<Result<Token<'l>, Error>>,
 }
 
-#[deriving(Show, Clone)]
+#[derive(Show, Clone)]
 pub struct Error
 {
 	pub text: String
@@ -292,7 +302,7 @@ impl Error
 		if col > 0
 		{
 			let num_tabs = source_line.slice_to(col).chars().filter(|&c| c == '\t').count();
-			col_str.grow(col + num_tabs * 3, ' ');
+			grow_str(&mut col_str, col + num_tabs * 3, ' ');
 		}
 		col_str.push('^');
 		
@@ -319,13 +329,13 @@ impl Error
 		if start_col > 0
 		{
 			let num_start_tabs = source_line.slice_to(start_col).chars().filter(|&c| c == '\t').count();
-			col_str.grow(start_col + num_start_tabs * 3, ' ');
+			grow_str(&mut col_str, start_col + num_start_tabs * 3, ' ');
 		}
 		col_str.push('^');
 		if end_col > start_col + 1
 		{
 			let num_end_tabs = source_line.slice(start_col, end_col).chars().filter(|&c| c == '\t').count();
-			col_str.grow(end_col - start_col + num_end_tabs * 3, '~');
+			grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
 		}
 		
 		let source_line = source_line.replace("\t", "    ");

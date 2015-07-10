@@ -1,31 +1,28 @@
 // Copyright (c) 2014 by SiegeLord
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
-
-#![feature(globs)]
-#![feature(associated_types)]
-
+use std::path::Path;
 use std::str::CharIndices;
 
 pub use self::TokenKind::*;
 
-fn grow_str(string: &mut String, count: uint, ch: char)
+fn grow_str(string: &mut String, count: usize, ch: char)
 {
 	string.reserve(count);
-	for _ in range(0, count)
+	for _ in 0..count
 	{
 		string.push(ch);
 	}
 }
 
-#[derive(Show, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Span
 {
-	start: uint,
-	len: uint,
+	start: usize,
+	len: usize,
 }
 
-#[derive(Show, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Token<'l>
 {
 	pub kind: TokenKind<'l>,
@@ -40,7 +37,7 @@ impl<'l> Token<'l>
 	}
 }
 
-#[derive(PartialEq, Show, Copy, Clone)]
+#[derive(PartialEq, Debug, Copy, Clone)]
 pub enum TokenKind<'l>
 {
 	EscapedString(&'l str),
@@ -103,17 +100,17 @@ pub struct Source<'l>
 	chars: CharIndices<'l>,
 	
 	cur_char: Option<char>,
-	cur_pos: uint,
+	cur_pos: usize,
 	
 	next_char: Option<char>,
-	next_pos: uint,
+	next_pos: usize,
 	
-	line_start_pos: uint,
+	line_start_pos: usize,
 	at_newline: bool,
 	
-	line_ends: Vec<uint>,
+	line_ends: Vec<usize>,
 
-	span_start: uint,
+	span_start: usize,
 }
 
 impl<'l> Source<'l>
@@ -141,7 +138,7 @@ impl<'l> Source<'l>
 		src
 	}
 	
-	fn get_line_start_end(&self, line: uint) -> (uint, uint)
+	fn get_line_start_end(&self, line: usize) -> (usize, usize)
 	{
 		if line > self.line_ends.len() + 1
 		{
@@ -155,12 +152,12 @@ impl<'l> Source<'l>
 		{
 			self.line_ends[line - 1]
 		};
-		let start = match self.source.slice_from(start).chars().position(|c| !is_newline(c))
+		let start = match self.source[start..].chars().position(|c| !is_newline(c))
 		{
 			Some(offset) => start + offset,
 			None => self.source.len()
 		};
-		let end = match self.source.slice_from(start).chars().position(|c| is_newline(c))
+		let end = match self.source[start..].chars().position(|c| is_newline(c))
 		{
 			Some(end) => end + start,
 			None => self.source.len()
@@ -168,14 +165,14 @@ impl<'l> Source<'l>
 		(start, end)
 	}
 
-	fn get_line(&self, line: uint) -> &str
+	fn get_line(&self, line: usize) -> &str
 	{
 		let (start, end) = self.get_line_start_end(line);
-		self.source.slice(start, end)
+		&self.source[start..end]
 	}
 
 	#[allow(dead_code)]
-	fn get_cur_col(&self) -> uint
+	fn get_cur_col(&self) -> usize
 	{
 		if self.cur_pos >= self.line_start_pos
 		{
@@ -188,7 +185,7 @@ impl<'l> Source<'l>
 	}
 
 	#[allow(dead_code)]
-	fn get_cur_line(&self) -> uint
+	fn get_cur_line(&self) -> usize
 	{
 		self.line_ends.len()
 	}
@@ -215,9 +212,9 @@ impl<'l> Source<'l>
 		}
 	}
 
-	fn get_line_col_from_pos(&self, pos: uint) -> (uint, uint)
+	fn get_line_col_from_pos(&self, pos: usize) -> (usize, usize)
 	{
-		let line = match self.line_ends.as_slice().binary_search(&pos)
+		let line = match self.line_ends.binary_search(&pos)
 		{
 			Ok(n) => n,
 			Err(n) => n
@@ -277,7 +274,7 @@ pub struct Lexer<'l>
 	pub next_token: Option<Result<Token<'l>, Error>>,
 }
 
-#[derive(Show, Clone)]
+#[derive(Debug, Clone)]
 pub struct Error
 {
 	pub text: String
@@ -293,7 +290,7 @@ impl Error
 		}
 	}
 
-	pub fn from_pos<'l, T>(source: &Source<'l>, pos: uint, msg: &str) -> Result<T, Error>
+	pub fn from_pos<'l, T>(source: &Source<'l>, pos: usize, msg: &str) -> Result<T, Error>
 	{
 		let (line, col) = source.get_line_col_from_pos(pos);
 
@@ -301,7 +298,7 @@ impl Error
 		let mut col_str = String::with_capacity(col + 1);
 		if col > 0
 		{
-			let num_tabs = source_line.slice_to(col).chars().filter(|&c| c == '\t').count();
+			let num_tabs = source_line[..col].chars().filter(|&c| c == '\t').count();
 			grow_str(&mut col_str, col + num_tabs * 3, ' ');
 		}
 		col_str.push('^');
@@ -328,13 +325,13 @@ impl Error
 		let mut col_str = String::with_capacity(end_col);
 		if start_col > 0
 		{
-			let num_start_tabs = source_line.slice_to(start_col).chars().filter(|&c| c == '\t').count();
+			let num_start_tabs = source_line[..start_col].chars().filter(|&c| c == '\t').count();
 			grow_str(&mut col_str, start_col + num_start_tabs * 3, ' ');
 		}
 		col_str.push('^');
 		if end_col > start_col + 1
 		{
-			let num_end_tabs = source_line.slice(start_col, end_col).chars().filter(|&c| c == '\t').count();
+			let num_end_tabs = source_line[start_col..end_col].chars().filter(|&c| c == '\t').count();
 			grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
 		}
 		
@@ -370,7 +367,7 @@ impl<'l> Lexer<'l>
 		{
 			return false;
 		}
-		for c in self.source
+		for c in &mut self.source
 		{
 			if !c.is_whitespace()
 			{
@@ -460,7 +457,7 @@ impl<'l> Lexer<'l>
 			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in string literal"));
 		}
 		
-		let contents = self.source.source.slice(start_pos, end_pos);
+		let contents = &self.source.source[start_pos..end_pos];
 		let span = Span{ start: start_pos, len: end_pos - start_pos };
 		let kind = match contents
 		{
@@ -481,7 +478,7 @@ impl<'l> Lexer<'l>
 		self.source.start_span();
 		let mut start_pos = self.source.cur_pos;
 		let mut end_pos = start_pos;
-		let mut num_leading_braces = 0u;
+		let mut num_leading_braces = 0;
 		loop
 		{
 			match self.source.cur_char
@@ -520,7 +517,7 @@ impl<'l> Lexer<'l>
 				end_pos = self.source.cur_pos;
 				let mut num_trailing_braces = 0;
 				
-				for c in self.source
+				for c in &mut self.source
 				{
 					if num_trailing_braces == num_leading_braces
 					{
@@ -541,7 +538,7 @@ impl<'l> Lexer<'l>
 		}
 		else
 		{
-			Some(Ok(Token::new(RawString(self.source.source.slice(start_pos, end_pos)), self.source.get_span())))
+			Some(Ok(Token::new(RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
 		}
 	}
 

@@ -2,9 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-#![feature(macro_rules, globs)]
-
-extern crate "slr_lexer" as lex;
+extern crate slr_lexer as lex;
 
 pub use parser::*;
 pub use visitor::*;

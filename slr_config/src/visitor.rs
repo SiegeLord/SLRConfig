@@ -18,7 +18,7 @@ impl GetError for Error
 	}
 }
 
-pub trait Visitor<'l, E>
+pub trait Visitor<'l, E: GetError>
 {
 	fn start_table(&mut self) -> Result<(), E>;
 	fn end_table(&mut self) -> Result<(), E>;

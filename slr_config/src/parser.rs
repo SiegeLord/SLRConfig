@@ -2,29 +2,30 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-/* FIXME: Some bug with globs */
-extern crate "slr_lexer" as lex;
+extern crate slr_lexer as lex;
 use lex::{Lexer, Token, Error, Span};
 use visitor::{Visitor, GetError};
+use std::marker::PhantomData;
+use std::path::Path;
 
 pub use self::StringKind::*;
 pub use self::PathKind::*;
 
-#[derive(Clone, Copy, Show)]
+#[derive(Clone, Copy, Debug)]
 pub struct ConfigString<'l>
 {
 	pub kind: StringKind<'l>,
 	pub span: Span,
 }
 
-#[derive(Clone, Copy, Show, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum StringKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
 }
 
-#[derive(Clone, Copy, Show, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum PathKind
 {
 	Absolute,
@@ -40,7 +41,7 @@ impl<'l> ConfigString<'l>
 		{
 			lex::EscapedString(s) => EscapedString(s),
 			lex::RawString(s) => RawString(s),
-			_ => panic!("Invalid token passed to visitor! {}", tok.kind)
+			_ => panic!("Invalid token passed to visitor! {:?}", tok.kind)
 		};
 
 		ConfigString{ kind: kind, span: tok.span }
@@ -93,12 +94,13 @@ impl<'l> ConfigString<'l>
 	}
 }
 
-struct Parser<'l, 'm, V: 'm>
+struct Parser<'l, 'm, E, V: 'm>
 {
 	lexer: Lexer<'l>,
 	visitor: &'m mut V,
 	path_kind: PathKind,
 	path: Vec<ConfigString<'l>>,
+	error_marker: PhantomData<E>,
 }
 
 macro_rules! get_token
@@ -144,7 +146,7 @@ macro_rules! try
 	}
 }
 
-impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
+impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 {
 	fn parse_table_contents(&mut self, is_root: bool) -> Result<(), Error>
 	{
@@ -200,7 +202,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		}
 		else if try!(self.parse_expansion())
 		{
-			try!(self.visitor.insert_path(self.path_kind, self.path.as_slice()));
+			try!(self.visitor.insert_path(self.path_kind, &self.path));
 			Ok(true)
 		}
 		else
@@ -240,7 +242,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 			return Ok(false)
 		}
 		
-		try!(self.visitor.assign_element(self.path.as_slice()));
+		try!(self.visitor.assign_element(&self.path));
 		
 		let assign = try_eof!(self.lexer.cur_token,
 			Error::from_span(self.lexer.get_source(), self.path.last().unwrap().span, "Expected a '=' to follow this string literal, but got EOF"));
@@ -418,7 +420,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, V>
 		}
 		else if try!(self.parse_expansion())
 		{
-			try!(self.visitor.append_path(self.path_kind, self.path.as_slice()));
+			try!(self.visitor.append_path(self.path_kind, &self.path));
 			Ok(true)
 		}
 		else
@@ -446,6 +448,13 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, 
 {
 	let mut lexer = Lexer::new(filename, source);
 	lexer.next();
-	let mut parser = Parser{ lexer: lexer, visitor: visitor, path_kind: Absolute, path: vec![] };
+	let mut parser = Parser
+	{
+		lexer: lexer,
+		visitor: visitor,
+		path_kind: Absolute,
+		path: vec![],
+		error_marker: PhantomData::<E>,
+	};
 	parser.parse_table_contents(true)
 }

@@ -41,10 +41,11 @@ impl ConfigElement
 	}
 }
 
+#[derive(Debug)]
 struct PathVector
 {
 	data: Vec<String>,
-	len: uint,
+	len: usize,
 }
 
 impl PathVector
@@ -63,12 +64,12 @@ impl PathVector
 		self.len = 0;
 	}
 
-	fn len(&self) -> uint
+	fn len(&self) -> usize
 	{
 		self.len
 	}
 
-	fn shrink(&mut self, new_len: uint)
+	fn shrink(&mut self, new_len: usize)
 	{
 		if new_len < self.len
 		{
@@ -96,18 +97,19 @@ impl PathVector
 		}
 		let dest = &mut self.data[self.len];
 		dest.clear();
-		dest.push_str(path.as_slice());;
+		dest.push_str(&path);
 		self.len += 1;
 	}
 
-	fn iter<'l>(&'l self) -> Iter<'l, String>
+	//~ fn iter<'l>(&'l self) -> Iter<'l, String>
+	fn iter(&self) -> Iter<String>
 	{
-		self.data.slice_to(self.len).iter()
+		self.data[..self.len].iter()
 	}
 
-	fn as_slice<'l>(&'l self) -> &'l [String]
+	fn as_slice(&self) -> &[String]
 	{
-		self.data.slice_to(self.len)
+		&self.data[..self.len]
 	}
 }
 
@@ -116,7 +118,7 @@ pub struct HashmapVisitor
 	root: HashMap<String, ConfigElement>,
 	current_path: PathVector,
 	assign_path: PathVector,
-	scope_stops: Vec<uint>,
+	scope_stops: Vec<usize>,
 	current_element: ConfigElement,
 }
 
@@ -145,19 +147,19 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 			self.assign_path.push_cfg_string(path_element);
 		}
 
-		println!("Started assignment: {}", path);
+		println!("Started assignment: {:?}", path);
 		Ok(())
 	}
 
 	fn insert_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Inserted {} path: {}", path_kind, path);
+		println!("Inserted {:?} path: {:?}", path_kind, path);
 		Ok(())
 	}
 
 	fn append_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
 	{
-		println!("Appended {} path: {}", path_kind, path);
+		println!("Appended {:?} path: {:?}", path_kind, path);
 		Ok(())
 	}
 	
@@ -174,7 +176,7 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 		{
 			self.current_path.push_string(path_entry);
 		}
-		println!("Started table. Scope: {}", self.current_path.as_slice());
+		println!("Started table. Scope: {:?}", self.current_path);
 		Ok(())
 	}
 	
@@ -182,7 +184,7 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 	{
 		let old_stop = self.scope_stops.pop().unwrap_or(0);
 		self.current_path.shrink(old_stop);
-		println!("Ended table. Scope: {}", self.current_path.as_slice());
+		println!("Ended table. Scope: {:?}", self.current_path);
 		Ok(())
 	}
 
@@ -193,7 +195,7 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 		{
 			self.current_path.push_string(path_entry);
 		}
-		println!("Started array. Scope: {}", self.current_path.as_slice());
+		println!("Started array. Scope: {:?}", self.current_path);
 		Ok(())
 	}
 	
@@ -201,7 +203,7 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 	{
 		let old_stop = self.scope_stops.pop().unwrap_or(0);
 		self.current_path.shrink(old_stop);
-		println!("Ended array. Scope: {}", self.current_path.as_slice());
+		println!("Ended array. Scope: {:?}", self.current_path);
 		Ok(())
 	}
 

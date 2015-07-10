@@ -3,23 +3,26 @@
 extern crate slr_lexer;
 
 use slr_lexer::Lexer;
-use std::os;
-use std::io::File;
+use std::io::prelude::*;
+use std::env;
+use std::fs::File;
 use std::path::Path;
 
 fn main()
 {
-	let args = os::args();
+	let mut args = env::args();
 	if args.len() < 2
 	{
 		panic!("Pass a file to test with");
 	}
+
+	args.next();
+	let filename = args.next().unwrap();
+
+	let mut src = String::new();
+	File::open(&filename).unwrap().read_to_string(&mut src).unwrap();
 	
-	let filename = Path::new(args[1].as_slice());
-	
-	let src = File::open(&filename).unwrap().read_to_string().unwrap();
-	
-	let mut lexer = Lexer::new(&filename, src.as_slice());
+	let mut lexer = Lexer::new(Path::new(&filename), &src);
 	
 	loop
 	{
@@ -30,7 +33,7 @@ fn main()
 			{
 				match res.as_ref()
 				{
-					Ok(tok) => println!("{}", tok.kind),
+					Ok(tok) => println!("{:?}", tok.kind),
 					Err(err) =>
 					{
 						println!("{}", err.text);

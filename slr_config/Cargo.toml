@@ -1,8 +1,12 @@
 [package]
 
 name = "slr_config"
-version = "0.0.0"
+version = "0.0.1"
+license = "LGPL-3.0"
+repository = "https://github.com/SiegeLord/SLRConfig"
+keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
+description = "A simple configuration format"
 
 [lib]
 name = "slr_config"
@@ -15,3 +19,4 @@ path = "src/slr_test.rs"
 [dependencies.slr_lexer]
 
 path = "../slr_lexer"
+version = "=0.0.1"

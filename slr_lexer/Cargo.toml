@@ -1,8 +1,12 @@
 [package]
 
 name = "slr_lexer"
-version = "0.0.0"
+version = "0.0.1"
+license = "LGPL-3.0"
+repository = "https://github.com/SiegeLord/SLRConfig"
+keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
+description = "A simple configuration format. This crate contains just the lexer."
 
 [lib]
 name = "slr_lexer"

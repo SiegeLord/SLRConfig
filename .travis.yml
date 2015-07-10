@@ -1,18 +1,11 @@
+language: rust
 notifications:
   email:
     on_success: never
-before_install:
-  - wget http://static.rust-lang.org/dist/rust-nightly-x86_64-unknown-linux-gnu.tar.gz
-  - tar xf rust-nightly-x86_64-unknown-linux-gnu.tar.gz
-  - wget http://static.rust-lang.org/cargo-dist/cargo-nightly-x86_64-unknown-linux-gnu.tar.gz
-  - tar xf cargo-nightly-x86_64-unknown-linux-gnu.tar.gz
-install:
-  - sudo ./rust-nightly-x86_64-unknown-linux-gnu/install.sh
-  - sudo ./cargo-nightly-x86_64-unknown-linux-gnu/install.sh
 script:
   - cd slr_lexer
   - cargo test
-  - ./target/examples/lexer_test ../test/test.slr
+  - ./target/debug/examples/lexer_test ../test/test.slr
   - cd ../slr_config
   - cargo test
-  - ./target/examples/slr_test ../test/test.slr
+  - ./target/debug/examples/slr_test ../test/test.slr

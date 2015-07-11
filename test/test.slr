@@ -1,11 +1,15 @@
 # Comment
 
-baz = {{"a"}}
+val1 = {{"a"}}
+val2 = b ~ c d
 
-foo = [{},[]]
-foo = [a]
+arr1 = []
+arr3 = [a]
+arr2 = [[], {}]
 
-foo = test
+foo2 = [a]
+
+foo2 = test
 
 bar
 {
@@ -14,10 +18,10 @@ bar
 	{
 		foo
 		{
-			bar bar = [test]
-			bar bar = [test,]
-			bar bar = [test,test]
-			bar bar = []
+			bar bar1 = [test]
+			bar bar2 = [test,]
+			bar bar3 = [test,test]
+			bar bar4 = []
 		}
 	}
 }

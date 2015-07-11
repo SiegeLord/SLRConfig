@@ -38,16 +38,15 @@ impl<'l> ConfigString<'l>
 		ConfigString{ kind: kind, span: tok.span }
 	}
 
-	pub fn write_string(&self, dest: &mut String)
+	pub fn append_to_string(&self, dest: &mut String)
 	{
-		dest.clear();
 		match self.kind
 		{
 			RawString(s) => dest.push_str(s),
 			EscapedString(s) =>
 			{
 				/* Benchmarking has shown this to be faster than computing the exact size. */
-				let lb = s.len() - s.chars().filter(|&c| c == '\\').count();
+				let lb = dest.len() + s.len() - s.chars().filter(|&c| c == '\\').count();
 				dest.reserve(lb);
 				let mut escape_next = false;
 
@@ -80,7 +79,7 @@ impl<'l> ConfigString<'l>
 	pub fn to_string(&self) -> String
 	{
 		let mut dest = String::new();
-		self.write_string(&mut dest);
+		self.append_to_string(&mut dest);
 		dest
 	}
 }

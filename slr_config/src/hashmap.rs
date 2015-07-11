@@ -3,123 +3,43 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 use std::collections::HashMap;
-use std::slice::Iter;
 
 use visitor::Visitor;
 use lex::Error;
-use parser::{ConfigString, PathKind};
+use parser::ConfigString;
 
-pub use self::ConfigElementKind::*;
+pub use self::ConfigElement::*;
 
-pub enum ConfigElementKind
+pub enum ConfigElement
 {
 	Value(String),
 	Table(HashMap<String, ConfigElement>),
-}
-
-pub struct ConfigElement
-{
-	kind: ConfigElementKind,
+	Array(Vec<ConfigElement>),
 }
 
 impl ConfigElement
 {
 	pub fn new_table() -> ConfigElement
 	{
-		ConfigElement
-		{
-			kind: Table(HashMap::new()),
-		}
+		Table(HashMap::new())
 	}
 
 	pub fn new_value() -> ConfigElement
 	{
-		ConfigElement
-		{
-			kind: Value(String::new()),
-		}
-	}
-}
-
-#[derive(Debug)]
-struct PathVector
-{
-	data: Vec<String>,
-	len: usize,
-}
-
-impl PathVector
-{
-	fn new() -> PathVector
-	{
-		PathVector
-		{
-			data: vec![],
-			len: 0,
-		}
-	}
-	
-	fn clear(&mut self)
-	{
-		self.len = 0;
+		Value(String::new())
 	}
 
-	fn len(&self) -> usize
+	pub fn new_array() -> ConfigElement
 	{
-		self.len
-	}
-
-	fn shrink(&mut self, new_len: usize)
-	{
-		if new_len < self.len
-		{
-			self.len = new_len;
-		}
-	}
-
-	fn push_cfg_string(&mut self, path: &ConfigString)
-	{
-		if self.len == self.data.len()
-		{
-			self.data.push(String::new());
-		}
-		let dest = &mut self.data[self.len];
-		dest.clear();
-		path.into_string(dest);
-		self.len += 1;
-	}
-	
-	fn push_string(&mut self, path: &String)
-	{
-		if self.len == self.data.len()
-		{
-			self.data.push(String::new());
-		}
-		let dest = &mut self.data[self.len];
-		dest.clear();
-		dest.push_str(&path);
-		self.len += 1;
-	}
-
-	//~ fn iter<'l>(&'l self) -> Iter<'l, String>
-	fn iter(&self) -> Iter<String>
-	{
-		self.data[..self.len].iter()
-	}
-
-	fn as_slice(&self) -> &[String]
-	{
-		&self.data[..self.len]
+		Array(Vec::new())
 	}
 }
 
 pub struct HashmapVisitor
 {
-	root: HashMap<String, ConfigElement>,
-	current_path: PathVector,
-	assign_path: PathVector,
-	scope_stops: Vec<usize>,
-	current_element: ConfigElement,
+	_root: HashMap<String, ConfigElement>,
+	assign_name: String,
+	//~ current_element: ConfigElement,
 }
 
 impl HashmapVisitor
@@ -128,38 +48,20 @@ impl HashmapVisitor
 	{
 		HashmapVisitor
 		{
-			assign_path: PathVector::new(),
-			current_path: PathVector::new(),
-			scope_stops: vec![],
-			root: HashMap::new(),
-			current_element: ConfigElement::new_value()
+			_root: HashMap::new(),
+			assign_name: "".to_string(),
+			//~ current_element: ConfigElement::new_value()
 		}
 	}
 }
 
 impl<'l> Visitor<'l, Error> for HashmapVisitor
 {
-	fn assign_element(&mut self, path: &[ConfigString<'l>]) -> Result<(), Error>
+	fn table_element(&mut self, name: ConfigString<'l>) -> Result<(), Error>
 	{
-		self.assign_path.clear();
-		for path_element in path.iter()
-		{
-			self.assign_path.push_cfg_string(path_element);
-		}
-
-		println!("Started assignment: {:?}", path);
-		Ok(())
-	}
-
-	fn insert_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
-	{
-		println!("Inserted {:?} path: {:?}", path_kind, path);
-		Ok(())
-	}
-
-	fn append_path(&mut self, path_kind: PathKind, path: &[ConfigString<'l>]) -> Result<(), Error>
-	{
-		println!("Appended {:?} path: {:?}", path_kind, path);
+		self.assign_name.clear();
+		name.write_string(&mut self.assign_name);
+		println!("Table element: {}", self.assign_name);
 		Ok(())
 	}
 	
@@ -171,51 +73,31 @@ impl<'l> Visitor<'l, Error> for HashmapVisitor
 
 	fn start_table(&mut self) -> Result<(), Error>
 	{
-		self.scope_stops.push(self.current_path.len());
-		for path_entry in self.assign_path.iter()
-		{
-			self.current_path.push_string(path_entry);
-		}
-		println!("Started table. Scope: {:?}", self.current_path);
+		println!("Started table.");
 		Ok(())
 	}
 	
 	fn end_table(&mut self) -> Result<(), Error>
 	{
-		let old_stop = self.scope_stops.pop().unwrap_or(0);
-		self.current_path.shrink(old_stop);
-		println!("Ended table. Scope: {:?}", self.current_path);
+		println!("Ended table.");
 		Ok(())
 	}
 
 	fn start_array(&mut self) -> Result<(), Error>
 	{
-		self.scope_stops.push(self.current_path.len());
-		for path_entry in self.assign_path.iter()
-		{
-			self.current_path.push_string(path_entry);
-		}
-		println!("Started array. Scope: {:?}", self.current_path);
+		println!("Started array.");
 		Ok(())
 	}
 	
 	fn end_array(&mut self) -> Result<(), Error>
 	{
-		let old_stop = self.scope_stops.pop().unwrap_or(0);
-		self.current_path.shrink(old_stop);
-		println!("Ended array. Scope: {:?}", self.current_path);
+		println!("Ended array.");
 		Ok(())
 	}
 
 	fn array_element(&mut self) -> Result<(), Error>
 	{
 		println!("Array element");
-		Ok(())
-	}
-
-	fn delete(&mut self) -> Result<(), Error>
-	{
-		println!("Delete");
 		Ok(())
 	}
 }

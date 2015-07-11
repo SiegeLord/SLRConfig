@@ -48,7 +48,7 @@ if args.build:
 if args.test:
 	crates_no_examples = filter(lambda crate: crate != 'examples', crate_list)
 	for crate in crates_no_examples:
-		check_call(['cargo', 'test', '-p', crate], cwd='doc')
+		check_call(['cargo', 'test', '-p', crate], cwd=crate)
 
 if args.clean:
 	crates_and_doc = ['doc']

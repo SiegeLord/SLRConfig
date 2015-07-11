@@ -42,9 +42,6 @@ pub enum TokenKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
-	Root,
-	Import,
-	Delete,
 	Assign,
 	LeftBracket,
 	RightBracket,
@@ -459,14 +456,7 @@ impl<'l> Lexer<'l>
 		
 		let contents = &self.source.source[start_pos..end_pos];
 		let span = Span{ start: start_pos, len: end_pos - start_pos };
-		let kind = match contents
-		{
-			"root" => Root,
-			"import" => Import,
-			"delete" => Delete,
-			_ => EscapedString(contents),
-		};
-		Some(Ok(Token::new(kind, span)))
+		Some(Ok(Token::new(EscapedString(contents), span)))
 	}
 	
 	fn eat_raw_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>

@@ -1,22 +1,29 @@
+foo = [{},[]]
+foo = [a]
+
 foo = test
 
-bar =
+bar
 {
-	bar_foo = test
-	bar_bar = 
+	bar_foo = test ~ baz
+	bar_bar
 	{
-		foo = 
+		foo
 		{
-			bar_bar_foo_foo = test
+			bar bar = [test]
+			bar bar = [test,]
+			bar bar = [test,test]
+			bar bar = []
 		}
 	}
 }
 
-baz = 
+baz
 {
-	$root[bar]
-	bar_bar[foo] = 
+	bar_bar
 	{
 		foo = ""
 	}
 }
+
+bar = a ~ b

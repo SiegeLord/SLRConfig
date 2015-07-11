@@ -146,7 +146,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		}
 		self.lexer.next();
 		try!(self.visitor.start_table());
-		try!(self.parse_table_contents(false));
+		try!(self.parse_table_contents());
 		try!(self.visitor.end_table());
 		let right_brace = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_brace.span, "Unterminated table"));
 		if right_brace.kind != lex::RightBrace
@@ -160,7 +160,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		}
 	}
 
-	fn parse_table_contents(&mut self, is_root: bool) -> Result<(), Error>
+	fn parse_table_contents(&mut self) -> Result<(), Error>
 	{
 		while try!(self.parse_table_element())
 		{
@@ -335,5 +335,10 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, 
 		visitor: visitor,
 		error_marker: PhantomData::<E>,
 	};
-	parser.parse_table_contents(true)
+	try!(parser.parse_table_contents());
+	match get_token!(parser.lexer.cur_token)
+	{
+		Some(token) => Error::from_span(parser.lexer.get_source(), token.span, "Expected a string"),
+		None => Ok(())
+	}
 }

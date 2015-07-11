@@ -151,7 +151,15 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		let right_brace = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_brace.span, "Unterminated table"));
 		if right_brace.kind != lex::RightBrace
 		{
-			Error::from_span(self.lexer.get_source(), right_brace.span, "Expected '}', ',' or a string")
+			let error_str = if right_brace.kind == lex::Comma
+			{
+				"Expected '}' or a string"
+			}
+			else
+			{
+				"Expected '}', ',' or a string"
+			};
+			Error::from_span(self.lexer.get_source(), right_brace.span, error_str)
 		}
 		else
 		{
@@ -229,7 +237,15 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		let right_bracket = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_bracket.span, "Unterminated array"));
 		if right_bracket.kind != lex::RightBracket
 		{
-			Error::from_span(self.lexer.get_source(), right_bracket.span, "Expected ']' or ','")
+			let error_str = if right_bracket.kind == lex::Comma
+			{
+				"Expected ']' or a string"
+			}
+			else
+			{
+				"Expected ']', ',' or a string"
+			};
+			Error::from_span(self.lexer.get_source(), right_bracket.span, error_str)
 		}
 		else
 		{

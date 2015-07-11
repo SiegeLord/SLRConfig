@@ -5,7 +5,7 @@ Comment Line = '#'
 ! -------------------------------------------------
 ! Character Sets
 ! -------------------------------------------------
-
+                      
 {Raw String Chars} = {Printable} + {Whitespace}
 {Raw String 0 Chars} = {Printable} + {Whitespace} - ["]
 
@@ -32,30 +32,41 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 
 ! Expressions
 <String> ::= EscapedString | RawString0 | RawString1 | RawString2
+          
+<IndexExpr> ::= <String>
+             |  <IndexExpr> '[' <String> ']'
+             | 'root'
+             | 'import'
 
-<StringExpr> ::= <String>
-             |   <StringExpr> '~' <String>
+<Expansion> ::= '$' <IndexExpr>
 
-! Array
+<StringSource> ::= <String>
+                |  <Expansion>
 
-<Array> ::= '[' <ArrayContents> ']'
+<StringExpr> ::= <StringSource>
+             |   <StringExpr> '~' <StringSource>
 
-<ArrayElement> ::= <StringExpr>
-                | <Table>
-                | <Array>
+<NoDeleteExpr> ::= <StringExpr>        
+                |  '{' <TableContents> '}'
+                |  '[' <ArrayContents> ']'
 
+<Expr> ::= <NoDeleteExpr> |  'delete'
+
+! Statements
+<AssignIndex> ::= <String>
+              |  <AssignIndex> '[' <String> ']'
+
+<Assignment> ::= <AssignIndex> '=' <Expr>
+
+<ArrayElement> ::= <Assignment> | <NoDeleteExpr>
+             
 <ArrayElements> ::= <ArrayElement>
                  |  <ArrayElements> ',' <ArrayElement>
 
 <ArrayContents> ::= <ArrayElements> <OptComma>
                      |
-! Table
 
-<Table> ::= '{' <TableContents> '}'
-
-<TableElement> ::= <String> <Table>
-                |  <String> '=' <Array>
-                |  <String> '=' <StringExpr>
+<TableElement> ::= <Assignment> | <Expansion>
 
 <TableElements> ::= <TableElement>
                  |  <TableElements> <OptComma> <TableElement>

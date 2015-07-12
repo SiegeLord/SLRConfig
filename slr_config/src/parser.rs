@@ -3,7 +3,8 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 extern crate slr_lexer as lex;
-use lex::{Lexer, Token, Error, Span};
+
+use lex::{Lexer, Token, Error, Span, Source};
 use visitor::{Visitor, GetError};
 use std::marker::PhantomData;
 use std::path::Path;
@@ -144,10 +145,10 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 			return Ok(false)
 		}
 		self.lexer.next();
-		try!(self.visitor.start_table());
+		try!(self.visitor.start_table(left_brace.span));
 		try!(self.parse_table_contents());
-		try!(self.visitor.end_table());
 		let right_brace = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_brace.span, "Unterminated table"));
+		try!(self.visitor.end_table(right_brace.span));
 		if right_brace.kind != lex::RightBrace
 		{
 			let error_str = if right_brace.kind == lex::Comma
@@ -187,7 +188,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
 		if token.kind.is_string()
 		{
-			try!(self.visitor.table_element(ConfigString::from_token(token)));
+			try!(self.visitor.table_element(ConfigString::from_token(token), token.span));
 
 			let assign = try_eof!(self.lexer.next(), Error::from_span(self.lexer.get_source(), token.span, "Expected '=' or '{' to follow, but got EOF"));
 			if assign.kind == lex::Assign
@@ -230,10 +231,10 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 			return Ok(false)
 		}
 		self.lexer.next();
-		try!(self.visitor.start_array());
+		try!(self.visitor.start_array(left_bracket.span));
 		try!(self.parse_array_contents());
-		try!(self.visitor.end_array());
 		let right_bracket = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_bracket.span, "Unterminated array"));
+		try!(self.visitor.end_array(right_bracket.span));
 		if right_bracket.kind != lex::RightBracket
 		{
 			let error_str = if right_bracket.kind == lex::Comma
@@ -311,7 +312,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				});
 			if token.kind.is_string()
 			{
-				try!(self.visitor.append_string(ConfigString::from_token(token)));
+				try!(self.visitor.append_string(ConfigString::from_token(token), token.span));
 				self.lexer.next();
 			}
 			else
@@ -340,7 +341,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 	}
 }
 
-pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, source: &'l str, visitor: &mut V) -> Result<(), Error>
+pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, source: &'l str, visitor: &mut V) -> Result<Source<'l>, Error>
 {
 	let mut lexer = Lexer::new(filename, source);
 	lexer.next();
@@ -354,6 +355,6 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, 
 	match get_token!(parser.lexer.cur_token)
 	{
 		Some(token) => Error::from_span(parser.lexer.get_source(), token.span, "Expected a string"),
-		None => Ok(())
+		None => Ok(parser.lexer.get_source().clone())
 	}
 }

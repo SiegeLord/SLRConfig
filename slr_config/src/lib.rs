@@ -6,8 +6,8 @@ extern crate slr_lexer as lex;
 
 pub use parser::*;
 pub use visitor::*;
-pub use hashmap::*;
+pub use config_element::*;
 
 mod parser;
 mod visitor;
-mod hashmap;
+mod config_element;

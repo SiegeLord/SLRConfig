@@ -6,7 +6,7 @@ use std::env;
 use std::io::prelude::*;
 use std::fs::File;
 use std::path::Path;
-use slr_config::{ConfigElement, HashmapVisitor, Value, Table, Array, parse_source};
+use slr_config::{ConfigElement, Value, Table, Array};
 
 pub fn print_element(depth: usize, elem: &ConfigElement)
 {
@@ -54,9 +54,8 @@ fn main()
 
 	let mut src = String::new();
 	File::open(&filename).unwrap().read_to_string(&mut src).unwrap();
+
+	let (root, _) = ConfigElement::from_str(Path::new(&filename), &src).map_err(|e| print!("{}", e.text)).unwrap();
 	
-	let mut visitor = HashmapVisitor::new();
-	parse_source(Path::new(&filename), &src, &mut visitor).map_err(|e| print!("{}", e.text)).unwrap();
-	let root = visitor.extract_root();
 	print_element(0, &root);
 }

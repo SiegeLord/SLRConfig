@@ -26,12 +26,42 @@ pub enum ConfigElementKind
 
 impl ConfigElement
 {
+	pub fn new_table() -> ConfigElement
+	{
+		ConfigElement{ kind: Table(HashMap::new()), span: Span::new() }
+	}
+
+	pub fn new_value(value: String) -> ConfigElement
+	{
+		ConfigElement{ kind: Value(value), span: Span::new() }
+	}
+
+	pub fn new_array() -> ConfigElement
+	{
+		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
+	}
+
 	pub fn from_str<'l>(filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
 	{
-		let mut visitor = ConfigElementVisitor::new();
+		ConfigElement::fill_from_str(ConfigElement::new_table(), filename, source)
+	}
+
+	pub fn fill_from_str<'l>(root: ConfigElement, filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
+	{
+		assert!(root.as_table().is_some());
+		let mut visitor = ConfigElementVisitor::new(root);
 		parse_source(filename, source, &mut visitor).map(|src| (visitor.extract_root(), src))
 	}
-	
+
+	pub fn as_table(&self) -> Option<&HashMap<String, ConfigElement>>
+	{
+		match self.kind
+		{
+			Table(ref table) => Some(table),
+			_ => None
+		}
+	}
+
 	pub fn as_table_mut(&mut self) -> Option<&mut HashMap<String, ConfigElement>>
 	{
 		match self.kind
@@ -59,6 +89,15 @@ impl ConfigElement
 		}
 	}
 
+	pub fn as_array(&self) -> Option<&Vec<ConfigElement>>
+	{
+		match self.kind
+		{
+			Array(ref array) => Some(array),
+			_ => None
+		}
+	}
+
 	pub fn as_array_mut(&mut self) -> Option<&mut Vec<ConfigElement>>
 	{
 		match self.kind
@@ -66,24 +105,6 @@ impl ConfigElement
 			Array(ref mut array) => Some(array),
 			_ => None
 		}
-	}
-}
-
-impl ConfigElement
-{
-	pub fn new_table() -> ConfigElement
-	{
-		ConfigElement{ kind: Table(HashMap::new()), span: Span::new() }
-	}
-
-	pub fn new_value() -> ConfigElement
-	{
-		ConfigElement{ kind: Value("".to_string()), span: Span::new() }
-	}
-
-	pub fn new_array() -> ConfigElement
-	{
-		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
 	}
 
 	pub fn insert_element(&mut self, name: String, elem: ConfigElement)
@@ -110,11 +131,11 @@ struct ConfigElementVisitor
 
 impl ConfigElementVisitor
 {
-	fn new() -> ConfigElementVisitor
+	fn new(root: ConfigElement) -> ConfigElementVisitor
 	{
 		ConfigElementVisitor
 		{
-			stack: vec![("root".to_string(), ConfigElement::new_table())],
+			stack: vec![("root".to_string(), root)],
 		}
 	}
 
@@ -154,14 +175,14 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 	fn table_element(&mut self, name: ConfigString<'l>, _span: Span) -> Result<(), Error>
 	{
 		self.collapse_stack(true);
-		self.stack.push((name.to_string(), ConfigElement::new_value()));
+		self.stack.push((name.to_string(), ConfigElement::new_value("".to_string())));
 		Ok(())
 	}
 
 	fn array_element(&mut self) -> Result<(), Error>
 	{
 		self.collapse_stack(true);
-		self.stack.push(("".to_string(), ConfigElement::new_value()));
+		self.stack.push(("".to_string(), ConfigElement::new_value("".to_string())));
 		Ok(())
 	}
 

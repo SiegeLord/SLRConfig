@@ -188,7 +188,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
 		if token.kind.is_string()
 		{
-			try!(self.visitor.table_element(ConfigString::from_token(token), token.span));
+			try!(self.visitor.table_element(ConfigString::from_token(token)));
 
 			let assign = try_eof!(self.lexer.next(), Error::from_span(self.lexer.get_source(), token.span, "Expected '=' or '{' to follow, but got EOF"));
 			if assign.kind == lex::Assign
@@ -312,7 +312,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				});
 			if token.kind.is_string()
 			{
-				try!(self.visitor.append_string(ConfigString::from_token(token), token.span));
+				try!(self.visitor.append_string(ConfigString::from_token(token)));
 				self.lexer.next();
 			}
 			else

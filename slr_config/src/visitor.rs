@@ -26,7 +26,7 @@ pub trait Visitor<'l, E: GetError>
 	fn start_array(&mut self, span: Span) -> Result<(), E>;
 	fn end_array(&mut self, span: Span) -> Result<(), E>;
 	
-	fn table_element(&mut self, name: ConfigString<'l>, span: Span) -> Result<(), E>;
+	fn table_element(&mut self, name: ConfigString<'l>) -> Result<(), E>;
 	fn array_element(&mut self) -> Result<(), E>;
-	fn append_string(&mut self, string: ConfigString<'l>, span: Span) -> Result<(), E>;
+	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), E>;
 }

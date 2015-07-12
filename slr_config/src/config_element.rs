@@ -3,11 +3,15 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 use std::collections::HashMap;
+use std::io;
+use std::fmt::{self, Display, Formatter};
 use std::path::Path;
+use std::str::from_utf8;
 
 use visitor::Visitor;
 use lex::{Error, Span, Source};
 use parser::{ConfigString, parse_source};
+use printer::Printer;
 
 pub use self::ConfigElementKind::*;
 
@@ -122,6 +126,47 @@ impl ConfigElement
 			_ => panic!("Trying to insert an element into a value!")
 		}
 	}
+
+	pub fn print<W: io::Write>(&self, name: Option<&str>, is_root: bool, p: &mut Printer<W>) -> Result<(), io::Error>
+	{
+		match self.kind
+		{
+			Value(ref val) => try!(p.value(name, &val)),
+			Table(ref table) =>
+			{
+				try!(p.start_table(name, is_root));
+				for (k, v) in table
+				{
+					try!(v.print(Some(k), false, p));
+				}
+				try!(p.end_table(is_root));
+			}
+			Array(ref array) =>
+			{
+				try!(p.start_array(name));
+				for v in array
+				{
+					try!(v.print(None, false, p));
+				}
+				try!(p.end_array());
+			}
+		}
+		Ok(())
+	}
+}
+
+impl Display for ConfigElement
+{
+	fn fmt(&self, formatter: &mut Formatter) -> Result<(), fmt::Error>
+	{
+		let mut buf = vec![];
+		{
+			let mut printer = Printer::new(&mut buf);
+			try!(self.print(None, true, &mut printer).map_err(|_| fmt::Error));
+		}
+		try!(write!(formatter, "{}", try!(from_utf8(&buf).map_err(|_| fmt::Error))));
+		Ok(())
+	}
 }
 
 struct ConfigElementVisitor
@@ -150,15 +195,6 @@ impl ConfigElementVisitor
 	fn collapse_stack(&mut self, value_only: bool)
 	{
 		let stack_size = self.stack.len();
-		for e in &self.stack
-		{
-			match e.1.kind
-			{
-				Table(ref table) => println!(" table {}", table.len()),
-				Value(ref val) => println!(" value {}", val),
-				Array(ref array) => println!(" array {}", array.len()),
-			}
-		}
 		if stack_size > 1
 		{
 			if !value_only || self.stack[stack_size - 1].1.as_value().is_some()
@@ -172,7 +208,7 @@ impl ConfigElementVisitor
 
 impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 {
-	fn table_element(&mut self, name: ConfigString<'l>, _span: Span) -> Result<(), Error>
+	fn table_element(&mut self, name: ConfigString<'l>) -> Result<(), Error>
 	{
 		self.collapse_stack(true);
 		self.stack.push((name.to_string(), ConfigElement::new_value("".to_string())));
@@ -186,11 +222,11 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 		Ok(())
 	}
 
-	fn append_string(&mut self, string: ConfigString<'l>, span: Span) -> Result<(), Error>
+	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), Error>
 	{
 		let stack_size = self.stack.len();
 		let elem = &mut self.stack[stack_size - 1].1;
-		elem.span.combine(span);
+		elem.span.combine(string.span);
 		string.append_to_string(&mut elem.as_value_mut().as_mut().expect("Trying to append a string to a non-value"));
 		Ok(())
 	}

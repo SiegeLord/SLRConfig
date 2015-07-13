@@ -1,6 +1,6 @@
 # Comment
 
-val1 = {{"a"}}
+val1 = {{{" "}}a"}}}
 val2 = b ~ c d
 
 arr1 = []
@@ -18,7 +18,7 @@ bar
 	{
 		foo
 		{
-			bar bar1 = [test]
+			"bar	bar1" = ["\ttest"]
 			bar bar2 = [test,]
 			bar bar3 = [test,test]
 			bar bar4 = []

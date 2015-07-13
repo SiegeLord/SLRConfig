@@ -2,6 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+use lex::{get_string_quote_type, StringQuoteType};
 use std::io;
 
 pub struct Printer<'l, W: 'l>
@@ -31,16 +32,41 @@ impl<'l, W: io::Write> Printer<'l, W>
 		}
 		Ok(())
 	}
+
+	fn write_string(&mut self, s: &str) -> Result<(), io::Error>
+	{
+		match get_string_quote_type(s)
+		{
+			StringQuoteType::Naked => try!(write!(self.writer, "{}", s)),
+			StringQuoteType::Quoted(num_braces) =>
+			{
+				for _ in 0..num_braces
+				{
+					try!(write!(self.writer, "{{"));
+				}
+				try!(write!(self.writer, r#""{}""#, s));
+				for _ in 0..num_braces
+				{
+					try!(write!(self.writer, "}}"));
+				}
+			}
+		}
+		Ok(())
+	}
 	
 	pub fn value(&mut self, name: Option<&str>, value: &str) -> Result<(), io::Error>
 	{
 		try!(self.write_indent());
 		match name
 		{
-			Some(name) => try!(write!(self.writer, "{} = ", name)),
+			Some(name) =>
+			{
+				try!(self.write_string(name));
+				try!(write!(self.writer, " = "));
+			}
 			_ => ()
 		}
-		try!(write!(self.writer, "{}", value));
+		try!(self.write_string(value));
 		if self.in_array[self.in_array.len() - 1]
 		{
 			try!(write!(self.writer, ","));
@@ -56,7 +82,8 @@ impl<'l, W: io::Write> Printer<'l, W>
 			Some(name) =>
 			{
 				try!(self.write_indent());
-				try!(write!(self.writer, "{} =\n", name));
+				try!(self.write_string(name));
+				try!(write!(self.writer, " =\n"));
 			}
 			_ => ()
 		}
@@ -92,7 +119,8 @@ impl<'l, W: io::Write> Printer<'l, W>
 			Some(name) =>
 			{
 				try!(self.write_indent());
-				try!(write!(self.writer, "{}\n", name));
+				try!(self.write_string(name));
+				try!(write!(self.writer, "\n"));
 			}
 			_ => ()
 		}

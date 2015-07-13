@@ -8,6 +8,69 @@ use std::usize;
 
 pub use self::TokenKind::*;
 
+pub enum StringQuoteType
+{
+	Naked,
+	Quoted(usize),
+}
+
+pub fn get_string_quote_type(s: &str) -> StringQuoteType
+{
+	if s.is_empty()
+	{
+		return StringQuoteType::Quoted(0);
+	}
+
+	let mut max_brace_run: i32 = -1;
+	let mut curr_brace_run: i32 = -1;
+	let mut naked = true;
+	for (i, c) in s.chars().enumerate()
+	{
+		if i == 0 && !is_string_border(c)
+		{
+			naked = false;
+		}
+		if i == s.len() - 1 && !is_string_border(c)
+		{
+			naked = false;
+		}
+		if i > 1 && i < s.len() - 1 && !is_string_middle(c)
+		{
+			naked = false;
+		}
+		
+		if curr_brace_run >= 0
+		{
+			if c == '}'
+			{
+				curr_brace_run += 1;
+				max_brace_run = max(max_brace_run, curr_brace_run);
+			}
+			else
+			{
+				curr_brace_run = -1;
+			}
+		}
+		else if c == '"'
+		{
+			curr_brace_run = 0;
+			max_brace_run = max(max_brace_run, curr_brace_run);
+		}
+	}
+	if naked
+	{
+		return StringQuoteType::Naked;
+	}
+	else if max_brace_run >= 0
+	{
+		StringQuoteType::Quoted(max(2, max_brace_run as usize + 1))
+	}
+	else
+	{
+		StringQuoteType::Quoted(0)
+	}
+}
+
 fn grow_str(string: &mut String, count: usize, ch: char)
 {
 	string.reserve(count);
@@ -568,7 +631,14 @@ impl<'l> Lexer<'l>
 		}
 		else
 		{
-			Some(Ok(Token::new(RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+			if num_leading_braces == 0
+			{
+				Some(Ok(Token::new(EscapedString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+			}
+			else
+			{
+				Some(Ok(Token::new(RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+			}
 		}
 	}
 

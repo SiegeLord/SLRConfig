@@ -4,6 +4,7 @@ name = "slr_config"
 version = "0.0.1" #auto
 license = "LGPL-3.0"
 repository = "https://github.com/SiegeLord/SLRConfig"
+documentation = "http://siegelord.github.io/SLRConfig/doc/slr_config/index.html"
 keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
 description = "A simple configuration format"

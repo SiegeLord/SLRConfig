@@ -38,7 +38,7 @@ pub fn get_string_quote_type(s: &str) -> StringQuoteType
 		{
 			naked = false;
 		}
-		
+
 		if curr_brace_run >= 0
 		{
 			if c == '}'
@@ -55,6 +55,11 @@ pub fn get_string_quote_type(s: &str) -> StringQuoteType
 		{
 			curr_brace_run = 0;
 			max_brace_run = max(max_brace_run, curr_brace_run);
+		}
+		else if c == '\\'
+		{
+			naked = false;
+			max_brace_run = 0;
 		}
 	}
 	if naked
@@ -191,16 +196,16 @@ pub struct Source<'l>
 	filename: &'l Path,
 	source: &'l str,
 	chars: CharIndices<'l>,
-	
+
 	cur_char: Option<char>,
 	cur_pos: usize,
-	
+
 	next_char: Option<char>,
 	next_pos: usize,
-	
+
 	line_start_pos: usize,
 	at_newline: bool,
-	
+
 	line_ends: Vec<usize>,
 
 	span_start: usize,
@@ -211,7 +216,7 @@ impl<'l> Source<'l>
 	fn new(filename: &'l Path, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
-		let mut src = 
+		let mut src =
 			Source
 			{
 				filename: filename,
@@ -230,7 +235,7 @@ impl<'l> Source<'l>
 		src.bump();
 		src
 	}
-	
+
 	fn get_line_start_end(&self, line: usize) -> (usize, usize)
 	{
 		if line > self.line_ends.len() + 1
@@ -324,7 +329,7 @@ impl<'l> Source<'l>
 	{
 		self.cur_char = self.next_char;
 		self.cur_pos = self.next_pos;
-		
+
 		match self.chars.next()
 		{
 			Some((pos, c)) =>
@@ -338,15 +343,15 @@ impl<'l> Source<'l>
 				self.next_char = None;
 			},
 		}
-		
+
 		self.at_newline = self.cur_char.map_or(false, |c| is_newline(c));
-		
+
 		if self.at_newline
 		{
 			self.line_start_pos = self.cur_pos + 1;
 			self.line_ends.push(self.cur_pos);
 		}
-		
+
 		self.cur_char
 	}
 }
@@ -361,7 +366,7 @@ impl<'l> Iterator for Source<'l>
 }
 
 pub struct Lexer<'l>
-{	
+{
 	source: Source<'l>,
 	pub cur_token: Option<Result<Token<'l>, Error>>,
 	pub next_token: Option<Result<Token<'l>, Error>>,
@@ -395,7 +400,7 @@ impl Error
 			grow_str(&mut col_str, col + num_tabs * 3, ' ');
 		}
 		col_str.push('^');
-		
+
 		let source_line = source_line.replace("\t", "    ");
 		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str)))
 	}
@@ -406,7 +411,7 @@ impl Error
 		{
 			let (start_line, start_col) = source.get_line_col_from_pos(span.start);
 			let (end_line, end_col) = source.get_line_col_from_pos(span.start + span.len - 1);
-			
+
 			let source_line = source.get_line(start_line);
 			let end_col = if start_line == end_line
 			{
@@ -416,7 +421,7 @@ impl Error
 			{
 				source_line.len() - 1
 			};
-			
+
 			let mut col_str = String::with_capacity(end_col);
 			if start_col > 0
 			{
@@ -429,7 +434,7 @@ impl Error
 				let num_end_tabs = source_line[start_col..end_col].chars().filter(|&c| c == '\t').count();
 				grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
 			}
-			
+
 			let source_line = source_line.replace("\t", "    ");
 			Err(Error::new(format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
 				msg, source_line, col_str)))
@@ -445,7 +450,7 @@ impl<'l> Lexer<'l>
 {
 	pub fn new(filename: &'l Path, source: &'l str) -> Lexer<'l>
 	{
-		let mut lex = 
+		let mut lex =
 			Lexer
 			{
 				source: Source::new(filename, source),
@@ -497,7 +502,7 @@ impl<'l> Lexer<'l>
 		}
 		true
 	}
-	
+
 	fn eat_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
 		//~ println!("naked: {}", self.source.cur_char);
@@ -505,7 +510,7 @@ impl<'l> Lexer<'l>
 		{
 			return None;
 		}
-		
+
 		let start_pos = self.source.cur_pos;
 		let mut end_pos = self.source.cur_pos;
 		let mut last_is_border = true;
@@ -516,7 +521,7 @@ impl<'l> Lexer<'l>
 			{
 				end_pos = self.source.cur_pos;
 			}
-			
+
 			match self.source.cur_char
 			{
 				Some(c) =>
@@ -556,12 +561,12 @@ impl<'l> Lexer<'l>
 			/* Got EOF while trying to escape it... */
 			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in string literal"));
 		}
-		
+
 		let contents = &self.source.source[start_pos..end_pos];
 		let span = Span{ start: start_pos, len: end_pos - start_pos };
 		Some(Ok(Token::new(EscapedString(contents), span)))
 	}
-	
+
 	fn eat_raw_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
 	{
 		if self.source.cur_char != Some('"') && !(self.source.cur_char == Some('{') && self.source.next_char == Some('{'))
@@ -569,8 +574,6 @@ impl<'l> Lexer<'l>
 			return None;
 		}
 		self.source.start_span();
-		let mut start_pos = self.source.cur_pos;
-		let mut end_pos = start_pos;
 		let mut num_leading_braces = 0;
 		loop
 		{
@@ -583,11 +586,11 @@ impl<'l> Lexer<'l>
 						'{' =>
 						{
 							num_leading_braces += 1;
-							start_pos += 1;
+							self.source.bump();
 						},
 						'"' =>
 						{
-							start_pos += 1;
+							self.source.bump();
 							break;
 						},
 						_ => return Some(Error::from_pos(&self.source, self.source.span_start,
@@ -596,38 +599,51 @@ impl<'l> Lexer<'l>
 				}
 				None => break
 			}
+
+		}
+
+		let start_pos = self.source.cur_pos;
+		let mut end_pos = start_pos;
+		let mut num_trailing_braces = 0;
+		let mut counting = false;
+		loop
+		{
+			match self.source.cur_char
+			{
+				Some(c) =>
+				{
+					if c == '"'
+					{
+						end_pos = self.source.cur_pos;
+						counting = true;
+						num_trailing_braces = 0;
+					}
+					else if counting
+					{
+						if c == '}'
+						{
+							num_trailing_braces += 1;
+						}
+						else
+						{
+							counting = false;
+							num_trailing_braces = 0;
+						}
+					}
+					if counting &&  num_trailing_braces == num_leading_braces
+					{
+						self.source.bump();
+						break;
+					}
+				},
+				None => break
+			}
 			self.source.bump();
 		}
-		'done: loop
-		{
-			let c = match self.source.next()
-			{
-				Some(c) => c,
-				None => break
-			};
-			if c == '"'
-			{
-				end_pos = self.source.cur_pos;
-				let mut num_trailing_braces = 0;
-				
-				for c in &mut self.source
-				{
-					if num_trailing_braces == num_leading_braces
-					{
-						break 'done;
-					}
-					match c
-					{
-						'}' => num_trailing_braces += 1,
-						_ => break,
-					}
-				}
-			}
-		}
-		
+
 		if self.source.cur_char.is_none()
 		{
-			Some(Error::from_pos(&self.source, self.source.span_start, "Unterminated raw string literal"))
+			Some(Error::from_pos(&self.source, self.source.span_start, "Unterminated quoted string literal"))
 		}
 		else
 		{
@@ -677,7 +693,7 @@ impl<'l> Lexer<'l>
 				.or_else(|| self.eat_char_tokens())
 				.or_else(|| self.eat_string());
 		}
-		
+
 		self.cur_token.clone()
 	}
 }

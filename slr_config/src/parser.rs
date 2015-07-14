@@ -6,8 +6,10 @@ extern crate slr_lexer as lex;
 
 use lex::{Lexer, Token, Error, Span, Source};
 use visitor::{Visitor, GetError};
+use std::char;
 use std::marker::PhantomData;
 use std::path::Path;
+use std::u32;
 
 pub use self::StringKind::*;
 
@@ -23,6 +25,15 @@ pub enum StringKind<'l>
 {
 	EscapedString(&'l str),
 	RawString(&'l str),
+}
+
+fn hex_to_char(s: &str) -> char
+{
+	match u32::from_str_radix(s, 16)
+	{
+		Ok(n) => char::from_u32(n).unwrap_or('�'),
+		Err(_) => '�'
+	}
 }
 
 impl<'l> ConfigString<'l>
@@ -49,29 +60,62 @@ impl<'l> ConfigString<'l>
 				/* Benchmarking has shown this to be faster than computing the exact size. */
 				let lb = dest.len() + s.len() - s.chars().filter(|&c| c == '\\').count();
 				dest.reserve(lb);
-				let mut escape_next = false;
+				let mut escape_chars = 0;
+				let mut matching_unicode = false;
+				let mut unicode_str = "".to_string();
 
 				for mut c in s.chars()
 				{
-					if escape_next
+					if escape_chars > 0
 					{
-						c = match c
+						if matching_unicode
 						{
-							'n' => '\n',
-							'r' => '\r',
-							't' => '\t',
-							'0' => '\0',
-							/* TODO: Unicode escapes */
-							_ => c
-						};
-						escape_next = false;
+							unicode_str.push(c);
+						}
+						else
+						{
+							if c == 'u'
+							{
+								matching_unicode = true;
+								escape_chars = 4;
+								continue;
+							}
+							else if c == 'U'
+							{
+								matching_unicode = true;
+								escape_chars = 8;
+								continue;
+							}
+							c = match c
+							{
+								'n' => '\n',
+								'r' => '\r',
+								't' => '\t',
+								'0' => '\0',
+								_ => c
+							};
+						}
+						escape_chars -= 1;
 					}
 					else if c == '\\'
 					{
-						escape_next = true;
+						escape_chars = 1;
 						continue;
 					}
-					dest.push(c);
+					if escape_chars == 0
+					{
+						if matching_unicode
+						{
+							c = hex_to_char(&unicode_str);
+							matching_unicode = false;
+							unicode_str.clear();
+						}
+						dest.push(c);
+					}
+				}
+				if matching_unicode
+				{
+					dest.push(hex_to_char(&unicode_str));
 				}
 			}
 		}

@@ -10,6 +10,8 @@ pub struct Printer<'l, W: 'l>
 	writer: &'l mut W,
 	depth: u32,
 	in_array: Vec<bool>,
+	is_empty: Vec<bool>,
+	in_root: bool,
 }
 
 impl<'l, W: io::Write> Printer<'l, W>
@@ -21,6 +23,8 @@ impl<'l, W: io::Write> Printer<'l, W>
 			writer: writer,
 			depth: 0,
 			in_array: vec![false],
+			is_empty: vec![true],
+			in_root: false,
 		}
 	}
 
@@ -28,7 +32,40 @@ impl<'l, W: io::Write> Printer<'l, W>
 	{
 		for _ in 0..self.depth
 		{
-			try!(write!(self.writer, "  "));
+			try!(write!(self.writer, "\t"));
+		}
+		Ok(())
+	}
+
+	fn in_array(&self) -> bool
+	{
+		self.in_array[self.in_array.len() - 1]
+	}
+
+	fn is_empty(&self) -> bool
+	{
+		self.is_empty[self.is_empty.len() - 1]
+	}
+
+	fn set_empty(&mut self, empty: bool)
+	{
+		let l = self.is_empty.len();
+		self.is_empty[l - 1] = empty;
+	}
+
+	fn start_value(&mut self) -> Result<(), io::Error>
+	{
+		if !self.in_array()
+		{
+			if !(self.depth == 0 && self.in_root && self.is_empty())
+			{
+				try!(write!(self.writer, "\n"));
+			}
+			try!(self.write_indent());
+		}
+		if self.in_array() && !self.is_empty()
+		{
+			try!(write!(self.writer, ", "));
 		}
 		Ok(())
 	}
@@ -56,7 +93,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 	
 	pub fn value(&mut self, name: Option<&str>, value: &str) -> Result<(), io::Error>
 	{
-		try!(self.write_indent());
+		try!(self.start_value());
 		match name
 		{
 			Some(name) =>
@@ -67,30 +104,27 @@ impl<'l, W: io::Write> Printer<'l, W>
 			_ => ()
 		}
 		try!(self.write_string(value));
-		if self.in_array[self.in_array.len() - 1]
-		{
-			try!(write!(self.writer, ","));
-		}
-		try!(write!(self.writer, "\n"));
+		self.set_empty(false);
 		Ok(())
 	}
 
 	pub fn start_array(&mut self, name: Option<&str>) -> Result<(), io::Error>
 	{
+		try!(self.start_value());
 		match name
 		{
 			Some(name) =>
 			{
-				try!(self.write_indent());
 				try!(self.write_string(name));
-				try!(write!(self.writer, " =\n"));
+				try!(write!(self.writer, " = "));
 			}
 			_ => ()
 		}
-		try!(self.write_indent());
-		try!(write!(self.writer, "[\n"));
+		try!(write!(self.writer, "["));
+		self.set_empty(false);
 		self.depth += 1;
 		self.in_array.push(true);
+		self.is_empty.push(true);
 		Ok(())
 	}
 
@@ -98,13 +132,8 @@ impl<'l, W: io::Write> Printer<'l, W>
 	{
 		self.depth -= 1;
 		self.in_array.pop();
-		try!(self.write_indent());
+		self.is_empty.pop();
 		try!(write!(self.writer, "]"));
-		if self.in_array[self.in_array.len() - 1]
-		{
-			try!(write!(self.writer, ","));
-		}
-		try!(write!(self.writer, "\n"));
 		Ok(())
 	}
 
@@ -112,40 +141,50 @@ impl<'l, W: io::Write> Printer<'l, W>
 	{
 		if is_root
 		{
+			self.in_root = true;
 			return Ok(())
 		}
+		try!(self.start_value());
 		match name
 		{
 			Some(name) =>
 			{
-				try!(self.write_indent());
 				try!(self.write_string(name));
 				try!(write!(self.writer, "\n"));
 			}
 			_ => ()
 		}
-		try!(self.write_indent());
-		try!(write!(self.writer, "{{\n"));
+		if !self.in_array()
+		{
+			try!(self.write_indent());
+		}
+		try!(write!(self.writer, "{{"));
+
+		self.set_empty(false);
 		self.depth += 1;
 		self.in_array.push(false);
+		self.is_empty.push(true);
 		Ok(())
 	}
 
 	pub fn end_table(&mut self, is_root: bool) -> Result<(), io::Error>
 	{
+		if !self.is_empty()
+		{
+			try!(write!(self.writer, "\n"));
+		}
 		if is_root
 		{
 			return Ok(())
 		}
 		self.depth -= 1;
-		self.in_array.pop();
-		try!(self.write_indent());
-		try!(write!(self.writer, "}}"));
-		if self.in_array[self.in_array.len() - 1]
+		if !self.is_empty()
 		{
-			try!(write!(self.writer, ","));
+			try!(self.write_indent());
 		}
-		try!(write!(self.writer, "\n"));
+		self.in_array.pop();
+		self.is_empty.pop();
+		try!(write!(self.writer, "}}"));
 		Ok(())
 	}
 }

@@ -13,3 +13,4 @@ mod parser;
 mod visitor;
 mod config_element;
 mod printer;
+mod test;

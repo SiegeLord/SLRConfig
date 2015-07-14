@@ -25,5 +25,4 @@ fn main()
 	let (root, _) = ConfigElement::from_str(Path::new(&filename), &src).map_err(|e| print!("{}", e.text)).unwrap();
 	
 	println!("{}", root);
-	println!("{}", root.as_table().unwrap()["val1"].as_value().unwrap());
 }

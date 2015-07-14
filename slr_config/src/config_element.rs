@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::io;
 use std::fmt::{self, Display, Formatter};
 use std::path::Path;
@@ -24,7 +24,7 @@ pub struct ConfigElement
 pub enum ConfigElementKind
 {
 	Value(String),
-	Table(HashMap<String, ConfigElement>),
+	Table(BTreeMap<String, ConfigElement>),
 	Array(Vec<ConfigElement>),
 }
 
@@ -32,12 +32,12 @@ impl ConfigElement
 {
 	pub fn new_table() -> ConfigElement
 	{
-		ConfigElement{ kind: Table(HashMap::new()), span: Span::new() }
+		ConfigElement{ kind: Table(BTreeMap::new()), span: Span::new() }
 	}
 
-	pub fn new_value(value: String) -> ConfigElement
+	pub fn new_value<T: ToString>(value: T) -> ConfigElement
 	{
-		ConfigElement{ kind: Value(value), span: Span::new() }
+		ConfigElement{ kind: Value(value.to_string()), span: Span::new() }
 	}
 
 	pub fn new_array() -> ConfigElement
@@ -57,7 +57,7 @@ impl ConfigElement
 		parse_source(filename, source, &mut visitor).map(|src| (visitor.extract_root(), src))
 	}
 
-	pub fn as_table(&self) -> Option<&HashMap<String, ConfigElement>>
+	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>
 	{
 		match self.kind
 		{
@@ -66,7 +66,7 @@ impl ConfigElement
 		}
 	}
 
-	pub fn as_table_mut(&mut self) -> Option<&mut HashMap<String, ConfigElement>>
+	pub fn as_table_mut(&mut self) -> Option<&mut BTreeMap<String, ConfigElement>>
 	{
 		match self.kind
 		{
@@ -111,13 +111,13 @@ impl ConfigElement
 		}
 	}
 
-	pub fn insert_element(&mut self, name: String, elem: ConfigElement)
+	pub fn insert<T: ToString>(&mut self, name: T, elem: ConfigElement)
 	{
 		match self.kind
 		{
 			Table(ref mut table) =>
 			{
-				table.insert(name, elem);
+				table.insert(name.to_string(), elem);
 			},
 			Array(ref mut array) =>
 			{
@@ -200,7 +200,7 @@ impl ConfigElementVisitor
 			if !value_only || self.stack[stack_size - 1].1.as_value().is_some()
 			{
 				let (name, elem) = self.stack.pop().unwrap();
-				self.stack[stack_size - 2].1.insert_element(name, elem);
+				self.stack[stack_size - 2].1.insert(name, elem);
 			}
 		}
 	}

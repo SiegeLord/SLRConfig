@@ -31,5 +31,6 @@ baz
 	bar_bar
 	{
 		foo = ""
+		bar = "\u0151f"
 	}
 }

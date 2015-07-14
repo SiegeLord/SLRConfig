@@ -1,0 +1,19 @@
+[package]
+
+name = "doc"
+version = "0.0.1" #auto
+authors = [ "SiegeLord <slabode@aim.com>" ]
+
+[lib]
+name = "delete_me"
+path = "dummy.rs"
+
+[dependencies.slr_lexer]
+
+path = "../slr_lexer"
+version = "=0.0.1" #auto
+
+[dependencies.slr_config]
+
+path = "../slr_config"
+version = "=0.0.1" #auto

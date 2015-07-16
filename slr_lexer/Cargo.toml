@@ -7,7 +7,7 @@ repository = "https://github.com/SiegeLord/SLRConfig"
 documentation = "http://siegelord.github.io/SLRConfig/doc/slr_lexer/index.html"
 keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
-description = "A simple configuration format. This crate contains just the lexer."
+description = "A simple configuration format. This crate contains just the lexer, see the slr_config crate for the parser and other utilities."
 
 [lib]
 name = "slr_lexer"

@@ -22,6 +22,7 @@ you" = "need
 to"
 on = a, single = line
 just another string = -1.5
+raw string = {{"embedded quote -> " <-"}}
 
 table
 {

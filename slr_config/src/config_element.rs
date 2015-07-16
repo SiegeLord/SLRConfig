@@ -16,12 +16,14 @@ use printer::Printer;
 
 pub use self::ConfigElementKind::*;
 
+#[derive(Clone)]
 pub struct ConfigElement
 {
 	kind: ConfigElementKind,
 	span: Span,
 }
 
+#[derive(Clone)]
 pub enum ConfigElementKind
 {
 	Value(String),

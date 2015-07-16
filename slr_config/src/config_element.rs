@@ -18,8 +18,8 @@ pub use self::ConfigElementKind::*;
 
 pub struct ConfigElement
 {
-	pub kind: ConfigElementKind,
-	pub span: Span,
+	kind: ConfigElementKind,
+	span: Span,
 }
 
 pub enum ConfigElementKind
@@ -64,6 +64,11 @@ impl ConfigElement
 			mem::swap(&mut visitor.extract_root(), self);
 			src
 		})
+	}
+
+	pub fn kind(&self) -> &ConfigElementKind
+	{
+		&self.kind
 	}
 
 	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>

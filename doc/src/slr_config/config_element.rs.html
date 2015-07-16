@@ -303,6 +303,22 @@
 <span id="261">261</span>
 <span id="262">262</span>
 <span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -311,6 +327,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Display</span>, <span class='ident'>Formatter</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>from_utf8</span>;
 
@@ -321,12 +338,14 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ConfigElementKind</span>::<span class='op'>*</span>;
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ConfigElement</span>
 {
-	<span class='kw'>pub</span> <span class='ident'>kind</span>: <span class='ident'>ConfigElementKind</span>,
-	<span class='kw'>pub</span> <span class='ident'>span</span>: <span class='ident'>Span</span>,
+	<span class='ident'>kind</span>: <span class='ident'>ConfigElementKind</span>,
+	<span class='ident'>span</span>: <span class='ident'>Span</span>,
 }
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ConfigElementKind</span>
 {
 	<span class='ident'>Value</span>(<span class='ident'>String</span>),
@@ -353,14 +372,27 @@
 
 	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>(<span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>Path</span>, <span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>ConfigElement</span>, <span class='ident'>Source</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>), <span class='ident'>Error</span><span class='op'>&gt;</span>
 	{
-		<span class='ident'>ConfigElement</span>::<span class='ident'>fill_from_str</span>(<span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>(), <span class='ident'>filename</span>, <span class='ident'>source</span>)
+		<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
+		<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>fill_from_str</span>(<span class='ident'>filename</span>, <span class='ident'>source</span>));
+		<span class='prelude-val'>Ok</span>((<span class='ident'>root</span>, <span class='ident'>src</span>))
 	}
 
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fill_from_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>(<span class='ident'>root</span>: <span class='ident'>ConfigElement</span>, <span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>Path</span>, <span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>ConfigElement</span>, <span class='ident'>Source</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>), <span class='ident'>Error</span><span class='op'>&gt;</span>
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>fill_from_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>filename</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>Path</span>, <span class='ident'>source</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Source</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>), <span class='ident'>Error</span><span class='op'>&gt;</span>
 	{
-		<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
+		<span class='macro'>assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
+		<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
+		<span class='ident'>mem</span>::<span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>root</span>, <span class='self'>self</span>);
 		<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>visitor</span> <span class='op'>=</span> <span class='ident'>ConfigElementVisitor</span>::<span class='ident'>new</span>(<span class='ident'>root</span>);
-		<span class='ident'>parse_source</span>(<span class='ident'>filename</span>, <span class='ident'>source</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>visitor</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>src</span><span class='op'>|</span> (<span class='ident'>visitor</span>.<span class='ident'>extract_root</span>(), <span class='ident'>src</span>))
+		<span class='ident'>parse_source</span>(<span class='ident'>filename</span>, <span class='ident'>source</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>visitor</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>src</span><span class='op'>|</span>
+		{
+			<span class='ident'>mem</span>::<span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>visitor</span>.<span class='ident'>extract_root</span>(), <span class='self'>self</span>);
+			<span class='ident'>src</span>
+		})
+	}
+
+	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>kind</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>ConfigElementKind</span>
+	{
+		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>kind</span>
 	}
 
 	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_table</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BTreeMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>ConfigElement</span><span class='op'>&gt;&gt;</span>

@@ -45,8 +45,29 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/slr_config/lib.rs.html#5-16' title='goto source code'>[src]</a></span></h1>
-<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+        </span><a id='src-0' class='srclink' href='../src/slr_config/lib.rs.html#5-42' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This crate implements the parsing for the SLRConfig format. Basic usage revolves
+around the creation and use of the <code>ConfigElement</code> type, like so:</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slr_config</span>;
+
+<span class='kw'>use</span> <span class='ident'>slr_config</span>::{<span class='ident'>ConfigElement</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>()
+{
+    <span class='comment'>// Parse config element from value.</span>
+    <span class='kw'>let</span> (<span class='ident'>root</span>, _) <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>&quot;&lt;dummy&gt;&quot;</span>), <span class='string'>&quot;key = value&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;key&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;value&quot;</span>);
+
+    <span class='comment'>// Create a new table and print it to a string.</span>
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
+    <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;value&quot;</span>);
+    <span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;key&quot;</span>, <span class='ident'>val</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;key = value\n&quot;</span>);
+}
+</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr class=' module-item'>
                         <td><a class='struct' href='struct.ConfigElement.html'

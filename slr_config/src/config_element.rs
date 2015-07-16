@@ -5,6 +5,7 @@
 use std::collections::BTreeMap;
 use std::io;
 use std::fmt::{self, Display, Formatter};
+use std::mem;
 use std::path::Path;
 use std::str::from_utf8;
 
@@ -47,14 +48,22 @@ impl ConfigElement
 
 	pub fn from_str<'l>(filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
 	{
-		ConfigElement::fill_from_str(ConfigElement::new_table(), filename, source)
+		let mut root = ConfigElement::new_table();
+		let src = try!(root.fill_from_str(filename, source));
+		Ok((root, src))
 	}
 
-	pub fn fill_from_str<'l>(root: ConfigElement, filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
+	pub fn fill_from_str<'l>(&mut self, filename: &'l Path, source: &'l str) -> Result<(Source<'l>), Error>
 	{
-		assert!(root.as_table().is_some());
+		assert!(self.as_table().is_some());
+		let mut root = ConfigElement::new_table();
+		mem::swap(&mut root, self);
 		let mut visitor = ConfigElementVisitor::new(root);
-		parse_source(filename, source, &mut visitor).map(|src| (visitor.extract_root(), src))
+		parse_source(filename, source, &mut visitor).map(|src|
+		{
+			mem::swap(&mut visitor.extract_root(), self);
+			src
+		})
 	}
 
 	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>

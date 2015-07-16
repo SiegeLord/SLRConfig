@@ -20,6 +20,8 @@ statement = there's no need to quote the vast majority of characters
 "sometimes
 you" = "need
 to"
+"you can always escape ☺
+" = you can always escape \u263a\n
 on = a, single = line
 just another string = -1.5
 raw string = {{"embedded quote -> " <-"}}

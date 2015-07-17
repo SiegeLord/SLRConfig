@@ -61,12 +61,10 @@ ends at a newline (LF). The comment can start anywhere on a line.
 *String terminals*
 
 ~~~
-NakedEscapedString = ({String Border}
-                   | '\' {Raw String Chars}) ({String Middle}
-                   | '\' {Raw String Chars})* ({String Border}
-                   | '\' {Raw String Chars})
-                   | ({String Border}
-                   | '\' {Raw String Chars})
+NakedEscapedString = ({String Border} | '\' {Raw String Chars})
+                     ({String Middle} | '\' {Raw String Chars})*
+                     ({String Border} | '\' {Raw String Chars})
+                   | ({String Border} | '\' {Raw String Chars})
 QuotedEscapedString = '"' {Escaped String Chars}* '"'
 
 RawString0 = '{{"' {Raw String Chars}* '"}}'

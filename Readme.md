@@ -39,16 +39,11 @@ meta-language](http://goldparser.org/doc/grammars/index.htm). Essentially,
 character sets are specified using set notation, terminals are specified using
 regular expressions and productions are specified using BNF.
 
-# Comments
+## Lexical grammar
 
-Only line comments are supported. The character `#` starts a line comment which
-ends at a newline (LF). The comment can start anywhere on a line.
+The string representation of the format is encoded using UTF-8.
 
-# Strings
-
-**Grammar**
-
-*Character sets*
+### Character sets
 
 ~~~
 {Raw String Chars} = {Printable} + {Whitespace}
@@ -58,7 +53,7 @@ ends at a newline (LF). The comment can start anywhere on a line.
 {String Border} = {String Middle} - [' ']
 ~~~
 
-*String terminals*
+### Terminals
 
 ~~~
 NakedEscapedString = ({String Border} | '\' {Raw String Chars})
@@ -70,7 +65,18 @@ QuotedEscapedString = '"' {Escaped String Chars}* '"'
 RawString0 = '{{"' {Raw String Chars}* '"}}'
 RawString1 = '{{{"' {Raw String Chars}* '"}}}'
 RawString2 = '{{{{"' {Raw String Chars}* '"}}}}'
+~~~
 
+### Comments
+
+Only line comments are supported. The character `#` starts a line comment which
+ends at a newline (LF). The comment can start anywhere on a line.
+
+## Parser grammar and semantics
+
+### Strings
+
+~~~
 <String> ::= NakedEscapedString
            | QuotedEscapedString
            | RawString0
@@ -81,12 +87,10 @@ RawString2 = '{{{{"' {Raw String Chars}* '"}}}}'
                | <StringExpr> '~' <String>
 ~~~
 
-**Semantics**
-
 Strings are used as keys in tables as well as one type of element that can be
 in tables and arrays. There are two types of strings, escaped and raw.
 
-*Escaped strings*
+#### Escaped strings
 
 Escaped strings can have character escapes which are resolved during parsing.
 The supported escapes are as follows:
@@ -103,20 +107,18 @@ Invalid escapes are replaced by `�` (U+fffd) character. There are two types of
 escaped strings, naked and quoted. Naked strings do not need quotes around
 them, but are restricted by what characters they may contain.
 
-*Raw strings*
+#### Raw strings
 
 Raw strings contain exactly the characters that are inside of them. The number
 of leading braces must match the number of trailing braces, but otherwise can
 be increased in case there's a quote character followed run of trailing braces
 inside the string itself.
 
-*String expressions*
+#### String concatenation
 
 Multiple strings can be contatenated using the `~` operator.
 
-# Tables
-
-**Grammar**
+### Tables
 
 ~~~
 <OptComma> ::= ','
@@ -134,9 +136,7 @@ Multiple strings can be contatenated using the `~` operator.
                   |
 ~~~
 
-# Arrays
-
-**Grammar**
+### Arrays
 
 ~~~
 <Array> ::= '[' <ArrayContents> ']'

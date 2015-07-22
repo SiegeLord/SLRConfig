@@ -34,3 +34,8 @@ baz
 		bar = "\u0151f"
 	}
 }
+
+val = "a"
+arr = []
+tab {}
+test = $val ~ $val

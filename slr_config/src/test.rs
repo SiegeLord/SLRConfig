@@ -109,3 +109,31 @@ fn unicode_encode_test()
 		assert_eq!(&s, decoded.as_table().unwrap()["test"].as_value().unwrap());
 	}
 }
+
+#[test]
+fn expand_test()
+{
+	let src =
+r#"
+val = "a"
+arr = []
+tab {}
+
+val_test = $val ~ $val
+arr_test = $arr
+tab_test = $tab
+
+tab2
+{
+	tab = "b"
+	val_test2 = $tab
+}
+"#;
+	let (root, _) = ConfigElement::from_str(Path::new("<dummy>"), src).unwrap();
+	let root = root.as_table().unwrap();
+	assert!(root["val_test"].as_value().is_some());
+	assert!(root["val_test"].as_value().unwrap() == "aa");
+	assert!(root["arr_test"].as_array().is_some());
+	assert!(root["tab_test"].as_table().is_some());
+	assert!(root["tab2"].as_table().unwrap()["val_test2"].as_value().is_some());
+}

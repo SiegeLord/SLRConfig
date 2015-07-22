@@ -38,6 +38,15 @@ fn hex_to_char(s: &str) -> char
 
 impl<'l> ConfigString<'l>
 {
+	fn new() -> ConfigString<'l>
+	{
+		ConfigString
+		{
+			kind: RawString(""),
+			span: Span::new(),
+		}
+	}
+
 	fn from_token(tok: Token<'l>) -> ConfigString<'l>
 	{
 		let kind = match tok.kind
@@ -190,10 +199,9 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 			return Ok(false)
 		}
 		self.lexer.next();
-		try!(self.visitor.start_table(left_brace.span));
+		try!(self.visitor.set_table(self.lexer.get_source(), left_brace.span));
 		try!(self.parse_table_contents());
 		let right_brace = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_brace.span, "Unterminated table"));
-		try!(self.visitor.end_table(right_brace.span));
 		if right_brace.kind != lex::RightBrace
 		{
 			let error_str = if right_brace.kind == lex::Comma
@@ -231,9 +239,9 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 	fn parse_table_element(&mut self) -> Result<bool, Error>
 	{
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
-		if token.kind.is_string()
+		let ret = if token.kind.is_string()
 		{
-			try!(self.visitor.table_element(ConfigString::from_token(token)));
+			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::from_token(token)));
 
 			let assign = try_eof!(self.lexer.next(), Error::from_span(self.lexer.get_source(), token.span, "Expected '=' or '{' to follow, but got EOF"));
 			if assign.kind == lex::Assign
@@ -241,31 +249,36 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				self.lexer.next();
 				if try!(self.parse_array())
 				{
-					Ok(true)
+					true
 				}
 				else if try!(self.parse_string_expr())
 				{
-					Ok(true)
+					true
 				}
 				else
 				{
 					let token = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), assign.span, "Expected '[' or a string to follow, but got EOF"));
-					Error::from_span(self.lexer.get_source(), token.span, "Expected '[' or a string")
+					return Error::from_span(self.lexer.get_source(), token.span, "Expected '[' or a string");
 				}
 			}
 			else if try!(self.parse_table())
 			{
-				Ok(true)
+				true
 			}
 			else
 			{
-				Error::from_span(self.lexer.get_source(), assign.span, "Expected '=' or '{'")
+				return Error::from_span(self.lexer.get_source(), assign.span, "Expected '=' or '{'")
 			}
 		}
 		else
 		{
-			Ok(false)
+			false
+		};
+		if ret
+		{
+			try!(self.visitor.end_element());
 		}
+		Ok(ret)
 	}
 
 	fn parse_array(&mut self) -> Result<bool, Error>
@@ -276,10 +289,9 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 			return Ok(false)
 		}
 		self.lexer.next();
-		try!(self.visitor.start_array(left_bracket.span));
+		try!(self.visitor.set_array(self.lexer.get_source(), left_bracket.span));
 		try!(self.parse_array_contents());
 		let right_bracket = try_eof!(self.lexer.cur_token, Error::from_span(self.lexer.get_source(), left_bracket.span, "Unterminated array"));
-		try!(self.visitor.end_array(right_bracket.span));
 		if right_bracket.kind != lex::RightBracket
 		{
 			let error_str = if right_bracket.kind == lex::Comma
@@ -317,25 +329,30 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 	fn parse_array_element(&mut self) -> Result<bool, Error>
 	{
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
-		if token.kind.is_string()
+		let ret = if token.kind.is_string() || token.kind == lex::Dollar
 		{
-			try!(self.visitor.array_element());
-			Ok(try!(self.parse_string_expr()))
+			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.parse_string_expr())
 		}
 		else if token.kind == lex::LeftBrace
 		{
-			try!(self.visitor.array_element());
-			Ok(try!(self.parse_table()))
+			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.parse_table())
 		}
 		else if token.kind == lex::LeftBracket
 		{
-			try!(self.visitor.array_element());
-			Ok(try!(self.parse_array()))
+			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.parse_array())
 		}
 		else
 		{
-			Ok(false)
+			false
+		};
+		if ret
+		{
+			try!(self.visitor.end_element());
 		}
+		Ok(ret)
 	}
 
 	fn parse_string_expr(&mut self) -> Result<bool, Error>
@@ -348,7 +365,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				{
 					Some(span) =>
 					{
-						return Error::from_span(self.lexer.get_source(), span, "Expected a string to follow, but got EOF");
+						return Error::from_span(self.lexer.get_source(), span, "Expected a string or '$' to follow, but got EOF");
 					}
 					None =>
 					{
@@ -357,8 +374,21 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				});
 			if token.kind.is_string()
 			{
-				try!(self.visitor.append_string(ConfigString::from_token(token)));
+				try!(self.visitor.append_string(self.lexer.get_source(), ConfigString::from_token(token)));
 				self.lexer.next();
+			}
+			else if token.kind == lex::Dollar
+			{
+				let string_token = try_eof!(self.lexer.next(), Error::from_span(self.lexer.get_source(), token.span, "Expected a string to follow, but got EOF"));
+				if string_token.kind.is_string()
+				{
+					try!(self.visitor.expand(self.lexer.get_source(), ConfigString::from_token(string_token)));
+					self.lexer.next();
+				}
+				else
+				{
+					return Error::from_span(self.lexer.get_source(), string_token.span, "Expected a string");
+				}
 			}
 			else
 			{
@@ -366,7 +396,7 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 				{
 					Some(span) =>
 					{
-						return Error::from_span(self.lexer.get_source(), span, "Expected a string to follow, but got EOF");
+						return Error::from_span(self.lexer.get_source(), span, "Expected a string or '$' to follow, but got EOF");
 					}
 					None =>
 					{

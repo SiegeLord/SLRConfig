@@ -39,7 +39,11 @@ meta-language](http://goldparser.org/doc/grammars/index.htm). Essentially,
 character sets are specified using set notation, terminals are specified using
 regular expressions and productions are specified using BNF.
 
+The root element is defined by the `<TableElements>` production.
+
 ## Lexical grammar
+
+### Encoding
 
 The string representation of the format is encoded using UTF-8.
 
@@ -69,8 +73,8 @@ RawString2 = '{{{{"' {Raw String Chars}* '"}}}}'
 
 ### Comments
 
-Only line comments are supported. The character `#` starts a line comment which
-ends at a newline (LF). The comment can start anywhere on a line.
+Line comments are introduced using the `#`  character. Line comments can start
+anywhere on a line and end at a newline (LF).
 
 ## Parser grammar and semantics
 
@@ -82,9 +86,6 @@ ends at a newline (LF). The comment can start anywhere on a line.
            | RawString0
            | RawString1
            | RawString2
-
-<StringExpr> ::= <String>
-               | <StringExpr> '~' <String>
 ~~~
 
 Strings are used as keys in tables as well as one type of element that can be
@@ -114,9 +115,29 @@ of leading braces must match the number of trailing braces, but otherwise can
 be increased in case there's a quote character followed run of trailing braces
 inside the string itself.
 
-#### String concatenation
+### Expressions
 
-Multiple strings can be contatenated using the `~` operator.
+~~~
+<Expansion> ::= '$' <String>
+
+<Expr> ::= <String>
+         | <Expansion>
+         | <Expr> '~' <String>
+         | <Expr> '~' <Expansion>
+~~~
+
+Table and array elements are assigned the results of expressions. An expression
+can result in a value (a string), a table or an array. Multiple strings can be
+contatenated using the `~` operator.
+
+Using the expansion syntax it is possible to fetch the value of a previously
+assigned element. The elements are looked up by key from tables and by index
+(zero based) from arrays. The lookup is performed by looking up the element in
+the table/array that the element being assigned to is. If nothing was found,
+then a higher level table/array is examined, and so on. The element being
+looked up must be lexically prior in the source string to the element being
+assigned to. The element being assign to is never considered as an expansion
+element.
 
 ### Tables
 

@@ -7,7 +7,7 @@ use std::io;
 use std::fmt::{self, Display, Formatter};
 use std::mem;
 use std::path::Path;
-use std::str::from_utf8;
+use std::str::{FromStr, from_utf8};
 
 use visitor::Visitor;
 use lex::{Error, Span, Source};
@@ -187,7 +187,8 @@ impl Display for ConfigElement
 
 struct ConfigElementVisitor
 {
-	stack: Vec<(String, ConfigElement)>,
+	// Name, element, initialized
+	stack: Vec<(String, ConfigElement, bool)>,
 }
 
 impl ConfigElementVisitor
@@ -196,14 +197,12 @@ impl ConfigElementVisitor
 	{
 		ConfigElementVisitor
 		{
-			stack: vec![("root".to_string(), root)],
+			stack: vec![("root".to_string(), root, true)],
 		}
 	}
 
 	fn extract_root(mut self) -> ConfigElement
 	{
-		assert!(self.stack.len() <= 2);
-		self.collapse_stack(true);
 		assert!(self.stack.len() == 1);
 		self.stack.pop().unwrap().1
 	}
@@ -215,7 +214,7 @@ impl ConfigElementVisitor
 		{
 			if !value_only || self.stack[stack_size - 1].1.as_value().is_some()
 			{
-				let (name, elem) = self.stack.pop().unwrap();
+				let (name, elem, _) = self.stack.pop().unwrap();
 				self.stack[stack_size - 2].1.insert(name, elem);
 			}
 		}
@@ -224,56 +223,115 @@ impl ConfigElementVisitor
 
 impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 {
-	fn table_element(&mut self, name: ConfigString<'l>) -> Result<(), Error>
+	fn start_element(&mut self, _src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>
 	{
-		self.collapse_stack(true);
-		self.stack.push((name.to_string(), ConfigElement::new_value("".to_string())));
+		self.stack.push((name.to_string(), ConfigElement::new_value("".to_string()), false));
 		Ok(())
 	}
 
-	fn array_element(&mut self) -> Result<(), Error>
+	fn end_element(&mut self) -> Result<(), Error>
 	{
-		self.collapse_stack(true);
-		self.stack.push(("".to_string(), ConfigElement::new_value("".to_string())));
+		self.collapse_stack(false);
 		Ok(())
 	}
 
-	fn append_string(&mut self, string: ConfigString<'l>) -> Result<(), Error>
+	fn append_string(&mut self, src: &Source<'l>, string: ConfigString<'l>) -> Result<(), Error>
 	{
 		let stack_size = self.stack.len();
-		let elem = &mut self.stack[stack_size - 1].1;
-		elem.span.combine(string.span);
-		string.append_to_string(&mut elem.as_value_mut().as_mut().expect("Trying to append a string to a non-value"));
+		{
+			let elem = &mut self.stack[stack_size - 1].1;
+			elem.span.combine(string.span);
+			match elem.kind
+			{
+				Value(ref mut val) => string.append_to_string(val),
+				Table(_) => return Error::from_span(src, string.span, "Cannot append a string to a table"),
+				Array(_) => return Error::from_span(src, string.span, "Cannot append a string to an array"),
+			}
+		}
+		self.stack[stack_size - 1].2 = true;
 		Ok(())
 	}
 
-	fn start_table(&mut self, span: Span) -> Result<(), Error>
+	fn set_table(&mut self, _src: &Source<'l>, span: Span) -> Result<(), Error>
 	{
 		let stack_size = self.stack.len();
 		self.stack[stack_size - 1].1 = ConfigElement::new_table();
 		self.stack[stack_size - 1].1.span = span;
+		self.stack[stack_size - 1].2 = true;
 		Ok(())
 	}
 
-	fn end_table(&mut self, _span: Span) -> Result<(), Error>
-	{
-		self.collapse_stack(true);
-		self.collapse_stack(false);
-		Ok(())
-	}
-
-	fn start_array(&mut self, span: Span) -> Result<(), Error>
+	fn set_array(&mut self, _src: &Source<'l>, span: Span) -> Result<(), Error>
 	{
 		let stack_size = self.stack.len();
 		self.stack[stack_size - 1].1 = ConfigElement::new_array();
 		self.stack[stack_size - 1].1.span = span;
+		self.stack[stack_size - 1].2 = true;
 		Ok(())
 	}
 
-	fn end_array(&mut self, _span: Span) -> Result<(), Error>
+	fn expand(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>
 	{
-		self.collapse_stack(true);
-		self.collapse_stack(false);
+		let mut found_element = None;
+		let span = name.span;
+		let name = name.to_string();
+		// Find the referenced element.
+		for &(ref elem_name, ref elem, _) in self.stack.iter().rev()
+		{
+			// Can't insert currently modified element.
+			if *elem_name == name
+			{
+				continue;
+			}
+			match elem.kind
+			{
+				Value(_) => continue,
+				Table(ref table) =>
+				{
+					found_element = table.get(&name).map(|v| v.clone());
+				},
+				Array(ref array) =>
+				{
+					found_element = <usize>::from_str(&name).ok().and_then(|idx| array.get(idx)).map(|v| v.clone());
+				},
+			}
+			if found_element.is_some()
+			{
+				break;
+			}
+		}
+
+		if found_element.is_none()
+		{
+			return Error::from_span(src, span, &format!("Could not find an element named `{}`", name));
+		}
+		let found_element = found_element.unwrap();
+
+		let stack_size = self.stack.len();
+		let lhs_is_initialized = self.stack[stack_size - 1].2;
+		if lhs_is_initialized
+		{
+			match self.stack[stack_size - 1].1.kind
+			{
+				Value(ref mut lhs_val) =>
+				{
+					match found_element.kind
+					{
+						Value(ref found_val) => lhs_val.push_str(found_val),
+						Table(_) => return Error::from_span(src, span, "Cannot append a table to a value"),
+						Array(_) => return Error::from_span(src, span, "Cannot append an array to a value"),
+					}
+				}
+				Table(_) => return Error::from_span(src, span, "Cannot append to a table"),
+				Array(_) => return Error::from_span(src, span, "Cannot append to an array"),
+			}
+		}
+		else
+		{
+			self.stack[stack_size - 1].1 = found_element;
+			self.stack[stack_size - 1].2 = true;
+		}
+		self.stack[stack_size - 1].1.span = span;
 		Ok(())
 	}
 }

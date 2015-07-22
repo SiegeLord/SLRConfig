@@ -33,14 +33,18 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 ! Expressions
 <String> ::= EscapedString | RawString0 | RawString1 | RawString2
 
-<StringExpr> ::= <String>
-             |   <StringExpr> '~' <String>
+<Expansion> ::= '$' <String>
+
+<Expr> ::= <String>
+       |   <Expansion>
+       |   <Expr> '~' <String>
+       |   <Expr> '~' <Expansion>
 
 ! Array
 
 <Array> ::= '[' <ArrayContents> ']'
 
-<ArrayElement> ::= <StringExpr>
+<ArrayElement> ::= <Expr>
                 | <Table>
                 | <Array>
 
@@ -55,10 +59,11 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 
 <TableElement> ::= <String> <Table>
                 |  <String> '=' <Array>
-                |  <String> '=' <StringExpr>
+                |  <String> '=' <Expr>
 
 <TableElements> ::= <TableElement>
                  |  <TableElements> <OptComma> <TableElement>
 
 <TableContents> ::= <TableElements> <OptComma>
                      |
+

@@ -16,6 +16,7 @@ use printer::Printer;
 
 pub use self::ConfigElementKind::*;
 
+/// A configuration element.
 #[derive(Clone)]
 pub struct ConfigElement
 {
@@ -23,31 +24,39 @@ pub struct ConfigElement
 	span: Span,
 }
 
+/// The kind of the configuration element.
 #[derive(Clone)]
 pub enum ConfigElementKind
 {
+	/// A simple value, containing a string.
 	Value(String),
+	/// A table, which is a mapping of strings to configuration elements.
 	Table(BTreeMap<String, ConfigElement>),
+	/// An array of configuration elements.
 	Array(Vec<ConfigElement>),
 }
 
 impl ConfigElement
 {
+	/// Creates a new empty table.
 	pub fn new_table() -> ConfigElement
 	{
 		ConfigElement{ kind: Table(BTreeMap::new()), span: Span::new() }
 	}
 
+	/// Creates a new value.
 	pub fn new_value<T: ToString>(value: T) -> ConfigElement
 	{
 		ConfigElement{ kind: Value(value.to_string()), span: Span::new() }
 	}
 
+	/// Creates a new array.
 	pub fn new_array() -> ConfigElement
 	{
 		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
 	}
 
+	/// Parses a source and returns a table alongside an annotated source.
 	pub fn from_str<'l>(filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
 	{
 		let mut root = ConfigElement::new_table();
@@ -55,6 +64,7 @@ impl ConfigElement
 		Ok((root, src))
 	}
 
+	/// Parses a source and returns a table alongside an annotated source.
 	pub fn fill_from_str<'l>(&mut self, filename: &'l Path, source: &'l str) -> Result<(Source<'l>), Error>
 	{
 		assert!(self.as_table().is_some());
@@ -206,19 +216,6 @@ impl ConfigElementVisitor
 		assert!(self.stack.len() == 1);
 		self.stack.pop().unwrap().1
 	}
-
-	fn collapse_stack(&mut self, value_only: bool)
-	{
-		let stack_size = self.stack.len();
-		if stack_size > 1
-		{
-			if !value_only || self.stack[stack_size - 1].1.as_value().is_some()
-			{
-				let (name, elem, _) = self.stack.pop().unwrap();
-				self.stack[stack_size - 2].1.insert(name, elem);
-			}
-		}
-	}
 }
 
 impl<'l> Visitor<'l, Error> for ConfigElementVisitor
@@ -231,7 +228,12 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 
 	fn end_element(&mut self) -> Result<(), Error>
 	{
-		self.collapse_stack(false);
+		let stack_size = self.stack.len();
+		if stack_size > 1
+		{
+			let (name, elem, _) = self.stack.pop().unwrap();
+			self.stack[stack_size - 2].1.insert(name, elem);
+		}
 		Ok(())
 	}
 

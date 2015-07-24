@@ -5,6 +5,8 @@
 #[cfg(test)]
 use config_element::*;
 #[cfg(test)]
+use from_element::*;
+#[cfg(test)]
 use std::path::Path;
 #[cfg(test)]
 use std::char;
@@ -136,4 +138,13 @@ tab2
 	assert!(root["arr_test"].as_array().is_some());
 	assert!(root["tab_test"].as_table().is_some());
 	assert!(root["tab2"].as_table().unwrap()["val_test2"].as_value().is_some());
+}
+
+#[test]
+fn from_element_test()
+{
+	let elem = ConfigElement::new_value("55");
+	let mut val: i32 = 0;
+	val.from_element(&elem, None).unwrap();
+	assert_eq!(val, 55);
 }

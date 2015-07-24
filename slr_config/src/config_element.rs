@@ -83,6 +83,11 @@ impl ConfigElement
 		&self.kind
 	}
 
+	pub fn span(&self) -> Span
+	{
+		self.span
+	}
+
 	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>
 	{
 		match self.kind

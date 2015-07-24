@@ -34,7 +34,9 @@ pub use parser::*;
 pub use printer::*;
 pub use visitor::*;
 pub use config_element::*;
+pub use from_element::*;
 
+mod from_element;
 mod parser;
 mod visitor;
 mod config_element;

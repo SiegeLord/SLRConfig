@@ -160,7 +160,7 @@ impl ConfigElement
 			Value(ref val) => try!(p.value(name, &val)),
 			Table(ref table) =>
 			{
-				try!(p.start_table(name, is_root));
+				try!(p.start_table(name, is_root, table.is_empty()));
 				for (k, v) in table
 				{
 					try!(v.print(Some(k), false, p));
@@ -169,7 +169,23 @@ impl ConfigElement
 			}
 			Array(ref array) =>
 			{
-				try!(p.start_array(name));
+				let mut one_line = true;
+				for v in array
+				{
+					match v.kind
+					{
+						Table(ref table) =>
+						{
+							if !table.is_empty()
+							{
+								one_line = false;
+								break;
+							}
+						},
+						_ => ()
+					}
+				}
+				try!(p.start_array(name, one_line));
 				for v in array
 				{
 					try!(v.print(None, false, p));

@@ -35,6 +35,16 @@ baz
 	}
 }
 
+arr_tab =
+[
+	{
+		a = b
+	},
+	{
+		c = d
+	}
+]
+
 val = "a"
 arr = []
 tab {}

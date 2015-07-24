@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ConfigElementKind",""],["StringKind",""]],"fn":[["parse_source",""]],"struct":[["ConfigElement",""],["ConfigString",""],["Printer",""]],"trait":[["GetError",""],["Visitor",""]]});
+initSidebarItems({"enum":[["ConfigElementKind","The kind of the configuration element."],["StringKind",""]],"fn":[["parse_source",""]],"struct":[["ConfigElement","A configuration element."],["ConfigString",""],["Printer",""]],"trait":[["FromElement",""],["GetError",""],["Visitor",""]]});

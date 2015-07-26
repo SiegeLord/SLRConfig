@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["FromElement",""]]});
+initSidebarItems({"fn":[["make_error",""]],"trait":[["FromElement",""]]});

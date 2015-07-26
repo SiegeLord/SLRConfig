@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/slr_config/lib.rs.html#5-44' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/slr_config/lib.rs.html#5-45' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This crate implements the parsing for the SLRConfig format. Basic usage revolves
 around the creation and use of the <code>ConfigElement</code> type, like so:</p>
 <pre class='rust rust-example-rendered'>
@@ -57,7 +57,7 @@ around the creation and use of the <code>ConfigElement</code> type, like so:</p>
 <span class='kw'>fn</span> <span class='ident'>main</span>()
 {
     <span class='comment'>// Parse config element from value.</span>
-    <span class='kw'>let</span> (<span class='ident'>root</span>, _) <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>&quot;&lt;dummy&gt;&quot;</span>), <span class='string'>&quot;key = value&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;key = value&quot;</span>).<span class='ident'>unwrap</span>();
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;key&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;value&quot;</span>);
 
     <span class='comment'>// Create a new table and print it to a string.</span>
@@ -66,7 +66,24 @@ around the creation and use of the <code>ConfigElement</code> type, like so:</p>
     <span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;key&quot;</span>, <span class='ident'>val</span>);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;key = value\n&quot;</span>);
 }</pre>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+</div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.slr_def!.html'
+                               title='slr_config::slr_def!'>slr_def!</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='macro' href='macro.slr_def_struct_impl!.html'
+                               title='slr_config::slr_def_struct_impl!'>slr_def_struct_impl!</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr class=' module-item'>
                         <td><a class='struct' href='struct.ConfigElement.html'
@@ -137,6 +154,14 @@ around the creation and use of the <code>ConfigElement</code> type, like so:</p>
                     </tr>
                 </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.make_error.html'
+                               title='slr_config::make_error'>make_error</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
                     <tr class=' module-item'>
                         <td><a class='fn' href='fn.parse_source.html'
                                title='slr_config::parse_source'>parse_source</a></td>

@@ -84,6 +84,7 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -102,7 +103,7 @@ use std::path::Path;
 fn main()
 {
 	// Parse config element from value.
-	let (root, _) = ConfigElement::from_str(Path::new(&quot;&lt;dummy&gt;&quot;), &quot;key = value&quot;).unwrap();
+	let root = ConfigElement::from_str(&quot;key = value&quot;).unwrap();
 	assert_eq!(root.as_table().unwrap()[&quot;key&quot;].as_value().unwrap(), &quot;value&quot;);
 
 	// Create a new table and print it to a string.
@@ -123,6 +124,7 @@ fn main()
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>from_element</span>::<span class='op'>*</span>;
 
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>from_element</span>;
 <span class='kw'>mod</span> <span class='ident'>parser</span>;
 <span class='kw'>mod</span> <span class='ident'>visitor</span>;

@@ -7,6 +7,8 @@ use config_element::*;
 #[cfg(test)]
 use from_element::*;
 #[cfg(test)]
+use lex::*;
+#[cfg(test)]
 use std::path::Path;
 #[cfg(test)]
 use std::char;
@@ -147,4 +149,38 @@ fn from_element_test()
 	let mut val: i32 = 0;
 	val.from_element(&elem, None).unwrap();
 	assert_eq!(val, 55);
+
+	let mut elem = ConfigElement::new_array();
+	elem.insert("", ConfigElement::new_value("55"));
+	let mut val: Vec<i32> = vec![];
+	val.from_element(&elem, None).unwrap();
+	assert_eq!(val[0], 55);
+}
+
+#[test]
+fn slr_struct()
+{
+	slr_def!
+	{
+		#[derive(Clone)]
+		struct Test
+		{
+			x: i32 = 0,
+			y: i32 = 0
+		}
+	}
+	let orig = Test::new();
+
+	let mut empty_test = orig.clone();
+	let empty_test_elem = ConfigElement::new_table();
+	empty_test.from_element(&empty_test_elem, None).unwrap();
+	assert_eq!(empty_test.x, 0);
+	assert_eq!(empty_test.y, 0);
+
+	let mut partial_test = orig.clone();
+	let mut partial_test_elem = ConfigElement::new_table();
+	partial_test_elem.insert("x", ConfigElement::new_value("5"));
+	partial_test.from_element(&partial_test_elem, None).unwrap();
+	assert_eq!(partial_test.x, 5);
+	assert_eq!(partial_test.y, 0);
 }

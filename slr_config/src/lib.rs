@@ -36,6 +36,7 @@ pub use visitor::*;
 pub use config_element::*;
 pub use from_element::*;
 
+#[macro_use]
 mod from_element;
 mod parser;
 mod visitor;

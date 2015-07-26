@@ -41,6 +41,15 @@ fn basic_parsing_test()
 }
 
 #[test]
+fn init_test()
+{
+	let mut root = ConfigElement::new_table();
+	root.insert("za", ConfigElement::new_value("warudo"));
+	root.from_str_with_init("what = $za").unwrap();
+	assert_eq!(root.as_table().unwrap()["what"].as_value().unwrap(), "warudo");
+}
+
+#[test]
 fn roundtrip_test()
 {
 	let src =

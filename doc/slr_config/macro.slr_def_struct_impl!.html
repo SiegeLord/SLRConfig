@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-7565' class='srclink' href='../src/slr_config/from_element.rs.html#87-123' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-7568' class='srclink' href='../src/slr_config/from_element.rs.html#87-123' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slr_def_struct_impl</span>
 {
@@ -56,13 +56,13 @@
 		}
 	) <span class='op'>=&gt;</span>
 	{
-		<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span> <span class='ident'>FromElement</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
+		<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>FromElement</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
 		{
-			<span class='kw'>fn</span> <span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='kw-2'>&amp;</span><span class='ident'>ConfigElement</span>, <span class='ident'>src</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Source</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span>
+			<span class='kw'>fn</span> <span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>elem</span>: <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>ConfigElement</span>, <span class='ident'>src</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Source</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
 			{
 				<span class='kw'>match</span> <span class='op'>*</span><span class='ident'>elem</span>.<span class='ident'>kind</span>()
 				{
-					<span class='ident'>Table</span>(<span class='kw-2'>ref</span> <span class='ident'>table</span>) <span class='op'>=&gt;</span>
+					<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Table</span>(<span class='kw-2'>ref</span> <span class='ident'>table</span>) <span class='op'>=&gt;</span>
 					{
 						$(
 							<span class='kw'>match</span> <span class='ident'>table</span>.<span class='ident'>get</span>(<span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>))
@@ -70,15 +70,15 @@
 								<span class='prelude-val'>Some</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span>
 								{
 									<span class='comment'>// Use UFCS for a better error message.</span>
-									<span class='macro'>try</span><span class='macro'>!</span>(<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span> <span class='kw'>as</span> <span class='ident'>FromElement</span><span class='op'>&gt;</span>::<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>, <span class='ident'>v</span>, <span class='ident'>src</span>))
+									<span class='macro'>try</span><span class='macro'>!</span>(<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>FromElement</span><span class='op'>&gt;</span>::<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>, <span class='ident'>v</span>, <span class='ident'>src</span>))
 								},
 								_ <span class='op'>=&gt;</span> (),
 							}
 						)<span class='op'>*</span>
 						<span class='prelude-val'>Ok</span>(())
 					},
-					<span class='ident'>Value</span>(_) <span class='op'>=&gt;</span> <span class='ident'>make_error</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Cannot parse a value as {}&quot;</span>, <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>)), <span class='ident'>elem</span>.<span class='ident'>span</span>(), <span class='ident'>src</span>),
-					<span class='ident'>Array</span>(_) <span class='op'>=&gt;</span> <span class='ident'>make_error</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Cannot parse an array as {}&quot;</span>, <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>)), <span class='ident'>elem</span>.<span class='ident'>span</span>(), <span class='ident'>src</span>),
+					<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Value</span>(_) <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>make_error</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Cannot parse a value as {}&quot;</span>, <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>)), <span class='ident'>elem</span>.<span class='ident'>span</span>(), <span class='ident'>src</span>),
+					<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Array</span>(_) <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>make_error</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Cannot parse an array as {}&quot;</span>, <span class='macro'>stringify</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>)), <span class='ident'>elem</span>.<span class='ident'>span</span>(), <span class='ident'>src</span>),
 				}
 			}
 		}

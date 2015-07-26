@@ -85,6 +85,25 @@
 <span id="43">43</span>
 <span id="44">44</span>
 <span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -95,9 +114,10 @@ This crate implements the parsing for the SLRConfig format. Basic usage revolves
 around the creation and use of the `ConfigElement` type, like so:
 
 ~~~
+#[macro_use]
 extern crate slr_config;
 
-use slr_config::{ConfigElement};
+use slr_config::{ConfigElement, FromElement};
 use std::path::Path;
 
 fn main()
@@ -111,6 +131,23 @@ fn main()
 	let val = ConfigElement::new_value(&quot;value&quot;);
 	root.insert(&quot;key&quot;, val);
 	assert_eq!(root.to_string(), &quot;key = value\n&quot;);
+
+	// Compile-time schemas automate the above process in many situations.
+	slr_def!
+	{
+		struct TestSchema
+		{
+			key: u32 = 0,
+			arr: Vec&lt;u32&gt; = vec![]
+		}
+	}
+
+	let mut schema = TestSchema::new();
+	schema.from_element(&amp;ConfigElement::from_str(&quot;key = 5, arr = [1, 2]&quot;).unwrap(), None).unwrap();
+	assert_eq!(schema.key, 5);
+	assert_eq!(schema.arr.len(), 2);
+	assert_eq!(schema.arr[0], 1);
+	assert_eq!(schema.arr[1], 2);
 }
 ~~~
 */</span>
@@ -123,6 +160,7 @@ fn main()
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>visitor</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>from_element</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>lex</span>::{<span class='ident'>Error</span>, <span class='ident'>Source</span>};
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>from_element</span>;

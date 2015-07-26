@@ -149,6 +149,14 @@ macro_rules! slr_def
 				}
 			}
 		}
+
+		slr_def_struct_impl!
+		{
+			struct $name
+			{
+				$($field_name : $field_type = $field_init),*
+			}
+		}
 	};
 	(
 		$(#[$attrs:meta])*

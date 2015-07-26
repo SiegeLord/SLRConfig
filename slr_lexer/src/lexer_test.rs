@@ -2,7 +2,7 @@
 
 extern crate slr_lexer;
 
-use slr_lexer::Lexer;
+use slr_lexer::{Lexer, Source};
 use std::io::prelude::*;
 use std::env;
 use std::fs::File;
@@ -21,8 +21,9 @@ fn main()
 
 	let mut src = String::new();
 	File::open(&filename).unwrap().read_to_string(&mut src).unwrap();
-	
-	let mut lexer = Lexer::new(Path::new(&filename), &src);
+
+	let mut src = Source::new(Path::new(&filename), &src);
+	let mut lexer = Lexer::new(&mut src);
 	
 	loop
 	{

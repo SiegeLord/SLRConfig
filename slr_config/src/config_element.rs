@@ -56,26 +56,35 @@ impl ConfigElement
 		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
 	}
 
-	/// Parses a source and returns a table alongside an annotated source.
-	pub fn from_str<'l>(filename: &'l Path, source: &'l str) -> Result<(ConfigElement, Source<'l>), Error>
+	/// Parses a source and returns a table.
+	pub fn from_source<'l>(source: &'l mut Source<'l>) -> Result<ConfigElement, Error>
 	{
 		let mut root = ConfigElement::new_table();
-		let src = try!(root.fill_from_str(filename, source));
-		Ok((root, src))
+		try!(root.from_source_with_init(source));
+		Ok(root)
 	}
 
-	/// Parses a source and returns a table alongside an annotated source.
-	pub fn fill_from_str<'l>(&mut self, filename: &'l Path, source: &'l str) -> Result<(Source<'l>), Error>
+	/// Parses a source and returns a table.
+	pub fn from_str(src: &str) -> Result<ConfigElement, Error>
+	{
+		ConfigElement::from_source(&mut Source::new(&Path::new("<anon>"), src))
+	}
+
+	pub fn from_source_with_init<'l>(&mut self, source: &'l mut Source<'l>) -> Result<(), Error>
 	{
 		assert!(self.as_table().is_some());
 		let mut root = ConfigElement::new_table();
 		mem::swap(&mut root, self);
 		let mut visitor = ConfigElementVisitor::new(root);
-		parse_source(filename, source, &mut visitor).map(|src|
+		parse_source(source, &mut visitor).map(|_|
 		{
 			mem::swap(&mut visitor.extract_root(), self);
-			src
 		})
+	}
+
+	pub fn from_str_with_init(&mut self, src: &str) -> Result<(), Error>
+	{
+		self.from_source_with_init(&mut Source::new(&Path::new("<anon>"), src))
 	}
 
 	pub fn kind(&self) -> &ConfigElementKind

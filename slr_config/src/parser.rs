@@ -8,7 +8,6 @@ use lex::{Lexer, Token, Error, Span, Source};
 use visitor::{Visitor, GetError};
 use std::char;
 use std::marker::PhantomData;
-use std::path::Path;
 use std::u32;
 
 pub use self::StringKind::*;
@@ -139,9 +138,9 @@ impl<'l> ConfigString<'l>
 	}
 }
 
-struct Parser<'l, 'm, E, V: 'm>
+struct Parser<'l, 's, 'm, E, V: 'm> where 's: 'l
 {
-	lexer: Lexer<'l>,
+	lexer: Lexer<'l, 's>,
 	visitor: &'m mut V,
 	error_marker: PhantomData<E>,
 }
@@ -189,7 +188,7 @@ macro_rules! try
 	}
 }
 
-impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
+impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 {
 	fn parse_table(&mut self) -> Result<bool, Error>
 	{
@@ -416,9 +415,9 @@ impl<'l, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 'm, E, V>
 	}
 }
 
-pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, source: &'l str, visitor: &mut V) -> Result<Source<'l>, Error>
+pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(source: &'l mut Source<'l>, visitor: &mut V) -> Result<(), Error>
 {
-	let mut lexer = Lexer::new(filename, source);
+	let mut lexer = Lexer::new(source);
 	lexer.next();
 	let mut parser = Parser
 	{
@@ -430,6 +429,6 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(filename: &'l Path, 
 	match get_token!(parser.lexer.cur_token)
 	{
 		Some(token) => Error::from_span(parser.lexer.get_source(), token.span, "Expected a string"),
-		None => Ok(parser.lexer.get_source().clone())
+		None => Ok(())
 	}
 }

@@ -123,15 +123,15 @@ impl Span
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct Token<'l>
+pub struct Token<'s>
 {
-	pub kind: TokenKind<'l>,
+	pub kind: TokenKind<'s>,
 	pub span: Span
 }
 
-impl<'l> Token<'l>
+impl<'s> Token<'s>
 {
-	fn new(kind: TokenKind<'l>, span: Span) -> Token<'l>
+	fn new(kind: TokenKind<'s>, span: Span) -> Token<'s>
 	{
 		Token{ kind: kind, span: span }
 	}
@@ -213,7 +213,7 @@ pub struct Source<'l>
 
 impl<'l> Source<'l>
 {
-	fn new(filename: &'l Path, source: &'l str) -> Source<'l>
+	pub fn new(filename: &'l Path, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
 		let mut src =
@@ -365,11 +365,11 @@ impl<'l> Iterator for Source<'l>
 	}
 }
 
-pub struct Lexer<'l>
+pub struct Lexer<'l, 's> where 's: 'l
 {
-	source: Source<'l>,
-	pub cur_token: Option<Result<Token<'l>, Error>>,
-	pub next_token: Option<Result<Token<'l>, Error>>,
+	source: &'l mut Source<'s>,
+	pub cur_token: Option<Result<Token<'s>, Error>>,
+	pub next_token: Option<Result<Token<'s>, Error>>,
 }
 
 #[derive(Debug, Clone)]
@@ -446,14 +446,14 @@ impl Error
 	}
 }
 
-impl<'l> Lexer<'l>
+impl<'l, 's> Lexer<'l, 's>
 {
-	pub fn new(filename: &'l Path, source: &'l str) -> Lexer<'l>
+	pub fn new(source: &'l mut Source<'s>) -> Lexer<'l, 's>
 	{
 		let mut lex =
 			Lexer
 			{
-				source: Source::new(filename, source),
+				source: source,
 				cur_token: None,
 				next_token: None,
 			};
@@ -461,12 +461,12 @@ impl<'l> Lexer<'l>
 		lex
 	}
 
-	pub fn get_source(&self) -> &Source<'l>
+	pub fn get_source(&mut self) -> &mut Source<'s>
 	{
-		&self.source
+		&mut self.source
 	}
 
-	fn skip_whitespace<'m>(&'m mut self) -> bool
+	fn skip_whitespace(&mut self) -> bool
 	{
 		if !self.source.cur_char.map_or(false, |c| c.is_whitespace())
 		{
@@ -482,7 +482,7 @@ impl<'l> Lexer<'l>
 		true
 	}
 
-	fn skip_comments<'m>(&'m mut self) -> bool
+	fn skip_comments(&mut self) -> bool
 	{
 		if self.source.cur_char != Some('#')
 		{
@@ -503,7 +503,7 @@ impl<'l> Lexer<'l>
 		true
 	}
 
-	fn eat_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	fn eat_string(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("naked: {}", self.source.cur_char);
 		if !self.source.cur_char.map_or(false, |c| is_string_border(c) || c == '\\')
@@ -567,7 +567,7 @@ impl<'l> Lexer<'l>
 		Some(Ok(Token::new(EscapedString(contents), span)))
 	}
 
-	fn eat_raw_string<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	fn eat_raw_string(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		if self.source.cur_char != Some('"') && !(self.source.cur_char == Some('{') && self.source.next_char == Some('{'))
 		{
@@ -658,7 +658,7 @@ impl<'l> Lexer<'l>
 		}
 	}
 
-	fn eat_char_tokens<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	fn eat_char_tokens(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("char");
 		self.source.cur_char.and_then(|c|
@@ -683,7 +683,7 @@ impl<'l> Lexer<'l>
 		})
 	}
 
-	pub fn next<'m>(&'m mut self) -> Option<Result<Token<'l>, Error>>
+	pub fn next(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		if self.cur_token.as_ref().map_or(true, |res| res.is_ok())
 		{

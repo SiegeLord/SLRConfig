@@ -15,7 +15,7 @@ use std::path::Path;
 fn main()
 {
 	// Parse config element from value.
-	let (root, _) = ConfigElement::from_str(Path::new("<dummy>"), "key = value").unwrap();
+	let root = ConfigElement::from_str("key = value").unwrap();
 	assert_eq!(root.as_table().unwrap()["key"].as_value().unwrap(), "value");
 
 	// Create a new table and print it to a string.

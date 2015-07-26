@@ -9,8 +9,6 @@ use from_element::*;
 #[cfg(test)]
 use lex::*;
 #[cfg(test)]
-use std::path::Path;
-#[cfg(test)]
 use std::char;
 
 #[test]
@@ -36,7 +34,7 @@ fn basic_printing_test()
 #[test]
 fn basic_parsing_test()
 {
-	let (root, _) = ConfigElement::from_str(Path::new("<dummy>"), "za = warudo").unwrap();
+	let root = ConfigElement::from_str("za = warudo").unwrap();
 	assert!(root.as_table().is_some());
 	assert!(root.as_table().unwrap()["za"].as_value().is_some());
 	assert_eq!(root.as_table().unwrap()["za"].as_value().unwrap(), "warudo");
@@ -91,10 +89,10 @@ baz
 	}
 }
 "#;
-	let (original, _) = ConfigElement::from_str(Path::new("<dummy>"), src).unwrap();
+	let original = ConfigElement::from_str(src).unwrap();
 	assert_eq!(original.as_table().unwrap()["foo2"].as_value().unwrap(), "test");
 	let original_str = format!("{}", original);
-	let (decoded, _) = ConfigElement::from_str(Path::new("<dummy>"), &original_str).unwrap();
+	let decoded = ConfigElement::from_str(&original_str).unwrap();
 	let encoded_str = format!("{}", decoded);
 	assert_eq!(original_str, encoded_str);
 }
@@ -109,7 +107,7 @@ fn unicode_encode_test()
 		root.insert("test", ConfigElement::new_value(&s));
 		let encoded = format!("{}", root);
 		println!("Encoding: {} |{}|\n{}", i, s, encoded);
-		let (decoded, _) = ConfigElement::from_str(Path::new("<dummy>"), &encoded).map_err(|e| print!("{}", e.text)).unwrap();
+		let decoded = ConfigElement::from_str(&encoded).map_err(|e| print!("{}", e.text)).unwrap();
 		assert_eq!(&s, decoded.as_table().unwrap()["test"].as_value().unwrap());
 	}
 }
@@ -133,7 +131,7 @@ tab2
 	val_test2 = $tab
 }
 "#;
-	let (root, _) = ConfigElement::from_str(Path::new("<dummy>"), src).unwrap();
+	let root = ConfigElement::from_str(src).unwrap();
 	let root = root.as_table().unwrap();
 	assert!(root["val_test"].as_value().is_some());
 	assert!(root["val_test"].as_value().unwrap() == "aa");

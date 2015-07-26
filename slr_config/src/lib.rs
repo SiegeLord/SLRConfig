@@ -7,9 +7,10 @@ This crate implements the parsing for the SLRConfig format. Basic usage revolves
 around the creation and use of the `ConfigElement` type, like so:
 
 ~~~
+#[macro_use]
 extern crate slr_config;
 
-use slr_config::{ConfigElement};
+use slr_config::{ConfigElement, FromElement};
 use std::path::Path;
 
 fn main()
@@ -23,6 +24,23 @@ fn main()
 	let val = ConfigElement::new_value("value");
 	root.insert("key", val);
 	assert_eq!(root.to_string(), "key = value\n");
+
+	// Compile-time schemas automate the above process in many situations.
+	slr_def!
+	{
+		struct TestSchema
+		{
+			key: u32 = 0,
+			arr: Vec<u32> = vec![]
+		}
+	}
+
+	let mut schema = TestSchema::new();
+	schema.from_element(&ConfigElement::from_str("key = 5, arr = [1, 2]").unwrap(), None).unwrap();
+	assert_eq!(schema.key, 5);
+	assert_eq!(schema.arr.len(), 2);
+	assert_eq!(schema.arr[0], 1);
+	assert_eq!(schema.arr[1], 2);
 }
 ~~~
 */
@@ -35,6 +53,7 @@ pub use printer::*;
 pub use visitor::*;
 pub use config_element::*;
 pub use from_element::*;
+pub use lex::{Error, Source};
 
 #[macro_use]
 mod from_element;

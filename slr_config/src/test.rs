@@ -7,8 +7,6 @@ use config_element::*;
 #[cfg(test)]
 use from_element::*;
 #[cfg(test)]
-use lex::*;
-#[cfg(test)]
 use std::char;
 
 #[test]

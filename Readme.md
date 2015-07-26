@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/SiegeLord/SLRConfig.png)](https://travis-ci.org/SiegeLord/SLRConfig)
 
-[Documentation](http://siegelord.github.io/SLRConfig/doc/slr_config/)
+[Rust interface documentation](http://siegelord.github.io/SLRConfig/doc/slr_config/)
 
 SLRConfig is a simple configuration format. It supports tables (mappings of
 strings to elements) and arrays of elements, where an element may be a string,

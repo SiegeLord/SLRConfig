@@ -21,13 +21,13 @@ macro_rules! impl_from_element
 {
 	($t: ty) =>
 	{
-		impl<'l> FromElement<'l> for $t
+		impl<'l> $crate::FromElement<'l> for $t
 		{
-			fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Error>
+			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), $crate::Error>
 			{
 				match *elem.kind()
 				{
-					Value(ref val) =>
+					$crate::Value(ref val) =>
 					{
 						match <$t as FromStr>::from_str(&val)
 						{
@@ -36,11 +36,11 @@ macro_rules! impl_from_element
 								*self = v;
 								Ok(())
 							}
-							Err(_) => make_error(&format!("Cannot parse '{}' as {}", val, stringify!($t)), elem.span(), src)
+							Err(_) => $crate::make_error(&format!("Cannot parse '{}' as {}", val, stringify!($t)), elem.span(), src)
 						}
 					},
-					Table(_) => make_error(&format!("Cannot parse a table as {}", stringify!($t)), elem.span(), src),
-					Array(_) => make_error(&format!("Cannot parse an array as {}", stringify!($t)), elem.span(), src),
+					$crate::Table(_) => $crate::make_error(&format!("Cannot parse a table as {}", stringify!($t)), elem.span(), src),
+					$crate::Array(_) => $crate::make_error(&format!("Cannot parse an array as {}", stringify!($t)), elem.span(), src),
 				}
 			}
 		}
@@ -93,13 +93,13 @@ macro_rules! slr_def_struct_impl
 		}
 	) =>
 	{
-		impl<'l> FromElement<'l> for $name
+		impl<'l> $crate::FromElement<'l> for $name
 		{
-			fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Error>
+			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), $crate::Error>
 			{
 				match *elem.kind()
 				{
-					Table(ref table) =>
+					$crate::Table(ref table) =>
 					{
 						$(
 							match table.get(stringify!($field_name))
@@ -107,15 +107,15 @@ macro_rules! slr_def_struct_impl
 								Some(v) =>
 								{
 									// Use UFCS for a better error message.
-									try!(<$field_type as FromElement>::from_element(&mut self.$field_name, v, src))
+									try!(<$field_type as $crate::FromElement>::from_element(&mut self.$field_name, v, src))
 								},
 								_ => (),
 							}
 						)*
 						Ok(())
 					},
-					Value(_) => make_error(&format!("Cannot parse a value as {}", stringify!($name)), elem.span(), src),
-					Array(_) => make_error(&format!("Cannot parse an array as {}", stringify!($name)), elem.span(), src),
+					$crate::Value(_) => $crate::make_error(&format!("Cannot parse a value as {}", stringify!($name)), elem.span(), src),
+					$crate::Array(_) => $crate::make_error(&format!("Cannot parse an array as {}", stringify!($name)), elem.span(), src),
 				}
 			}
 		}

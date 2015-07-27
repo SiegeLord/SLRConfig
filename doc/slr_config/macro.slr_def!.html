@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-7569' class='srclink' href='../src/slr_config/from_element.rs.html#126-194' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-7753' class='srclink' href='../src/slr_config/element_repr.rs.html#211-326' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slr_def</span>
 {
@@ -82,6 +82,7 @@
 			}
 		}
 	};
+
 	(
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
@@ -114,7 +115,53 @@
 				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>),<span class='op'>*</span>
 			}
 		}
-	}
+	};
+
+	(
+		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+		<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
+		{
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span>
+		}
+	) <span class='op'>=&gt;</span>
+	{
+		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
+		<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
+		{
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
+		}
+
+		<span class='macro'>slr_def_enum_impl</span><span class='macro'>!</span>
+		{
+			<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
+			{
+				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
+			}
+		}
+	};
+
+	(
+		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
+		<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
+		{
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span>
+		}
+	) <span class='op'>=&gt;</span>
+	{
+		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
+		<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
+		{
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
+		}
+
+		<span class='macro'>slr_def_enum_impl</span><span class='macro'>!</span>
+		{
+			<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
+			{
+				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
+			}
+		}
+	};
 }</pre>
 </section>
     <section id='search' class="content hidden"></section>

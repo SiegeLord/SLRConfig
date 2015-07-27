@@ -269,6 +269,7 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
+<span id="230">230</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -277,6 +278,7 @@
 <span class='kw'>use</span> <span class='ident'>lex</span>::{<span class='ident'>get_string_quote_type</span>, <span class='ident'>StringQuoteType</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
+<span class='doccomment'>/// A utility type for printing a configuration element.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Printer</span><span class='op'>&lt;</span><span class='lifetime'>&#39;l</span>, <span class='ident'>W</span>: <span class='lifetime'>&#39;l</span><span class='op'>&gt;</span>
 {
 	<span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;l</span> <span class='kw-2'>mut</span> <span class='ident'>W</span>,

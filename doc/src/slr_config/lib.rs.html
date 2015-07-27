@@ -104,6 +104,10 @@
 <span id="62">62</span>
 <span id="63">63</span>
 <span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -117,7 +121,7 @@ around the creation and use of the `ConfigElement` type, like so:
 #[macro_use]
 extern crate slr_config;
 
-use slr_config::{ConfigElement, FromElement};
+use slr_config::{ConfigElement, ElementRepr};
 use std::path::Path;
 
 fn main()
@@ -148,6 +152,10 @@ fn main()
 	assert_eq!(schema.arr.len(), 2);
 	assert_eq!(schema.arr[0], 1);
 	assert_eq!(schema.arr[1], 2);
+
+	let elem = schema.to_element();
+	assert_eq!(elem.as_table().unwrap()[&quot;key&quot;].as_value().unwrap(), &quot;5&quot;);
+	assert_eq!(elem.as_table().unwrap()[&quot;arr&quot;].as_array().unwrap()[0].as_value().unwrap(), &quot;1&quot;);
 }
 ~~~
 */</span>
@@ -159,11 +167,11 @@ fn main()
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>printer</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>visitor</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='op'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>from_element</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>element_repr</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>lex</span>::{<span class='ident'>Error</span>, <span class='ident'>Source</span>};
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>from_element</span>;
+<span class='kw'>mod</span> <span class='ident'>element_repr</span>;
 <span class='kw'>mod</span> <span class='ident'>parser</span>;
 <span class='kw'>mod</span> <span class='ident'>visitor</span>;
 <span class='kw'>mod</span> <span class='ident'>config_element</span>;

@@ -5,6 +5,7 @@
 use lex::{get_string_quote_type, StringQuoteType};
 use std::io;
 
+/// A utility type for printing a configuration element.
 pub struct Printer<'l, W: 'l>
 {
 	writer: &'l mut W,

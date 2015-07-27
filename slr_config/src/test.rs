@@ -5,7 +5,7 @@
 #[cfg(test)]
 use config_element::*;
 #[cfg(test)]
-use from_element::*;
+use element_repr::*;
 #[cfg(test)]
 use std::char;
 
@@ -188,4 +188,31 @@ fn slr_struct()
 	partial_test.from_element(&partial_test_elem, None).unwrap();
 	assert_eq!(partial_test.x, 5);
 	assert_eq!(partial_test.y, 0);
+
+	let partial_test_elem = partial_test.to_element();
+	assert!(partial_test_elem.as_table().is_some());
+	assert_eq!(partial_test_elem.as_table().unwrap()["x"].as_value().unwrap(), "5");
+	assert_eq!(partial_test_elem.as_table().unwrap()["y"].as_value().unwrap(), "0");
+}
+
+#[test]
+fn slr_enum()
+{
+	slr_def!
+	{
+		#[derive(Clone, PartialEq, Debug)]
+		enum Test
+		{
+			A,
+			B
+		}
+	}
+	let mut test = Test::A;
+
+	let test_elem = ConfigElement::new_value("B");
+	test.from_element(&test_elem, None).unwrap();
+	assert_eq!(test, Test::B);
+
+	let test_elem = test.to_element();
+	assert_eq!(test_elem.as_value().unwrap(), "B");
 }

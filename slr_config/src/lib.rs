@@ -10,7 +10,7 @@ around the creation and use of the `ConfigElement` type, like so:
 #[macro_use]
 extern crate slr_config;
 
-use slr_config::{ConfigElement, FromElement};
+use slr_config::{ConfigElement, ElementRepr};
 use std::path::Path;
 
 fn main()
@@ -41,6 +41,10 @@ fn main()
 	assert_eq!(schema.arr.len(), 2);
 	assert_eq!(schema.arr[0], 1);
 	assert_eq!(schema.arr[1], 2);
+
+	let elem = schema.to_element();
+	assert_eq!(elem.as_table().unwrap()["key"].as_value().unwrap(), "5");
+	assert_eq!(elem.as_table().unwrap()["arr"].as_array().unwrap()[0].as_value().unwrap(), "1");
 }
 ~~~
 */
@@ -52,11 +56,11 @@ pub use parser::*;
 pub use printer::*;
 pub use visitor::*;
 pub use config_element::*;
-pub use from_element::*;
+pub use element_repr::*;
 pub use lex::{Error, Source};
 
 #[macro_use]
-mod from_element;
+mod element_repr;
 mod parser;
 mod visitor;
 mod config_element;

@@ -1,17 +1,7 @@
 use config_element::{ConfigElement, Value, Table, Array};
-use lex::{Error, Span, Source};
+use lex::{Error, ErrorKind, Source};
 use std::str::FromStr;
 use std::default::Default;
-
-// TODO: Remove this.
-pub fn make_error<'l>(msg: &str, span: Span, src: Option<&Source<'l>>) -> Result<(), Error>
-{
-	match src
-	{
-		Some(src) => Error::from_span(src, span, msg),
-		None => Err(Error::new(msg.to_string()))
-	}
-}
 
 /// Describes a way to convert a type to a ConfigElement and back.
 pub trait ElementRepr<'l>
@@ -41,11 +31,11 @@ macro_rules! element_repr_via_str_impl
 								*self = v;
 								Ok(())
 							}
-							Err(_) => $crate::make_error(&format!("Cannot parse '{}' as {}", val, stringify!($t)), elem.span(), src)
+							Err(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse '{}' as {}", val, stringify!($t))))
 						}
 					},
-					$crate::Table(_) => $crate::make_error(&format!("Cannot parse a table as {}", stringify!($t)), elem.span(), src),
-					$crate::Array(_) => $crate::make_error(&format!("Cannot parse an array as {}", stringify!($t)), elem.span(), src),
+					$crate::Table(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($t)))),
+					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($t)))),
 				}
 			}
 
@@ -87,8 +77,8 @@ impl<'l, T: ElementRepr<'l> + Default> ElementRepr<'l> for Vec<T>
 				}
 				Ok(())
 			},
-			Table(_) => make_error("Cannot parse a table as 'Vec<T>'", elem.span(), src),
-			Value(_) => make_error("Cannot parse a value as 'Vec<T>'", elem.span(), src),
+			Table(_) => Err(Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a table as 'Vec<T>'")),
+			Value(_) => Err(Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'Vec<T>'")),
 		}
 	}
 
@@ -138,8 +128,8 @@ macro_rules! slr_def_struct_impl
 						)*
 						Ok(())
 					},
-					$crate::Value(_) => $crate::make_error(&format!("Cannot parse a value as {}", stringify!($name)), elem.span(), src),
-					$crate::Array(_) => $crate::make_error(&format!("Cannot parse an array as {}", stringify!($name)), elem.span(), src),
+					$crate::Value(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a value as {}", stringify!($name)))),
+					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))),
 				}
 			}
 
@@ -186,11 +176,11 @@ macro_rules! slr_def_enum_impl
 								}
 								,
 							)*
-							_ => $crate::make_error(&format!("{} has no variant named '{}'", stringify!($name), val), elem.span(), src)
+							_ => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("{} has no variant named '{}'", stringify!($name), val)))
 						}
 					},
-					$crate::Table(_) => $crate::make_error(&format!("Cannot parse a table as {}", stringify!($name)), elem.span(), src),
-					$crate::Array(_) => $crate::make_error(&format!("Cannot parse an array as {}", stringify!($name)), elem.span(), src),
+					$crate::Table(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($name)))),
+					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))),
 				}
 			}
 

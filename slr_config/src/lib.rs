@@ -57,7 +57,7 @@ pub use printer::*;
 pub use visitor::*;
 pub use config_element::*;
 pub use element_repr::*;
-pub use lex::{Error, Source};
+pub use lex::{Error, ErrorKind, Source};
 
 #[macro_use]
 mod element_repr;

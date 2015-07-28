@@ -372,78 +372,108 @@ pub struct Lexer<'l, 's> where 's: 'l
 	pub next_token: Option<Result<Token<'s>, Error>>,
 }
 
+#[derive(Debug, Copy, Clone)]
+pub enum ErrorKind
+{
+	ParseFailure,
+	InvalidRepr,
+	UnknownField,
+	Custom(i32),
+}
+
 #[derive(Debug, Clone)]
 pub struct Error
 {
-	pub text: String
+	pub kind: ErrorKind,
+	pub text: String,
 }
 
 impl Error
 {
-	pub fn new(text: String) -> Error
+	pub fn new(kind: ErrorKind, text: String) -> Error
 	{
 		Error
 		{
-			text: text
+			kind: kind,
+			text: text,
 		}
 	}
 
-	pub fn from_pos<'l, T>(source: &Source<'l>, pos: usize, msg: &str) -> Result<T, Error>
+	pub fn from_pos<'l>(pos: usize, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
 	{
-		let (line, col) = source.get_line_col_from_pos(pos);
-
-		let source_line = source.get_line(line);
-		let mut col_str = String::with_capacity(col + 1);
-		if col > 0
+		match source
 		{
-			let num_tabs = source_line[..col].chars().filter(|&c| c == '\t').count();
-			grow_str(&mut col_str, col + num_tabs * 3, ' ');
-		}
-		col_str.push('^');
+			Some(source) =>
+			{
+				let (line, col) = source.get_line_col_from_pos(pos);
 
-		let source_line = source_line.replace("\t", "    ");
-		Err(Error::new(format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str)))
+				let source_line = source.get_line(line);
+				let mut col_str = String::with_capacity(col + 1);
+				if col > 0
+				{
+					let num_tabs = source_line[..col].chars().filter(|&c| c == '\t').count();
+					grow_str(&mut col_str, col + num_tabs * 3, ' ');
+				}
+				col_str.push('^');
+
+				let source_line = source_line.replace("\t", "    ");
+				Error::new(kind, format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str))
+			},
+			None => Error::new(kind, format!("error: {}\n", msg))
+		}
 	}
 
-	pub fn from_span<'l, T>(source: &Source<'l>, span: Span, msg: &str) -> Result<T, Error>
+	pub fn from_span<'l, T>(span: Span, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
 	{
-		if span.is_valid()
+		match source
 		{
-			let (start_line, start_col) = source.get_line_col_from_pos(span.start);
-			let (end_line, end_col) = source.get_line_col_from_pos(span.start + span.len - 1);
+			Some(source) =>
+			{
+				if span.is_valid()
+				{
+					let (start_line, start_col) = source.get_line_col_from_pos(span.start);
+					let (end_line, end_col) = source.get_line_col_from_pos(span.start + span.len - 1);
 
-			let source_line = source.get_line(start_line);
-			let end_col = if start_line == end_line
-			{
-				end_col
-			}
-			else
-			{
-				source_line.len() - 1
-			};
+					let source_line = source.get_line(start_line);
+					let end_col = if start_line == end_line
+					{
+						end_col
+					}
+					else
+					{
+						source_line.len() - 1
+					};
 
-			let mut col_str = String::with_capacity(end_col);
-			if start_col > 0
-			{
-				let num_start_tabs = source_line[..start_col].chars().filter(|&c| c == '\t').count();
-				grow_str(&mut col_str, start_col + num_start_tabs * 3, ' ');
-			}
-			col_str.push('^');
-			if end_col > start_col + 1
-			{
-				let num_end_tabs = source_line[start_col..end_col].chars().filter(|&c| c == '\t').count();
-				grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
-			}
+					let mut col_str = String::with_capacity(end_col);
+					if start_col > 0
+					{
+						let num_start_tabs = source_line[..start_col].chars().filter(|&c| c == '\t').count();
+						grow_str(&mut col_str, start_col + num_start_tabs * 3, ' ');
+					}
+					col_str.push('^');
+					if end_col > start_col + 1
+					{
+						let num_end_tabs = source_line[start_col..end_col].chars().filter(|&c| c == '\t').count();
+						grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
+					}
 
-			let source_line = source_line.replace("\t", "    ");
-			Err(Error::new(format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
-				msg, source_line, col_str)))
-		}
-		else
-		{
-			Err(Error::new(format!("{}: error: {}\n", source.filename.display(), msg)))
+					let source_line = source_line.replace("\t", "    ");
+					Error::new(kind, format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
+						msg, source_line, col_str))
+				}
+				else
+				{
+					Error::new(kind, format!("{}: error: {}\n", source.filename.display(), msg))
+				}
+			},
+			None =>	Error::new(kind, format!("error: {}\n", msg))
 		}
 	}
+}
+
+fn lex_error<'l, T>(pos: usize, source: &Source<'l>, msg: &str) -> Result<T, Error>
+{
+	Err(Error::from_pos(pos, Some(source), ErrorKind::ParseFailure, msg))
 }
 
 impl<'l, 's> Lexer<'l, 's>
@@ -461,9 +491,9 @@ impl<'l, 's> Lexer<'l, 's>
 		lex
 	}
 
-	pub fn get_source(&mut self) -> &mut Source<'s>
+	pub fn get_source(&self) -> &Source<'s>
 	{
-		&mut self.source
+		&self.source
 	}
 
 	fn skip_whitespace(&mut self) -> bool
@@ -559,7 +589,7 @@ impl<'l, 's> Lexer<'l, 's>
 		if escape_next
 		{
 			/* Got EOF while trying to escape it... */
-			return Some(Error::from_pos(&self.source, end_pos, "Unexpected EOF while parsing escape in string literal"));
+			return Some(lex_error(end_pos, &self.source, "Unexpected EOF while parsing escape in string literal"));
 		}
 
 		let contents = &self.source.source[start_pos..end_pos];
@@ -593,7 +623,7 @@ impl<'l, 's> Lexer<'l, 's>
 							self.source.bump();
 							break;
 						},
-						_ => return Some(Error::from_pos(&self.source, self.source.span_start,
+						_ => return Some(lex_error(self.source.span_start, &self.source,
 							r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#)),
 					}
 				}
@@ -643,7 +673,7 @@ impl<'l, 's> Lexer<'l, 's>
 
 		if self.source.cur_char.is_none()
 		{
-			Some(Error::from_pos(&self.source, self.source.span_start, "Unterminated quoted string literal"))
+			Some(lex_error(self.source.span_start, &self.source, "Unterminated quoted string literal"))
 		}
 		else
 		{

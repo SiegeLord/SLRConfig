@@ -10,7 +10,7 @@ use std::path::Path;
 use std::str::{FromStr, from_utf8};
 
 use visitor::Visitor;
-use lex::{Error, Span, Source};
+use lex::{Error, ErrorKind, Span, Source};
 use parser::{ConfigString, parse_source};
 use printer::Printer;
 
@@ -225,6 +225,11 @@ impl Display for ConfigElement
 	}
 }
 
+fn visit_error<'l>(span: Span, source: &Source<'l>, msg: &str) -> Result<(), Error>
+{
+	Err(Error::from_span::<()>(span, Some(source), ErrorKind::ParseFailure, msg))
+}
+
 struct ConfigElementVisitor
 {
 	// Name, element, initialized
@@ -276,8 +281,8 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 			match elem.kind
 			{
 				Value(ref mut val) => string.append_to_string(val),
-				Table(_) => return Error::from_span(src, string.span, "Cannot append a string to a table"),
-				Array(_) => return Error::from_span(src, string.span, "Cannot append a string to an array"),
+				Table(_) => return visit_error(string.span, src, "Cannot append a string to a table"),
+				Array(_) => return visit_error(string.span, src, "Cannot append a string to an array"),
 			}
 		}
 		self.stack[stack_size - 1].2 = true;
@@ -335,7 +340,7 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 
 		if found_element.is_none()
 		{
-			return Error::from_span(src, span, &format!("Could not find an element named `{}`", name));
+			return visit_error(span, src, &format!("Could not find an element named `{}`", name));
 		}
 		let found_element = found_element.unwrap();
 
@@ -350,12 +355,12 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 					match found_element.kind
 					{
 						Value(ref found_val) => lhs_val.push_str(found_val),
-						Table(_) => return Error::from_span(src, span, "Cannot append a table to a value"),
-						Array(_) => return Error::from_span(src, span, "Cannot append an array to a value"),
+						Table(_) => return visit_error(span, src, "Cannot append a table to a value"),
+						Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
 					}
 				}
-				Table(_) => return Error::from_span(src, span, "Cannot append to a table"),
-				Array(_) => return Error::from_span(src, span, "Cannot append to an array"),
+				Table(_) => return visit_error(span, src, "Cannot append to a table"),
+				Array(_) => return visit_error(span, src, "Cannot append to an array"),
 			}
 		}
 		else

@@ -372,12 +372,22 @@ pub struct Lexer<'l, 's> where 's: 'l
 	pub next_token: Option<Result<Token<'s>, Error>>,
 }
 
-#[derive(Debug, Copy, Clone)]
+/// An enum describing the kind of the error, to allow treating different
+/// errors differenly.
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ErrorKind
 {
+	/// A parse error has occured. This error is not recoverable.
 	ParseFailure,
+	/// An object could not be parsed from its ConfigElement representation.
+	/// This error is recoverable, but the value the the object is in an
+	/// unspecified state.
 	InvalidRepr,
+	/// While parsing a struct from a table, an unknown field was found. This
+	/// error is recoverable, and the struct is unaffected.
 	UnknownField,
+	/// A custom error available to 3rd party implementors. The semantics are
+	/// defined by the 3rd party.
 	Custom(i32),
 }
 

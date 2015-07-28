@@ -7,6 +7,8 @@ use config_element::*;
 #[cfg(test)]
 use element_repr::*;
 #[cfg(test)]
+use ::ErrorKind;
+#[cfg(test)]
 use std::char;
 
 #[test]
@@ -160,6 +162,14 @@ fn from_element_test()
 	let mut val: Vec<i32> = vec![];
 	val.from_element(&elem, None).unwrap();
 	assert_eq!(val[0], 55);
+
+	let mut elem = ConfigElement::new_array();
+	elem.insert("", ConfigElement::new_value("nan"));
+	let mut val: Vec<i32> = vec![];
+	let res = val.from_element(&elem, None);
+	assert!(res.is_err());
+	assert_eq!(res.unwrap_err().len(), 1);
+	assert_eq!(val[0], 0);
 }
 
 #[test]
@@ -193,6 +203,12 @@ fn slr_struct()
 	assert!(partial_test_elem.as_table().is_some());
 	assert_eq!(partial_test_elem.as_table().unwrap()["x"].as_value().unwrap(), "5");
 	assert_eq!(partial_test_elem.as_table().unwrap()["y"].as_value().unwrap(), "0");
+
+	let mut err_test = orig.clone();
+	let mut err_test_elem = ConfigElement::new_table();
+	err_test_elem.insert("z", ConfigElement::new_value("5"));
+	let res = err_test.from_element(&err_test_elem, None).unwrap_err();
+	assert_eq!(res[0].kind, ErrorKind::UnknownField);
 }
 
 #[test]

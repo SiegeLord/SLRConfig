@@ -7,7 +7,7 @@ use std::default::Default;
 pub trait ElementRepr<'l>
 {
 	/// Updates the contents of `self` based on values in the element.
-	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Error>;
+	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>;
 	/// Creates an element that represents the contents of `self`.
 	fn to_element(&self) -> ConfigElement;
 }
@@ -18,7 +18,7 @@ macro_rules! element_repr_via_str_impl
 	{
 		impl<'l> $crate::ElementRepr<'l> for $t
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), $crate::Error>
+			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
@@ -31,11 +31,11 @@ macro_rules! element_repr_via_str_impl
 								*self = v;
 								Ok(())
 							}
-							Err(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse '{}' as {}", val, stringify!($t))))
+							Err(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse '{}' as {}", val, stringify!($t)))])
 						}
 					},
-					$crate::Table(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($t)))),
-					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($t)))),
+					$crate::Table(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($t)))]),
+					$crate::Array(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($t)))]),
 				}
 			}
 
@@ -61,24 +61,32 @@ element_repr_via_str_impl!(String);
 
 impl<'l, T: ElementRepr<'l> + Default> ElementRepr<'l> for Vec<T>
 {
-	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Error>
+	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
 	{
 		match *elem.kind()
 		{
 			Array(ref arr) =>
 			{
+				let mut errors = vec![];
 				self.clear();
 				self.reserve(arr.len());
 				for val_elem in arr
 				{
 					let mut val: T = Default::default();
-					try!(val.from_element(val_elem, src));
+					val.from_element(val_elem, src).map_err(|new_errors| errors.extend(new_errors)).ok();
 					self.push(val);
 				}
-				Ok(())
+				if errors.is_empty()
+				{
+					Ok(())
+				}
+				else
+				{
+					Err(errors)
+				}
 			},
-			Table(_) => Err(Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a table as 'Vec<T>'")),
-			Value(_) => Err(Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'Vec<T>'")),
+			Table(_) => Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a table as 'Vec<T>'")]),
+			Value(_) => Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'Vec<T>'")]),
 		}
 	}
 
@@ -109,27 +117,39 @@ macro_rules! slr_def_struct_impl
 	{
 		impl<'l> $crate::ElementRepr<'l> for $name
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), $crate::Error>
+			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
 					$crate::Table(ref table) =>
 					{
-						$(
-							match table.get(stringify!($field_name))
+						let mut errors = vec![];
+						for (k, v) in table
+						{
+							match &k[..]
 							{
-								Some(v) =>
-								{
-									// Use UFCS for a better error message.
-									try!(<$field_type as $crate::ElementRepr>::from_element(&mut self.$field_name, v, src))
-								},
-								_ => (),
+								$(
+									stringify!($field_name) =>
+									{
+										// Use UFCS for a better error message.
+										<$field_type as $crate::ElementRepr>::from_element(&mut self.$field_name, v, src).map_err(|new_errors| errors.extend(new_errors)).ok();
+									},
+								)*
+								_ => errors.push($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::UnknownField,
+									&format!("{} does not have a field named {}", stringify!($name), k)))
 							}
-						)*
-						Ok(())
+						}
+						if errors.is_empty()
+						{
+							Ok(())
+						}
+						else
+						{
+							Err(errors)
+						}
 					},
-					$crate::Value(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a value as {}", stringify!($name)))),
-					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))),
+					$crate::Value(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a value as {}", stringify!($name)))]),
+					$crate::Array(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))]),
 				}
 			}
 
@@ -160,7 +180,7 @@ macro_rules! slr_def_enum_impl
 	{
 		impl<'l> $crate::ElementRepr<'l> for $name
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), $crate::Error>
+			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
@@ -176,11 +196,11 @@ macro_rules! slr_def_enum_impl
 								}
 								,
 							)*
-							_ => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("{} has no variant named '{}'", stringify!($name), val)))
+							_ => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("{} has no variant named '{}'", stringify!($name), val))])
 						}
 					},
-					$crate::Table(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($name)))),
-					$crate::Array(_) => Err($crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))),
+					$crate::Table(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($name)))]),
+					$crate::Array(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))]),
 				}
 			}
 

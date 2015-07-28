@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["StringQuoteType",""],["TokenKind",""]],"fn":[["get_string_quote_type",""]],"struct":[["Error",""],["Lexer",""],["Source",""],["Span",""],["Token",""]]});
+initSidebarItems({"enum":[["ErrorKind","An enum describing the kind of the error, to allow treating different errors differenly."],["StringQuoteType",""],["TokenKind",""]],"fn":[["get_string_quote_type",""]],"struct":[["Error",""],["Lexer",""],["Source",""],["Span",""],["Token",""]]});

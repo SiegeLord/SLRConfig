@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["make_error",""]],"trait":[["ElementRepr","Describes a way to convert a type to a ConfigElement and back."]]});
+initSidebarItems({"trait":[["ElementRepr","Describes a way to convert a type to a ConfigElement and back."]]});

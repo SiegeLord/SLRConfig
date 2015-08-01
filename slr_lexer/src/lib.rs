@@ -85,6 +85,7 @@ fn grow_str(string: &mut String, count: usize, ch: char)
 	}
 }
 
+/// Type representing a certain sub-section of the source.
 #[derive(Debug, Copy, Clone)]
 pub struct Span
 {
@@ -190,6 +191,7 @@ fn is_newline(c: char) -> bool
 	c == '\n'
 }
 
+/// Annotated representation of the configuration source string.
 #[derive(Clone)]
 pub struct Source<'l>
 {
@@ -234,6 +236,11 @@ impl<'l> Source<'l>
 		src.bump();
 		src.bump();
 		src
+	}
+
+	fn reset(&mut self)
+	{
+		*self = Source::new(self.filename, self.source);
 	}
 
 	fn get_line_start_end(&self, line: usize) -> (usize, usize)
@@ -365,6 +372,7 @@ impl<'l> Iterator for Source<'l>
 	}
 }
 
+/// A type handling the lexing.
 pub struct Lexer<'l, 's> where 's: 'l
 {
 	source: &'l mut Source<'s>,
@@ -391,6 +399,7 @@ pub enum ErrorKind
 	Custom(i32),
 }
 
+/// The error type used throughout this crate.
 #[derive(Debug, Clone)]
 pub struct Error
 {
@@ -409,7 +418,7 @@ impl Error
 		}
 	}
 
-	pub fn from_pos<'l>(pos: usize, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
+	fn from_pos<'l>(pos: usize, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
 	{
 		match source
 		{
@@ -433,6 +442,8 @@ impl Error
 		}
 	}
 
+	/// Creates an error from a certain span of the source. The source argument,
+	/// if set, must be set to the source that was used when the span was created.
 	pub fn from_span<'l, T>(span: Span, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
 	{
 		match source
@@ -488,8 +499,12 @@ fn lex_error<'l, T>(pos: usize, source: &Source<'l>, msg: &str) -> Result<T, Err
 
 impl<'l, 's> Lexer<'l, 's>
 {
+	/// Creates a new lexer from a source. The source will be reset by this
+	/// operation, and must not be used with any spans created from a previous
+	/// lexing done with that source.
 	pub fn new(source: &'l mut Source<'s>) -> Lexer<'l, 's>
 	{
+		source.reset();
 		let mut lex =
 			Lexer
 			{

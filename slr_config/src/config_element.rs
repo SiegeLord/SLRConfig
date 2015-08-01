@@ -56,7 +56,9 @@ impl ConfigElement
 		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
 	}
 
-	/// Parses a source and returns a table.
+	/// Parses a source and returns a table. The source will be reset by this
+	/// operation, and must not be used with any spans created from a previous
+	/// parsing done with that source.
 	pub fn from_source<'l>(source: &'l mut Source<'l>) -> Result<ConfigElement, Error>
 	{
 		let mut root = ConfigElement::new_table();
@@ -70,6 +72,10 @@ impl ConfigElement
 		ConfigElement::from_source(&mut Source::new(&Path::new("<anon>"), src))
 	}
 
+	/// Updates the elements in this table with new values parsed from source.
+	/// If an error occurs, the contents of this table are undefined. The source
+	/// will be reset by this operation, and must not be used with any spans
+	/// created from a previous lexing done with that source.
 	pub fn from_source_with_init<'l>(&mut self, source: &'l mut Source<'l>) -> Result<(), Error>
 	{
 		assert!(self.as_table().is_some());
@@ -82,6 +88,8 @@ impl ConfigElement
 		})
 	}
 
+	/// Updates the elements in this table with new values parsed from source.
+	/// If an error occurs, the contents of this table are undefined.
 	pub fn from_str_with_init(&mut self, src: &str) -> Result<(), Error>
 	{
 		self.from_source_with_init(&mut Source::new(&Path::new("<anon>"), src))
@@ -151,6 +159,8 @@ impl ConfigElement
 		}
 	}
 
+	/// Insert an element into a table or an array. Panics if self is a value.
+	/// `name` is ignored if self is an array.
 	pub fn insert<T: ToString>(&mut self, name: T, elem: ConfigElement)
 	{
 		match self.kind

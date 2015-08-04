@@ -95,16 +95,25 @@ impl ConfigElement
 		self.from_source_with_init(&mut Source::new(&Path::new("<anon>"), src))
 	}
 
+	/// Returns the kind of this element.
 	pub fn kind(&self) -> &ConfigElementKind
 	{
 		&self.kind
 	}
 
+	/// Returns the kind of this element.
+	pub fn kind_mut(&mut self) -> &mut ConfigElementKind
+	{
+		&mut self.kind
+	}
+
+	/// Returns the span associated with this element.
 	pub fn span(&self) -> Span
 	{
 		self.span
 	}
 
+	/// If this is a table, returns a pointer to its contents.
 	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>
 	{
 		match self.kind
@@ -114,6 +123,7 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is a table, returns a pointer to its contents.
 	pub fn as_table_mut(&mut self) -> Option<&mut BTreeMap<String, ConfigElement>>
 	{
 		match self.kind
@@ -123,6 +133,7 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is a value, returns a pointer to its contents.
 	pub fn as_value(&self) -> Option<&String>
 	{
 		match self.kind
@@ -132,6 +143,7 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is a value, returns a pointer to its contents.
 	pub fn as_value_mut(&mut self) -> Option<&mut String>
 	{
 		match self.kind
@@ -141,6 +153,7 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is an array, returns a pointer to its contents.
 	pub fn as_array(&self) -> Option<&Vec<ConfigElement>>
 	{
 		match self.kind
@@ -150,6 +163,7 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is an array, returns a pointer to its contents.
 	pub fn as_array_mut(&mut self) -> Option<&mut Vec<ConfigElement>>
 	{
 		match self.kind
@@ -177,19 +191,20 @@ impl ConfigElement
 		}
 	}
 
-	pub fn print<W: io::Write>(&self, name: Option<&str>, is_root: bool, p: &mut Printer<W>) -> Result<(), io::Error>
+	/// Outputs the string representation of this element into into a printer.
+	pub fn print<W: io::Write>(&self, name: Option<&str>, is_root: bool, printer: &mut Printer<W>) -> Result<(), io::Error>
 	{
 		match self.kind
 		{
-			Value(ref val) => try!(p.value(name, &val)),
+			Value(ref val) => try!(printer.value(name, &val)),
 			Table(ref table) =>
 			{
-				try!(p.start_table(name, is_root, table.is_empty()));
+				try!(printer.start_table(name, is_root, table.is_empty()));
 				for (k, v) in table
 				{
-					try!(v.print(Some(k), false, p));
+					try!(v.print(Some(k), false, printer));
 				}
-				try!(p.end_table(is_root));
+				try!(printer.end_table(is_root));
 			}
 			Array(ref array) =>
 			{
@@ -209,12 +224,12 @@ impl ConfigElement
 						_ => ()
 					}
 				}
-				try!(p.start_array(name, one_line));
+				try!(printer.start_array(name, one_line));
 				for v in array
 				{
-					try!(v.print(None, false, p));
+					try!(v.print(None, false, printer));
 				}
-				try!(p.end_array());
+				try!(printer.end_array());
 			}
 		}
 		Ok(())

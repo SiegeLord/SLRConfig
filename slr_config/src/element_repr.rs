@@ -106,6 +106,7 @@ impl<'l, T: ElementRepr<'l> + Default> ElementRepr<'l> for Vec<T>
 }
 
 #[macro_export]
+#[doc(hidden)]
 macro_rules! slr_def_struct_impl
 {
 	(
@@ -169,6 +170,7 @@ macro_rules! slr_def_struct_impl
 }
 
 #[macro_export]
+#[doc(hidden)]
 macro_rules! slr_def_enum_impl
 {
 	(
@@ -217,6 +219,39 @@ macro_rules! slr_def_enum_impl
 	}
 }
 
+/** A macro to define the compile-time schemas for configuration elements.
+You can use this macro to define structs and enums, like so:
+
+~~~
+#[macro_use]
+extern crate slr_config;
+
+slr_def!
+{
+	#[derive(Clone)] // Attributes supported.
+	pub struct TestSchema
+	{
+		pub key: u32 = 0, // The rhs assignments are initializer expressions.
+		pub arr: Vec<u32> = vec![]
+	}
+}
+
+slr_def!
+{
+	pub enum TestEnum
+	{
+		VariantA,
+		VariantB
+	}
+}
+
+# fn main() {}
+~~~
+
+The types declared by both invocations implement `ElementRepr`, and the struct
+versions also implement a `new` constructor which creates the type with the
+default value specified by the macro invocation.
+*/
 #[macro_export]
 macro_rules! slr_def
 {
@@ -224,7 +259,7 @@ macro_rules! slr_def
 		$(#[$attrs:meta])*
 		pub struct $name: ident
 		{
-			$($field_name: ident : $field_type: ty = $field_init: expr),*
+			$(pub $field_name: ident : $field_type: ty = $field_init: expr),*
 		}
 	) =>
 	{

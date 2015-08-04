@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-8182' class='srclink' href='../src/slr_config/element_repr.rs.html#221-336' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-8193' class='srclink' href='../src/slr_config/element_repr.rs.html#256-371' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slr_def</span>
 {
@@ -53,7 +53,7 @@
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
 		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span>
+			$(<span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span>
 		}
 	) <span class='op'>=&gt;</span>
 	{
@@ -163,7 +163,36 @@
 		}
 	};
 }</pre>
-</section>
+<div class='docblock'><p>A macro to define the compile-time schemas for configuration elements.
+You can use this macro to define structs and enums, like so:</p>
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slr_config</span>;
+
+<span class='macro'>slr_def</span><span class='macro'>!</span>
+{
+    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span> <span class='comment'>// Attributes supported.</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TestSchema</span>
+    {
+        <span class='kw'>pub</span> <span class='ident'>key</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='number'>0</span>, <span class='comment'>// The rhs assignments are initializer expressions.</span>
+        <span class='kw'>pub</span> <span class='ident'>arr</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[]
+    }
+}
+
+<span class='macro'>slr_def</span><span class='macro'>!</span>
+{
+    <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>TestEnum</span>
+    {
+        <span class='ident'>VariantA</span>,
+        <span class='ident'>VariantB</span>
+    }
+}
+</pre>
+
+<p>The types declared by both invocations implement <code>ElementRepr</code>, and the struct
+versions also implement a <code>new</code> constructor which creates the type with the
+default value specified by the macro invocation.</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

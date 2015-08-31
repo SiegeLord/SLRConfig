@@ -47,8 +47,8 @@
             </a>
         </span><a id='src-1735' class='srclink' href='../src/slr_lexer/lib.rs.html#376-381' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Lexer&lt;'l, 's&gt; <span class='where'>where 's: 'l</span> {
-    pub cur_token: <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
-    pub next_token: <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
+    pub cur_token: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
+    pub next_token: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
     // some fields omitted
 }</pre><div class='docblock'><p>A type handling the lexing.</p>
 </div><h2 class='fields'>Fields</h2>
@@ -59,7 +59,7 @@
 operation, and must not be used with any spans created from a previous
 lexing done with that source.</p>
 </div><h4 id='method.get_source' class='method'><code>fn <a href='#method.get_source' class='fnname'>get_source</a>(&amp;self) -&gt; &amp;<a class='struct' href='../slr_lexer/struct.Source.html' title='slr_lexer::Source'>Source</a>&lt;'s&gt;</code></h4>
-<h4 id='method.next' class='method'><code>fn <a href='#method.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;</code></h4>
+<h4 id='method.next' class='method'><code>fn <a href='#method.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -95,8 +95,8 @@ lexing done with that source.</p>
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>

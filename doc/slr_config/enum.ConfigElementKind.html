@@ -47,16 +47,16 @@
             </a>
         </span><a id='src-5030' class='srclink' href='../src/slr_config/config_element.rs.html#29-37' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum ConfigElementKind {
-    Value(<a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>),
-    Table(<a class='struct' href='http://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;<a class='struct' href='http://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='../slr_config/struct.ConfigElement.html' title='slr_config::ConfigElement'>ConfigElement</a>&gt;),
-    Array(<a class='struct' href='http://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../slr_config/struct.ConfigElement.html' title='slr_config::ConfigElement'>ConfigElement</a>&gt;),
+    Value(<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>),
+    Table(<a class='struct' href='https://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='../slr_config/struct.ConfigElement.html' title='slr_config::ConfigElement'>ConfigElement</a>&gt;),
+    Array(<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../slr_config/struct.ConfigElement.html' title='slr_config::ConfigElement'>ConfigElement</a>&gt;),
 }</pre><div class='docblock'><p>The kind of the configuration element.</p>
 </div><h2 class='variants'>Variants</h2>
 <table><tr><td id='variant.Value'><code>Value</code></td><td><div class='docblock'><p>A simple value, containing a string.</p>
 </div></td></tr><tr><td id='variant.Table'><code>Table</code></td><td><div class='docblock'><p>A table, which is a mapping of strings to configuration elements.</p>
 </div></td></tr><tr><td id='variant.Array'><code>Array</code></td><td><div class='docblock'><p>An array of configuration elements.</p>
-</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../slr_config/enum.ConfigElementKind.html' title='slr_config::ConfigElementKind'>ConfigElementKind</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../slr_config/enum.ConfigElementKind.html' title='slr_config::ConfigElementKind'>ConfigElementKind</a></code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../slr_config/enum.ConfigElementKind.html' title='slr_config::ConfigElementKind'>ConfigElementKind</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../slr_config/enum.ConfigElementKind.html' title='slr_config::ConfigElementKind'>ConfigElementKind</a></code></h4>
+<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -92,8 +92,8 @@
                 <p>
                     Accepted types are: <code>fn</code>, <code>mod</code>,
                     <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>typedef</code> (or
-                    <code>tdef</code>).
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
                 </p>
 
                 <p>

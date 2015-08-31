@@ -1,8 +1,7 @@
 # SLRConfig
 
 [![Build Status](https://travis-ci.org/SiegeLord/SLRConfig.png)](https://travis-ci.org/SiegeLord/SLRConfig)
-
-[Rust interface documentation](http://siegelord.github.io/SLRConfig/doc/slr_config/)
+[![](http://meritbadge.herokuapp.com/slr_config)](https://crates.io/crates/slr_config)
 
 SLRConfig is a simple configuration format. It supports tables (mappings of
 strings to elements) and arrays of elements, where an element may be a string,
@@ -10,6 +9,18 @@ an array or a table. Despite only supporting arrangements of strings, it's
 permissive syntax and a standard implementation that preserves the location of
 where each element was assigned allows the programmer to add support for any
 other type with the same quality of error messages as if it were built in.
+
+## Documentation
+
+[Rust interface documentation](http://siegelord.github.io/SLRConfig/doc/slr_config/)
+
+## Packages
+
+[slr_config](https://crates.io/crates/slr_config) - Parser and Rust interface.
+
+[slr_lexer](https://crates.io/crates/slr_lexer) - Lexer.
+
+## Example
 
 Here's a sample snippet. The details of the syntax are explained further below.
 

@@ -17,7 +17,6 @@ other type with the same quality of error messages as if it were built in.
 ## Packages
 
 * [slr_config](https://crates.io/crates/slr_config) - Parser and Rust interface.
-
 * [slr_lexer](https://crates.io/crates/slr_lexer) - Lexer.
 
 ## Example

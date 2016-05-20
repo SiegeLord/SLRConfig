@@ -9,7 +9,9 @@
 
     <title>slr_config::slr_def! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,129 +44,44 @@
 
     <section id='main' class="content macro">
 <h1 class='fqn'><span class='in-band'><a href='index.html'>slr_config</a>::<wbr><a class='macro' href=''>slr_def!</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-8193' class='srclink' href='../src/slr_config/element_repr.rs.html#256-371' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-910' class='srclink' href='../src/slr_config/element_repr.rs.html#257-372' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slr_def</span>
-{
-	(
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slr_def</span> {
+    (
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
 		{
-			$(<span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span>
+			$(<span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span> $(,)<span class='op'>*</span>
 		}
-	) <span class='op'>=&gt;</span>
-	{
-		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
-		<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			$(<span class='kw'>pub</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>),<span class='op'>*</span>
-		}
-
-		<span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-				{
-					$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>),<span class='op'>*</span>
-				}
-			}
-		}
-
-		<span class='macro'>slr_def_struct_impl</span><span class='macro'>!</span>
-		{
-			<span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>),<span class='op'>*</span>
-			}
-		}
-	};
-
-	(
+	) <span class='op'>=&gt;</span> { ... };
+    (
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
 		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span>
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='ident'>ident</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>: <span class='ident'>ty</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>: <span class='ident'>expr</span>),<span class='op'>*</span> $(,)<span class='op'>*</span>
 		}
-	) <span class='op'>=&gt;</span>
-	{
-		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
-		<span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span>),<span class='op'>*</span>
-		}
-
-		<span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			<span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-				{
-					$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>),<span class='op'>*</span>
-				}
-			}
-		}
-
-		<span class='macro'>slr_def_struct_impl</span><span class='macro'>!</span>
-		{
-			<span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_name</span> : <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_type</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>field_init</span>),<span class='op'>*</span>
-			}
-		}
-	};
-
-	(
+	) <span class='op'>=&gt;</span> { ... };
+    (
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
 		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span>
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span> $(,)<span class='op'>*</span>
 		}
-	) <span class='op'>=&gt;</span>
-	{
-		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
-		<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
-		}
-
-		<span class='macro'>slr_def_enum_impl</span><span class='macro'>!</span>
-		{
-			<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
-			}
-		}
-	};
-
-	(
+	) <span class='op'>=&gt;</span> { ... };
+    (
 		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
 		<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>
 		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span>
+			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>: <span class='ident'>ident</span>),<span class='op'>*</span> $(,)<span class='op'>*</span>
 		}
-	) <span class='op'>=&gt;</span>
-	{
-		$(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>attrs</span>]</span>)<span class='op'>*</span>
-		<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-		{
-			$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
-		}
-
-		<span class='macro'>slr_def_enum_impl</span><span class='macro'>!</span>
-		{
-			<span class='kw'>enum</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>
-			{
-				$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>var_name</span>),<span class='op'>*</span>
-			}
-		}
-	};
+	) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>A macro to define the compile-time schemas for configuration elements.
 You can use this macro to define structs and enums, like so:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slr_config</span>;
@@ -235,7 +152,7 @@ default value specified by the macro invocation.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -251,6 +168,6 @@ default value specified by the macro invocation.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

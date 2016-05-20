@@ -9,7 +9,9 @@
 
     <title>slr_lexer::Error - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,24 +44,27 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slr_lexer</a>::<wbr><a class='struct' href=''>Error</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-2057' class='srclink' href='../src/slr_lexer/lib.rs.html#404-408' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-270' class='srclink' href='../src/slr_lexer/lib.rs.html#404-408' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Error {
     pub kind: <a class='enum' href='../slr_lexer/enum.ErrorKind.html' title='slr_lexer::ErrorKind'>ErrorKind</a>,
     pub text: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>,
 }</pre><div class='docblock'><p>The error type used throughout this crate.</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr class='stab '>
-                                  <td id='structfield.kind'><code>kind</code></td><td></td></tr><tr class='stab '>
-                                  <td id='structfield.text'><code>text</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(kind: <a class='enum' href='../slr_lexer/enum.ErrorKind.html' title='slr_lexer::ErrorKind'>ErrorKind</a>, text: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
-<h4 id='method.from_span' class='method'><code>fn <a href='#method.from_span' class='fnname'>from_span</a>&lt;'l, T&gt;(span: <a class='struct' href='../slr_lexer/struct.Span.html' title='slr_lexer::Span'>Span</a>, source: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../slr_lexer/struct.Source.html' title='slr_lexer::Source'>Source</a>&lt;'l&gt;&gt;, kind: <a class='enum' href='../slr_lexer/enum.ErrorKind.html' title='slr_lexer::ErrorKind'>ErrorKind</a>, msg: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
+                             <td id='structfield.kind'><code>kind</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.text'><code>text</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-285' class='srclink' href='../src/slr_lexer/lib.rs.html#410-493' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(kind: <a class='enum' href='../slr_lexer/enum.ErrorKind.html' title='slr_lexer::ErrorKind'>ErrorKind</a>, text: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
+<h4 id='method.from_span' class='method'><code>fn <a href='#method.from_span' class='fnname'>from_span</a>&lt;'l, T&gt;(span: <a class='struct' href='../slr_lexer/struct.Span.html' title='slr_lexer::Span'>Span</a>, source: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../slr_lexer/struct.Source.html' title='slr_lexer::Source'>Source</a>&lt;'l&gt;&gt;, kind: <a class='enum' href='../slr_lexer/enum.ErrorKind.html' title='slr_lexer::ErrorKind'>ErrorKind</a>, msg: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
 <div class='docblock'><p>Creates an error from a certain span of the source. The source argument,
 if set, must be set to the source that was used when the span was created.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-273' class='srclink' href='../src/slr_lexer/lib.rs.html#403' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></h4>
+<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-278' class='srclink' href='../src/slr_lexer/lib.rs.html#403' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -103,7 +108,7 @@ if set, must be set to the source that was used when the span was created.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -119,6 +124,6 @@ if set, must be set to the source that was used when the span was created.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

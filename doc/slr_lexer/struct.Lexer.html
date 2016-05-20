@@ -9,7 +9,9 @@
 
     <title>slr_lexer::Lexer - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,10 +44,10 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slr_lexer</a>::<wbr><a class='struct' href=''>Lexer</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-1735' class='srclink' href='../src/slr_lexer/lib.rs.html#376-381' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-229' class='srclink' href='../src/slr_lexer/lib.rs.html#376-381' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Lexer&lt;'l, 's&gt; <span class='where'>where 's: 'l</span> {
     pub cur_token: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
     pub next_token: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../slr_lexer/struct.Token.html' title='slr_lexer::Token'>Token</a>&lt;'s&gt;, <a class='struct' href='../slr_lexer/struct.Error.html' title='slr_lexer::Error'>Error</a>&gt;&gt;,
@@ -53,8 +55,9 @@
 }</pre><div class='docblock'><p>A type handling the lexing.</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr class='stab '>
-                                  <td id='structfield.cur_token'><code>cur_token</code></td><td></td></tr><tr class='stab '>
-                                  <td id='structfield.next_token'><code>next_token</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'l, 's&gt; <a class='struct' href='../slr_lexer/struct.Lexer.html' title='slr_lexer::Lexer'>Lexer</a>&lt;'l, 's&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(source: &amp;'l mut <a class='struct' href='../slr_lexer/struct.Source.html' title='slr_lexer::Source'>Source</a>&lt;'s&gt;) -&gt; <a class='struct' href='../slr_lexer/struct.Lexer.html' title='slr_lexer::Lexer'>Lexer</a>&lt;'l, 's&gt;</code></h4>
+                             <td id='structfield.cur_token'><code>cur_token</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.next_token'><code>next_token</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'l, 's&gt; <a class='struct' href='../slr_lexer/struct.Lexer.html' title='slr_lexer::Lexer'>Lexer</a>&lt;'l, 's&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-357' class='srclink' href='../src/slr_lexer/lib.rs.html#500-754' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(source: &amp;'l mut <a class='struct' href='../slr_lexer/struct.Source.html' title='slr_lexer::Source'>Source</a>&lt;'s&gt;) -&gt; <a class='struct' href='../slr_lexer/struct.Lexer.html' title='slr_lexer::Lexer'>Lexer</a>&lt;'l, 's&gt;</code></h4>
 <div class='docblock'><p>Creates a new lexer from a source. The source will be reset by this
 operation, and must not be used with any spans created from a previous
 lexing done with that source.</p>
@@ -103,7 +106,7 @@ lexing done with that source.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -119,6 +122,6 @@ lexing done with that source.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

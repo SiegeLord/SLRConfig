@@ -9,7 +9,9 @@
 
     <title>slr_lexer - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,93 +44,79 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slr_lexer</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/slr_lexer/lib.rs.html#4-754' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/slr_lexer/lib.rs.html#4-754' title='goto source code'>[src]</a></span></h1>
 <h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use self::<a class='enum' href='../slr_lexer/enum.TokenKind.html' title='slr_lexer::TokenKind'>TokenKind</a>::*;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Error.html'
-                               title='slr_lexer::Error'>Error</a></td>
-                        <td class='docblock short'>
-                             <p>The error type used throughout this crate.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Lexer.html'
-                               title='slr_lexer::Lexer'>Lexer</a></td>
-                        <td class='docblock short'>
-                             <p>A type handling the lexing.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Source.html'
-                               title='slr_lexer::Source'>Source</a></td>
-                        <td class='docblock short'>
-                             <p>Annotated representation of the configuration source string.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Span.html'
-                               title='slr_lexer::Span'>Span</a></td>
-                        <td class='docblock short'>
-                             <p>Type representing a certain sub-section of the source.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Token.html'
-                               title='slr_lexer::Token'>Token</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Error.html'
+                                  title='slr_lexer::Error'>Error</a></td>
+                           <td class='docblock short'>
+                                <p>The error type used throughout this crate.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Lexer.html'
+                                  title='slr_lexer::Lexer'>Lexer</a></td>
+                           <td class='docblock short'>
+                                <p>A type handling the lexing.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Source.html'
+                                  title='slr_lexer::Source'>Source</a></td>
+                           <td class='docblock short'>
+                                <p>Annotated representation of the configuration source string.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Span.html'
+                                  title='slr_lexer::Span'>Span</a></td>
+                           <td class='docblock short'>
+                                <p>Type representing a certain sub-section of the source.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Token.html'
+                                  title='slr_lexer::Token'>Token</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.ErrorKind.html'
-                               title='slr_lexer::ErrorKind'>ErrorKind</a></td>
-                        <td class='docblock short'>
-                             <p>An enum describing the kind of the error, to allow treating different
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.ErrorKind.html'
+                                  title='slr_lexer::ErrorKind'>ErrorKind</a></td>
+                           <td class='docblock short'>
+                                <p>An enum describing the kind of the error, to allow treating different
 errors differenly.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.StringQuoteType.html'
-                               title='slr_lexer::StringQuoteType'>StringQuoteType</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.TokenKind.html'
-                               title='slr_lexer::TokenKind'>TokenKind</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.StringQuoteType.html'
+                                  title='slr_lexer::StringQuoteType'>StringQuoteType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.TokenKind.html'
+                                  title='slr_lexer::TokenKind'>TokenKind</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='fn' href='fn.get_string_quote_type.html'
-                               title='slr_lexer::get_string_quote_type'>get_string_quote_type</a></td>
-                        <td class='docblock short'>
-                             
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_string_quote_type.html'
+                                  title='slr_lexer::get_string_quote_type'>get_string_quote_type</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -171,7 +159,7 @@ errors differenly.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -187,6 +175,6 @@ errors differenly.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

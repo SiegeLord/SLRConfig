@@ -260,7 +260,7 @@ macro_rules! slr_def
 		$(#[$attrs:meta])*
 		pub struct $name: ident
 		{
-			$(pub $field_name: ident : $field_type: ty = $field_init: expr),*
+			$(pub $field_name: ident : $field_type: ty = $field_init: expr),* $(,)*
 		}
 	) =>
 	{
@@ -294,7 +294,7 @@ macro_rules! slr_def
 		$(#[$attrs:meta])*
 		struct $name: ident
 		{
-			$($field_name: ident : $field_type: ty = $field_init: expr),*
+			$($field_name: ident : $field_type: ty = $field_init: expr),* $(,)*
 		}
 	) =>
 	{
@@ -328,7 +328,7 @@ macro_rules! slr_def
 		$(#[$attrs:meta])*
 		enum $name: ident
 		{
-			$($var_name: ident),*
+			$($var_name: ident),* $(,)*
 		}
 	) =>
 	{
@@ -351,7 +351,7 @@ macro_rules! slr_def
 		$(#[$attrs:meta])*
 		pub enum $name: ident
 		{
-			$($var_name: ident),*
+			$($var_name: ident),* $(,)*
 		}
 	) =>
 	{

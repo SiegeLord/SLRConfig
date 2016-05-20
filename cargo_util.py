@@ -66,7 +66,7 @@ if args.doc:
 	print 'Fixing up the search index'
 	found = False
 	for line in fileinput.input('doc/target/doc/search-index.js', inplace=1):
-		new_line = re.sub(r"searchIndex\['delete_me'\].*", '', line)
+		new_line = re.sub(r'searchIndex\["delete_me"\].*', '', line)
 		if new_line != line:
 			found = True
 		print new_line,

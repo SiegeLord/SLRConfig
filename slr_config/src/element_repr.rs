@@ -58,6 +58,7 @@ element_repr_via_str_impl!(usize);
 element_repr_via_str_impl!(f32);
 element_repr_via_str_impl!(f64);
 element_repr_via_str_impl!(String);
+element_repr_via_str_impl!(bool);
 
 impl<'l, T: ElementRepr<'l> + Default> ElementRepr<'l> for Vec<T>
 {

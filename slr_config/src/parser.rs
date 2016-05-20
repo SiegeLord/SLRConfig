@@ -420,7 +420,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 	}
 }
 
-pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'l, E>>(source: &'l mut Source<'l>, visitor: &mut V) -> Result<(), Error>
+pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'m, E>>(source: &'m mut Source<'l>, visitor: &mut V) -> Result<(), Error>
 {
 	let mut lexer = Lexer::new(source);
 	lexer.next();

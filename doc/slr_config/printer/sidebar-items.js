@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Printer","A utility type for printing a configuration element."]]});

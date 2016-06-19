@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ConfigElementKind","The kind of the configuration element."]],"struct":[["ConfigElement","A configuration element."]]});

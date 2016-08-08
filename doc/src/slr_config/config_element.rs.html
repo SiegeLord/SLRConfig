@@ -438,9 +438,6 @@
 <span id="394">394</span>
 <span id="395">395</span>
 <span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
@@ -453,10 +450,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::{<span class='ident'>FromStr</span>, <span class='ident'>from_utf8</span>};
 
-<span class='kw'>use</span> <span class='ident'>visitor</span>::<span class='ident'>Visitor</span>;
-<span class='kw'>use</span> <span class='ident'>lex</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>Span</span>, <span class='ident'>Source</span>};
-<span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>ConfigString</span>, <span class='ident'>parse_source</span>};
-<span class='kw'>use</span> <span class='ident'>printer</span>::<span class='ident'>Printer</span>;
+<span class='kw'>use</span> <span class='ident'>slr_parser</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>Span</span>, <span class='ident'>Source</span>, <span class='ident'>ConfigString</span>, <span class='ident'>Visitor</span>, <span class='ident'>Printer</span>, <span class='ident'>parse_source</span>};
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ConfigElementKind</span>::<span class='op'>*</span>;
 

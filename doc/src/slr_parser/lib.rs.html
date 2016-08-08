@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/build/SiegeLord/SLRConfig/slr_config/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/build/SiegeLord/SLRConfig/slr_parser/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -55,118 +55,20 @@
 <span id="11">11</span>
 <span id="12">12</span>
 <span id="13">13</span>
-<span id="14">14</span>
-<span id="15">15</span>
-<span id="16">16</span>
-<span id="17">17</span>
-<span id="18">18</span>
-<span id="19">19</span>
-<span id="20">20</span>
-<span id="21">21</span>
-<span id="22">22</span>
-<span id="23">23</span>
-<span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-<span id="36">36</span>
-<span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
-<span id="51">51</span>
-<span id="52">52</span>
-<span id="53">53</span>
-<span id="54">54</span>
-<span id="55">55</span>
-<span id="56">56</span>
-<span id="57">57</span>
-<span id="58">58</span>
-<span id="59">59</span>
-<span id="60">60</span>
-<span id="61">61</span>
-<span id="62">62</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
 <span class='comment'>// All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.</span>
 
-<span class='doccomment'>/*!
-This crate implements the parsing for the SLRConfig format. Basic usage revolves
-around the creation and use of the `ConfigElement` type, like so:
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>lexer</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>visitor</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>printer</span>::<span class='op'>*</span>;
 
-~~~
-#[macro_use]
-extern crate slr_config;
-
-use slr_config::{ConfigElement, ElementRepr};
-use std::path::Path;
-
-fn main()
-{
-	// Parse config element from value.
-	let root = ConfigElement::from_str(&quot;key = value&quot;).unwrap();
-	assert_eq!(root.as_table().unwrap()[&quot;key&quot;].as_value().unwrap(), &quot;value&quot;);
-
-	// Create a new table and print it to a string.
-	let mut root = ConfigElement::new_table();
-	let val = ConfigElement::new_value(&quot;value&quot;);
-	root.insert(&quot;key&quot;, val);
-	assert_eq!(root.to_string(), &quot;key = value\n&quot;);
-
-	// Compile-time schemas automate the above process in many situations.
-	slr_def!
-	{
-		struct TestSchema
-		{
-			key: u32 = 0,
-			arr: Vec&lt;u32&gt; = vec![]
-		}
-	}
-
-	let mut schema = TestSchema::new();
-	schema.from_element(&amp;ConfigElement::from_str(&quot;key = 5, arr = [1, 2]&quot;).unwrap(), None).unwrap();
-	assert_eq!(schema.key, 5);
-	assert_eq!(schema.arr.len(), 2);
-	assert_eq!(schema.arr[0], 1);
-	assert_eq!(schema.arr[1], 2);
-
-	let elem = schema.to_element();
-	assert_eq!(elem.as_table().unwrap()[&quot;key&quot;].as_value().unwrap(), &quot;5&quot;);
-	assert_eq!(elem.as_table().unwrap()[&quot;arr&quot;].as_array().unwrap()[0].as_value().unwrap(), &quot;1&quot;);
-}
-~~~
-*/</span>
-
-
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slr_parser</span>;
-
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>slr_parser</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>Source</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='op'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>element_repr</span>::<span class='op'>*</span>;
-
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>element_repr</span>;
-<span class='kw'>mod</span> <span class='ident'>config_element</span>;
-<span class='kw'>mod</span> <span class='ident'>test</span>;
+<span class='kw'>mod</span> <span class='ident'>lexer</span>;
+<span class='kw'>mod</span> <span class='ident'>parser</span>;
+<span class='kw'>mod</span> <span class='ident'>visitor</span>;
+<span class='kw'>mod</span> <span class='ident'>printer</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -223,7 +125,7 @@ fn main()
 
     <script>
         window.rootPath = "../../";
-        window.currentCrate = "slr_config";
+        window.currentCrate = "slr_parser";
         window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>

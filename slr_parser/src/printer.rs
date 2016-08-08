@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use lex::{get_string_quote_type, StringQuoteType};
+use lexer::{get_string_quote_type, StringQuoteType};
 use std::io;
 
 /// A utility type for printing a configuration element.

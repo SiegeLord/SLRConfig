@@ -1,16 +1,16 @@
 [package]
 
-name = "slr_lexer"
+name = "slr_parser"
 version = "0.0.13" #auto
 license = "LGPL-3.0"
 repository = "https://github.com/SiegeLord/SLRConfig"
-documentation = "http://siegelord.github.io/SLRConfig/doc/slr_lexer/index.html"
+documentation = "http://siegelord.github.io/SLRConfig/doc/slr_parser/index.html"
 keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
-description = "A simple configuration format. This crate contains just the lexer, see the slr_config crate for the parser and other utilities."
+description = "A simple configuration format. This crate contains the parser, see the slr_config crate for a more user-friendly API."
 
 [lib]
-name = "slr_lexer"
+name = "slr_parser"
 path = "src/lib.rs"
 
 [[example]]

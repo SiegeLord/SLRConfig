@@ -17,7 +17,7 @@ path = "src/lib.rs"
 name = "slr_test"
 path = "src/slr_test.rs"
 
-[dependencies.slr_lexer]
+[dependencies.slr_parser]
 
-path = "../slr_lexer"
+path = "../slr_parser"
 version = "=0.0.13" #auto

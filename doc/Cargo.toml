@@ -8,9 +8,9 @@ authors = [ "SiegeLord <slabode@aim.com>" ]
 name = "delete_me"
 path = "dummy.rs"
 
-[dependencies.slr_lexer]
+[dependencies.slr_parser]
 
-path = "../slr_lexer"
+path = "../slr_parser"
 version = "=0.0.13" #auto
 
 [dependencies.slr_config]

@@ -9,10 +9,7 @@ use std::mem;
 use std::path::Path;
 use std::str::{FromStr, from_utf8};
 
-use visitor::Visitor;
-use lex::{Error, ErrorKind, Span, Source};
-use parser::{ConfigString, parse_source};
-use printer::Printer;
+use slr_parser::{Error, ErrorKind, Span, Source, ConfigString, Visitor, Printer, parse_source};
 
 pub use self::ConfigElementKind::*;
 

@@ -1,8 +1,8 @@
 // This file is released into Public Domain.
 
-extern crate slr_lexer;
+extern crate slr_parser;
 
-use slr_lexer::{Lexer, Source};
+use slr_parser::{Lexer, Source};
 use std::io::prelude::*;
 use std::env;
 use std::fs::File;

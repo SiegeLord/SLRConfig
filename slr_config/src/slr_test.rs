@@ -1,13 +1,13 @@
 // This file is released into Public Domain.
 
-extern crate slr_lexer;
+extern crate slr_parser;
 extern crate slr_config;
 
 use std::env;
 use std::io::prelude::*;
 use std::fs::File;
 use std::path::Path;
-use slr_lexer::Source;
+use slr_parser::Source;
 use slr_config::ConfigElement;
 
 fn main()

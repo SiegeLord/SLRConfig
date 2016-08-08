@@ -1,5 +1,5 @@
 use config_element::{ConfigElement, Value, Table, Array};
-use lex::{Error, ErrorKind, Source};
+use slr_parser::{Error, ErrorKind, Source};
 use std::str::FromStr;
 use std::default::Default;
 

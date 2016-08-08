@@ -2,15 +2,11 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-extern crate slr_lexer as lex;
-
-use lex::{Lexer, Token, Error, ErrorKind, Span, Source};
+use lexer::{Lexer, Token, Error, ErrorKind, Span, Source, TokenKind};
 use visitor::{Visitor, GetError};
 use std::char;
 use std::marker::PhantomData;
 use std::u32;
-
-pub use self::StringKind::*;
 
 #[derive(Clone, Copy, Debug)]
 pub struct ConfigString<'l>
@@ -41,7 +37,7 @@ impl<'l> ConfigString<'l>
 	{
 		ConfigString
 		{
-			kind: RawString(""),
+			kind: StringKind::RawString(""),
 			span: Span::new(),
 		}
 	}
@@ -50,8 +46,8 @@ impl<'l> ConfigString<'l>
 	{
 		let kind = match tok.kind
 		{
-			lex::EscapedString(s) => EscapedString(s),
-			lex::RawString(s) => RawString(s),
+			TokenKind::EscapedString(s) => StringKind::EscapedString(s),
+			TokenKind::RawString(s) => StringKind::RawString(s),
 			_ => panic!("Invalid token passed to visitor! {:?}", tok.kind)
 		};
 
@@ -62,8 +58,8 @@ impl<'l> ConfigString<'l>
 	{
 		match self.kind
 		{
-			RawString(s) => dest.push_str(s),
-			EscapedString(s) =>
+			StringKind::RawString(s) => dest.push_str(s),
+			StringKind::EscapedString(s) =>
 			{
 				/* Benchmarking has shown this to be faster than computing the exact size. */
 				let lb = dest.len() + s.len() - s.chars().filter(|&c| c == '\\').count();
@@ -198,7 +194,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 	fn parse_table(&mut self) -> Result<bool, Error>
 	{
 		let left_brace = try_eof!(self.lexer.cur_token, Ok(false));
-		if left_brace.kind != lex::LeftBrace
+		if left_brace.kind != TokenKind::LeftBrace
 		{
 			return Ok(false)
 		}
@@ -206,9 +202,9 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		try!(self.visitor.set_table(self.lexer.get_source(), left_brace.span));
 		try!(self.parse_table_contents());
 		let right_brace = try_eof!(self.lexer.cur_token, self.parse_error(left_brace.span, "Unterminated table"));
-		if right_brace.kind != lex::RightBrace
+		if right_brace.kind != TokenKind::RightBrace
 		{
-			let error_str = if right_brace.kind == lex::Comma
+			let error_str = if right_brace.kind == TokenKind::Comma
 			{
 				"Expected '}' or a string"
 			}
@@ -230,7 +226,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		while try!(self.parse_table_element())
 		{
 			let comma = try_eof!(self.lexer.cur_token, Ok(()));
-			if comma.kind == lex::Comma
+			if comma.kind == TokenKind::Comma
 			{
 				self.lexer.next();
 			}
@@ -248,7 +244,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::from_token(token)));
 
 			let assign = try_eof!(self.lexer.next(), self.parse_error(token.span, "Expected '=' or '{' to follow, but got EOF"));
-			if assign.kind == lex::Assign
+			if assign.kind == TokenKind::Assign
 			{
 				self.lexer.next();
 				if try!(self.parse_array())
@@ -288,7 +284,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 	fn parse_array(&mut self) -> Result<bool, Error>
 	{
 		let left_bracket = try_eof!(self.lexer.cur_token, Ok(false));
-		if left_bracket.kind != lex::LeftBracket
+		if left_bracket.kind != TokenKind::LeftBracket
 		{
 			return Ok(false)
 		}
@@ -296,9 +292,9 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		try!(self.visitor.set_array(self.lexer.get_source(), left_bracket.span));
 		try!(self.parse_array_contents());
 		let right_bracket = try_eof!(self.lexer.cur_token, self.parse_error(left_bracket.span, "Unterminated array"));
-		if right_bracket.kind != lex::RightBracket
+		if right_bracket.kind != TokenKind::RightBracket
 		{
-			let error_str = if right_bracket.kind == lex::Comma
+			let error_str = if right_bracket.kind == TokenKind::Comma
 			{
 				"Expected ']' or a string"
 			}
@@ -320,7 +316,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		while try!(self.parse_array_element())
 		{
 			let comma = try_eof!(self.lexer.cur_token, Ok(()));
-			if comma.kind != lex::Comma
+			if comma.kind != TokenKind::Comma
 			{
 				break;
 			}
@@ -333,17 +329,17 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 	fn parse_array_element(&mut self) -> Result<bool, Error>
 	{
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
-		let ret = if token.kind.is_string() || token.kind == lex::Dollar
+		let ret = if token.kind.is_string() || token.kind == TokenKind::Dollar
 		{
 			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_string_expr())
 		}
-		else if token.kind == lex::LeftBrace
+		else if token.kind == TokenKind::LeftBrace
 		{
 			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_table())
 		}
-		else if token.kind == lex::LeftBracket
+		else if token.kind == TokenKind::LeftBracket
 		{
 			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_array())
@@ -381,7 +377,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 				try!(self.visitor.append_string(self.lexer.get_source(), ConfigString::from_token(token)));
 				self.lexer.next();
 			}
-			else if token.kind == lex::Dollar
+			else if token.kind == TokenKind::Dollar
 			{
 				let string_token = try_eof!(self.lexer.next(), self.parse_error(token.span, "Expected a string to follow, but got EOF"));
 				if string_token.kind.is_string()
@@ -410,7 +406,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 			}
 
 			let tilde = try_eof!(self.lexer.cur_token, Ok(true));
-			if tilde.kind != lex::Tilde
+			if tilde.kind != TokenKind::Tilde
 			{
 				return Ok(true);
 			}

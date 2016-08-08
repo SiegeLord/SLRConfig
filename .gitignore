@@ -1,4 +1,4 @@
 */Cargo.lock
 doc/target
-slr_lexer/target
+slr_parser/target
 slr_config/target

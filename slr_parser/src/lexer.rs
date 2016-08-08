@@ -1,12 +1,11 @@
 // Copyright (c) 2014 by SiegeLord
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
+
 use std::cmp::{min, max};
 use std::path::Path;
 use std::str::CharIndices;
 use std::usize;
-
-pub use self::TokenKind::*;
 
 pub enum StringQuoteType
 {
@@ -160,7 +159,7 @@ impl<'l> TokenKind<'l>
 	{
 		match *self
 		{
-			EscapedString(_) | RawString (_) => true,
+			TokenKind::EscapedString(_) | TokenKind::RawString (_) => true,
 			_ => false
 		}
 	}
@@ -619,7 +618,7 @@ impl<'l, 's> Lexer<'l, 's>
 
 		let contents = &self.source.source[start_pos..end_pos];
 		let span = Span{ start: start_pos, len: end_pos - start_pos };
-		Some(Ok(Token::new(EscapedString(contents), span)))
+		Some(Ok(Token::new(TokenKind::EscapedString(contents), span)))
 	}
 
 	fn eat_raw_string(&mut self) -> Option<Result<Token<'s>, Error>>
@@ -704,11 +703,11 @@ impl<'l, 's> Lexer<'l, 's>
 		{
 			if num_leading_braces == 0
 			{
-				Some(Ok(Token::new(EscapedString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+				Some(Ok(Token::new(TokenKind::EscapedString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
 			}
 			else
 			{
-				Some(Ok(Token::new(RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+				Some(Ok(Token::new(TokenKind::RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
 			}
 		}
 	}
@@ -720,14 +719,14 @@ impl<'l, 's> Lexer<'l, 's>
 		{
 			match c
 			{
-				'=' => Some(Assign),
-				'[' => Some(LeftBracket),
-				']' => Some(RightBracket),
-				'{' => Some(LeftBrace),
-				'}' => Some(RightBrace),
-				'$' => Some(Dollar),
-				',' => Some(Comma),
-				'~' => Some(Tilde),
+				'=' => Some(TokenKind::Assign),
+				'[' => Some(TokenKind::LeftBracket),
+				']' => Some(TokenKind::RightBracket),
+				'{' => Some(TokenKind::LeftBrace),
+				'}' => Some(TokenKind::RightBrace),
+				'$' => Some(TokenKind::Dollar),
+				',' => Some(TokenKind::Comma),
+				'~' => Some(TokenKind::Tilde),
 				_ => None
 			}
 		}).map(|kind|

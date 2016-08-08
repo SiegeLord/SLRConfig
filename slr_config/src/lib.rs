@@ -50,19 +50,13 @@ fn main()
 */
 
 
-extern crate slr_lexer as lex;
+extern crate slr_parser;
 
-pub use parser::*;
-pub use printer::*;
-pub use visitor::*;
+pub use slr_parser::{Error, ErrorKind, Source};
 pub use config_element::*;
 pub use element_repr::*;
-pub use lex::{Error, ErrorKind, Source};
 
 #[macro_use]
 mod element_repr;
-mod parser;
-mod visitor;
 mod config_element;
-mod printer;
 mod test;

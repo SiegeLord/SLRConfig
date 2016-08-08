@@ -9,7 +9,7 @@ from shutil import copy, rmtree
 from subprocess import check_call
 
 crate_list="""
-slr_lexer
+slr_parser
 slr_config
 """
 

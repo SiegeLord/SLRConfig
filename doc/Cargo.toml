@@ -1,7 +1,7 @@
 [package]
 
 name = "doc"
-version = "0.0.14" #auto
+version = "0.0.15" #auto
 authors = [ "SiegeLord <slabode@aim.com>" ]
 
 [lib]
@@ -11,9 +11,9 @@ path = "dummy.rs"
 [dependencies.slr_parser]
 
 path = "../slr_parser"
-version = "=0.0.14" #auto
+version = "=0.0.15" #auto
 
 [dependencies.slr_config]
 
 path = "../slr_config"
-version = "=0.0.14" #auto
+version = "=0.0.15" #auto

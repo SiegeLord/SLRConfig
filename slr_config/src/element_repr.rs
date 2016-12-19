@@ -2,12 +2,17 @@ use config_element::{ConfigElement, Value, Table, Array};
 use slr_parser::{Error, ErrorKind, Source};
 use std::str::FromStr;
 use std::default::Default;
+use std::path::Path;
+use std::io::prelude::*;
+use std::fs::File;
+
+
 
 /// Describes a way to convert a type to a ConfigElement and back.
-pub trait ElementRepr<'l>
+pub trait ElementRepr
 {
 	/// Updates the contents of `self` based on values in the element.
-	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>;
+	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>;
 	/// Creates an element that represents the contents of `self`.
 	fn to_element(&self) -> ConfigElement;
 }
@@ -16,9 +21,9 @@ macro_rules! element_repr_via_str_impl
 {
 	($t: ty) =>
 	{
-		impl<'l> $crate::ElementRepr<'l> for $t
+		impl $crate::ElementRepr for $t
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
+			fn from_element<'l>(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
@@ -60,9 +65,9 @@ element_repr_via_str_impl!(f64);
 element_repr_via_str_impl!(String);
 element_repr_via_str_impl!(bool);
 
-impl<'l, T: ElementRepr<'l> + Default> ElementRepr<'l> for Vec<T>
+impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 {
-	fn from_element(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
+	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
 	{
 		match *elem.kind()
 		{
@@ -117,9 +122,9 @@ macro_rules! slr_def_struct_impl
 		}
 	) =>
 	{
-		impl<'l> $crate::ElementRepr<'l> for $name
+		impl $crate::ElementRepr for $name
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
+			fn from_element<'l>(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
@@ -181,9 +186,9 @@ macro_rules! slr_def_enum_impl
 		}
 	) =>
 	{
-		impl<'l> $crate::ElementRepr<'l> for $name
+		impl $crate::ElementRepr for $name
 		{
-			fn from_element(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
+			fn from_element<'l>(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{

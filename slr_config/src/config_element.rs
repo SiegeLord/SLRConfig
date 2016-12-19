@@ -56,7 +56,7 @@ impl ConfigElement
 	/// Parses a source and returns a table. The source will be reset by this
 	/// operation, and must not be used with any spans created from a previous
 	/// parsing done with that source.
-	pub fn from_source<'l, 'm>(source: &'m mut Source<'l>) -> Result<ConfigElement, Error>
+	pub fn from_source<'l>(source: &mut Source<'l>) -> Result<ConfigElement, Error>
 	{
 		let mut root = ConfigElement::new_table();
 		try!(root.from_source_with_init(source));

@@ -911,7 +911,7 @@
 	{
 		<span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>is_valid</span>()
 		{
-			<span class='op'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>other</span>;
+			<span class='kw-2'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>other</span>;
 		}
 		<span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>other</span>.<span class='ident'>is_valid</span>()
 		{
@@ -956,7 +956,7 @@
 {
 	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_string</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>
 	{
-		<span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span>
+		<span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span>
 		{
 			<span class='ident'>TokenKind</span>::<span class='ident'>EscapedString</span>(_) <span class='op'>|</span> <span class='ident'>TokenKind</span>::<span class='ident'>RawString</span> (_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
 			_ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>
@@ -1038,7 +1038,7 @@
 
 	<span class='kw'>fn</span> <span class='ident'>reset</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>)
 	{
-		<span class='op'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>Source</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>filename</span>, <span class='self'>self</span>.<span class='ident'>source</span>);
+		<span class='kw-2'>*</span><span class='self'>self</span> <span class='op'>=</span> <span class='ident'>Source</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>filename</span>, <span class='self'>self</span>.<span class='ident'>source</span>);
 	}
 
 	<span class='kw'>fn</span> <span class='ident'>get_line_start_end</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>line</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='ident'>usize</span>)

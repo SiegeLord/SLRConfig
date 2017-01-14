@@ -453,7 +453,7 @@
 
 <span class='kw'>use</span> <span class='ident'>slr_parser</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>Span</span>, <span class='ident'>Source</span>, <span class='ident'>ConfigString</span>, <span class='ident'>Visitor</span>, <span class='ident'>Printer</span>, <span class='ident'>parse_source</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ConfigElementKind</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ConfigElementKind</span>::<span class='kw-2'>*</span>;
 
 <span class='doccomment'>/// A configuration element.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
@@ -780,7 +780,7 @@
 		<span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>elem_name</span>, <span class='kw-2'>ref</span> <span class='ident'>elem</span>, _) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>iter</span>().<span class='ident'>rev</span>()
 		{
 			<span class='comment'>// Can&#39;t insert currently modified element.</span>
-			<span class='kw'>if</span> <span class='op'>*</span><span class='ident'>elem_name</span> <span class='op'>==</span> <span class='ident'>name</span>
+			<span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>elem_name</span> <span class='op'>==</span> <span class='ident'>name</span>
 			{
 				<span class='kw'>continue</span>;
 			}

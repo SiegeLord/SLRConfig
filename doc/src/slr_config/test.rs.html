@@ -275,19 +275,17 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
 <span class='comment'>//</span>
 <span class='comment'>// All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.</span>
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>use</span> ::<span class='ident'>ErrorKind</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='kw-2'>*</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>element_repr</span>::<span class='kw-2'>*</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>use</span> ::<span class='ident'>ErrorKind</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>char</span>;
 
@@ -332,8 +330,7 @@
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>roundtrip_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span>
-<span class='string'>r#&quot;
+	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='string'>r#&quot;
 # Comment
 val1 = {{{&quot; &quot;}}a&quot;}}}
 val2 = b ~ c d
@@ -404,8 +401,7 @@ baz
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>expand_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span>
-<span class='string'>r#&quot;
+	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='string'>r#&quot;
 val = &quot;a&quot;
 arr = []
 tab {}

@@ -3,11 +3,11 @@
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
 #[cfg(test)]
+use ::ErrorKind;
+#[cfg(test)]
 use config_element::*;
 #[cfg(test)]
 use element_repr::*;
-#[cfg(test)]
-use ::ErrorKind;
 #[cfg(test)]
 use std::char;
 
@@ -52,8 +52,7 @@ fn init_test()
 #[test]
 fn roundtrip_test()
 {
-	let src =
-r#"
+	let src = r#"
 # Comment
 val1 = {{{" "}}a"}}}
 val2 = b ~ c d
@@ -124,8 +123,7 @@ fn unicode_encode_test()
 #[test]
 fn expand_test()
 {
-	let src =
-r#"
+	let src = r#"
 val = "a"
 arr = []
 tab {}

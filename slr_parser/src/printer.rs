@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use lexer::{get_string_quote_type, StringQuoteType};
+use lexer::{StringQuoteType, get_string_quote_type};
 use std::io;
 
 /// A utility type for printing a configuration element.
@@ -20,8 +20,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 {
 	pub fn new(writer: &'l mut W) -> Printer<'l, W>
 	{
-		Printer
-		{
+		Printer {
 			writer: writer,
 			depth: 0,
 			in_array: vec![false],
@@ -105,7 +104,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 		}
 		Ok(())
 	}
-	
+
 	pub fn value(&mut self, name: Option<&str>, value: &str) -> Result<(), io::Error>
 	{
 		try!(self.start_value());
@@ -116,7 +115,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 				try!(self.write_string(name));
 				try!(write!(self.writer, " = "));
 			}
-			_ => ()
+			_ => (),
 		}
 		try!(self.write_string(value));
 		self.set_empty(false);
@@ -142,7 +141,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 					try!(self.write_indent());
 				}
 			}
-			_ => ()
+			_ => (),
 		}
 		try!(write!(self.writer, "["));
 		self.set_empty(false);
@@ -176,7 +175,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 		if is_root
 		{
 			self.in_root = true;
-			return Ok(())
+			return Ok(());
 		}
 		try!(self.start_value());
 		match name
@@ -194,7 +193,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 					try!(self.write_indent());
 				}
 			}
-			_ => ()
+			_ => (),
 		}
 		try!(write!(self.writer, "{{"));
 
@@ -214,7 +213,7 @@ impl<'l, W: io::Write> Printer<'l, W>
 		}
 		if is_root
 		{
-			return Ok(())
+			return Ok(());
 		}
 		self.depth -= 1;
 		if !self.one_line() && !self.is_empty()

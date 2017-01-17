@@ -3,12 +3,12 @@
 extern crate slr_parser;
 extern crate slr_config;
 
-use std::env;
-use std::io::prelude::*;
-use std::fs::File;
-use std::path::Path;
-use slr_parser::Source;
 use slr_config::ConfigElement;
+use slr_parser::Source;
+use std::env;
+use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
 
 fn main()
 {
@@ -17,7 +17,7 @@ fn main()
 	{
 		panic!("Pass a file to test with");
 	}
-	
+
 	args.next();
 	let filename = args.next().unwrap();
 
@@ -26,6 +26,6 @@ fn main()
 
 	let mut src = Source::new(&Path::new(&filename), &src);
 	let root = ConfigElement::from_source(&mut src).map_err(|e| print!("{}", e.text)).unwrap();
-	
+
 	println!("{}", root);
 }

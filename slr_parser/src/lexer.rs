@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use std::cmp::{min, max};
+use std::cmp::{max, min};
 use std::path::Path;
 use std::str::CharIndices;
 use std::usize;
@@ -96,11 +96,7 @@ impl Span
 {
 	pub fn new() -> Span
 	{
-		Span
-		{
-			start: usize::MAX,
-			len: 0,
-		}
+		Span { start: usize::MAX, len: 0 }
 	}
 
 	pub fn is_valid(&self) -> bool
@@ -126,14 +122,14 @@ impl Span
 pub struct Token<'s>
 {
 	pub kind: TokenKind<'s>,
-	pub span: Span
+	pub span: Span,
 }
 
 impl<'s> Token<'s>
 {
 	fn new(kind: TokenKind<'s>, span: Span) -> Token<'s>
 	{
-		Token{ kind: kind, span: span }
+		Token { kind: kind, span: span }
 	}
 }
 
@@ -150,7 +146,7 @@ pub enum TokenKind<'l>
 	Dollar,
 	Comma,
 	Tilde,
-	Eof
+	Eof,
 }
 
 impl<'l> TokenKind<'l>
@@ -159,24 +155,16 @@ impl<'l> TokenKind<'l>
 	{
 		match *self
 		{
-			TokenKind::EscapedString(_) | TokenKind::RawString (_) => true,
-			_ => false
+			TokenKind::EscapedString(_) |
+			TokenKind::RawString(_) => true,
+			_ => false,
 		}
 	}
 }
 
 fn is_string_border(c: char) -> bool
 {
-	!c.is_whitespace() &&
-	c != '=' &&
-	c != '[' &&
-	c != ']' &&
-	c != '{' &&
-	c != '}' &&
-	c != '$' &&
-	c != ',' &&
-	c != '~' &&
-	c != '"' &&
+	!c.is_whitespace() && c != '=' && c != '[' && c != ']' && c != '{' && c != '}' && c != '$' && c != ',' && c != '~' && c != '"' &&
 	c != '#'
 }
 
@@ -217,21 +205,19 @@ impl<'l> Source<'l>
 	pub fn new(filename: &'l Path, source: &'l str) -> Source<'l>
 	{
 		let chars = source.char_indices();
-		let mut src =
-			Source
-			{
-				filename: filename,
-				source: source,
-				chars: chars,
-				cur_char: None,
-				cur_pos: 0,
-				next_char: None,
-				next_pos: 0,
-				line_start_pos: 0,
-				at_newline: false,
-				line_ends: vec![],
-				span_start: 0,
-			};
+		let mut src = Source {
+			filename: filename,
+			source: source,
+			chars: chars,
+			cur_char: None,
+			cur_pos: 0,
+			next_char: None,
+			next_pos: 0,
+			line_start_pos: 0,
+			at_newline: false,
+			line_ends: vec![],
+			span_start: 0,
+		};
 		src.bump();
 		src.bump();
 		src
@@ -259,12 +245,12 @@ impl<'l> Source<'l>
 		let start = match self.source[start..].chars().position(|c| !is_newline(c))
 		{
 			Some(offset) => start + offset,
-			None => self.source.len()
+			None => self.source.len(),
 		};
 		let end = match self.source[start..].chars().position(|c| is_newline(c))
 		{
 			Some(end) => end + start,
-			None => self.source.len()
+			None => self.source.len(),
 		};
 		(start, end)
 	}
@@ -309,11 +295,7 @@ impl<'l> Source<'l>
 		{
 			self.cur_pos - self.span_start
 		};
-		Span
-		{
-			start: self.span_start,
-			len: len,
-		}
+		Span { start: self.span_start, len: len }
 	}
 
 	fn get_line_col_from_pos(&self, pos: usize) -> (usize, usize)
@@ -321,7 +303,7 @@ impl<'l> Source<'l>
 		let line = match self.line_ends.binary_search(&pos)
 		{
 			Ok(n) => n,
-			Err(n) => n
+			Err(n) => n,
 		};
 		let (start, _) = self.get_line_start_end(line);
 		if pos < start
@@ -342,12 +324,12 @@ impl<'l> Source<'l>
 			{
 				self.next_pos = pos;
 				self.next_char = Some(c);
-			},
+			}
 			None =>
 			{
 				self.next_pos = self.source.len();
 				self.next_char = None;
-			},
+			}
 		}
 
 		self.at_newline = self.cur_char.map_or(false, |c| is_newline(c));
@@ -372,7 +354,8 @@ impl<'l> Iterator for Source<'l>
 }
 
 /// A type handling the lexing.
-pub struct Lexer<'l, 's> where 's: 'l
+pub struct Lexer<'l, 's>
+	where 's: 'l
 {
 	source: &'l mut Source<'s>,
 	pub cur_token: Option<Result<Token<'s>, Error>>,
@@ -410,11 +393,7 @@ impl Error
 {
 	pub fn new(kind: ErrorKind, text: String) -> Error
 	{
-		Error
-		{
-			kind: kind,
-			text: text,
-		}
+		Error { kind: kind, text: text }
 	}
 
 	fn from_pos<'l>(pos: usize, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
@@ -435,9 +414,10 @@ impl Error
 				col_str.push('^');
 
 				let source_line = source_line.replace("\t", "    ");
-				Error::new(kind, format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str))
-			},
-			None => Error::new(kind, format!("error: {}\n", msg))
+				Error::new(kind,
+				           format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str))
+			}
+			None => Error::new(kind, format!("error: {}\n", msg)),
 		}
 	}
 
@@ -478,15 +458,23 @@ impl Error
 					}
 
 					let source_line = source_line.replace("\t", "    ");
-					Error::new(kind, format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n", source.filename.display(), start_line + 1, start_col, end_line + 1, end_col,
-						msg, source_line, col_str))
+					Error::new(kind,
+					           format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n",
+					                   source.filename.display(),
+					                   start_line + 1,
+					                   start_col,
+					                   end_line + 1,
+					                   end_col,
+					                   msg,
+					                   source_line,
+					                   col_str))
 				}
 				else
 				{
 					Error::new(kind, format!("{}: error: {}\n", source.filename.display(), msg))
 				}
-			},
-			None =>	Error::new(kind, format!("error: {}\n", msg))
+			}
+			None => Error::new(kind, format!("error: {}\n", msg)),
 		}
 	}
 }
@@ -504,13 +492,11 @@ impl<'l, 's> Lexer<'l, 's>
 	pub fn new(source: &'l mut Source<'s>) -> Lexer<'l, 's>
 	{
 		source.reset();
-		let mut lex =
-			Lexer
-			{
-				source: source,
-				cur_token: None,
-				next_token: None,
-			};
+		let mut lex = Lexer {
+			source: source,
+			cur_token: None,
+			next_token: None,
+		};
 		lex.next();
 		lex
 	}
@@ -617,7 +603,10 @@ impl<'l, 's> Lexer<'l, 's>
 		}
 
 		let contents = &self.source.source[start_pos..end_pos];
-		let span = Span{ start: start_pos, len: end_pos - start_pos };
+		let span = Span {
+			start: start_pos,
+			len: end_pos - start_pos,
+		};
 		Some(Ok(Token::new(TokenKind::EscapedString(contents), span)))
 	}
 
@@ -641,17 +630,21 @@ impl<'l, 's> Lexer<'l, 's>
 						{
 							num_leading_braces += 1;
 							self.source.bump();
-						},
+						}
 						'"' =>
 						{
 							self.source.bump();
 							break;
-						},
-						_ => return Some(lex_error(self.source.span_start, &self.source,
-							r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#)),
+						}
+						_ =>
+						{
+							return Some(lex_error(self.source.span_start,
+							                      &self.source,
+							                      r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#))
+						}
 					}
 				}
-				None => break
+				None => break,
 			}
 
 		}
@@ -684,13 +677,13 @@ impl<'l, 's> Lexer<'l, 's>
 							num_trailing_braces = 0;
 						}
 					}
-					if counting &&  num_trailing_braces == num_leading_braces
+					if counting && num_trailing_braces == num_leading_braces
 					{
 						self.source.bump();
 						break;
 					}
-				},
-				None => break
+				}
+				None => break,
 			}
 			self.source.bump();
 		}
@@ -715,9 +708,9 @@ impl<'l, 's> Lexer<'l, 's>
 	fn eat_char_tokens(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("char");
-		self.source.cur_char.and_then(|c|
-		{
-			match c
+		self.source
+			.cur_char
+			.and_then(|c| match c
 			{
 				'=' => Some(TokenKind::Assign),
 				'[' => Some(TokenKind::LeftBracket),
@@ -727,21 +720,21 @@ impl<'l, 's> Lexer<'l, 's>
 				'$' => Some(TokenKind::Dollar),
 				',' => Some(TokenKind::Comma),
 				'~' => Some(TokenKind::Tilde),
-				_ => None
-			}
-		}).map(|kind|
-		{
-			self.source.start_span();
-			self.source.bump();
-			Ok(Token::new(kind, self.source.get_span()))
-		})
+				_ => None,
+			})
+			.map(|kind| {
+				self.source.start_span();
+				self.source.bump();
+				Ok(Token::new(kind, self.source.get_span()))
+			})
 	}
 
 	pub fn next(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		if self.cur_token.as_ref().map_or(true, |res| res.is_ok())
 		{
-			while self.skip_whitespace() || self.skip_comments() {}
+			while self.skip_whitespace() || self.skip_comments()
+			{}
 			self.cur_token = self.next_token.take();
 			self.next_token = self.eat_raw_string()
 				.or_else(|| self.eat_char_tokens())

@@ -1,10 +1,10 @@
-use config_element::{ConfigElement, Value, Table, Array};
+use config_element::{Array, ConfigElement, Table, Value};
 use slr_parser::{Error, ErrorKind, Source};
-use std::str::FromStr;
 use std::default::Default;
-use std::path::Path;
-use std::io::prelude::*;
 use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
+use std::str::FromStr;
 
 
 
@@ -90,7 +90,7 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 				{
 					Err(errors)
 				}
-			},
+			}
 			Table(_) => Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a table as 'Vec<T>'")]),
 			Value(_) => Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'Vec<T>'")]),
 		}

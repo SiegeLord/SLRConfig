@@ -3,9 +3,9 @@
 extern crate slr_parser;
 
 use slr_parser::{Lexer, Source};
-use std::io::prelude::*;
 use std::env;
 use std::fs::File;
+use std::io::prelude::*;
 use std::path::Path;
 
 fn main()
@@ -24,7 +24,7 @@ fn main()
 
 	let mut src = Source::new(Path::new(&filename), &src);
 	let mut lexer = Lexer::new(&mut src);
-	
+
 	loop
 	{
 		let tok = lexer.next();
@@ -42,7 +42,7 @@ fn main()
 					}
 				}
 			}
-			None => break
+			None => break,
 		}
 	}
 }

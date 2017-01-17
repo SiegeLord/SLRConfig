@@ -52,9 +52,9 @@ fn main()
 
 extern crate slr_parser;
 
-pub use slr_parser::{Error, ErrorKind, Source};
 pub use config_element::*;
 pub use element_repr::*;
+pub use slr_parser::{Error, ErrorKind, Source};
 
 #[macro_use]
 mod element_repr;

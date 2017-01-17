@@ -2,11 +2,11 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use lexer::{Lexer, Token, Error, ErrorKind, Span, Source, TokenKind};
-use visitor::{Visitor, GetError};
+use lexer::{Error, ErrorKind, Lexer, Source, Span, Token, TokenKind};
 use std::char;
 use std::marker::PhantomData;
 use std::u32;
+use visitor::{GetError, Visitor};
 
 #[derive(Clone, Copy, Debug)]
 pub struct ConfigString<'l>
@@ -27,7 +27,7 @@ fn hex_to_char(s: &str) -> char
 	match u32::from_str_radix(s, 16)
 	{
 		Ok(n) => char::from_u32(n).unwrap_or('�'),
-		Err(_) => '�'
+		Err(_) => '�',
 	}
 }
 
@@ -35,8 +35,7 @@ impl<'l> ConfigString<'l>
 {
 	fn new() -> ConfigString<'l>
 	{
-		ConfigString
-		{
+		ConfigString {
 			kind: StringKind::RawString(""),
 			span: Span::new(),
 		}
@@ -48,10 +47,10 @@ impl<'l> ConfigString<'l>
 		{
 			TokenKind::EscapedString(s) => StringKind::EscapedString(s),
 			TokenKind::RawString(s) => StringKind::RawString(s),
-			_ => panic!("Invalid token passed to visitor! {:?}", tok.kind)
+			_ => panic!("Invalid token passed to visitor! {:?}", tok.kind),
 		};
 
-		ConfigString{ kind: kind, span: tok.span }
+		ConfigString { kind: kind, span: tok.span }
 	}
 
 	pub fn append_to_string(&self, dest: &mut String)
@@ -97,7 +96,7 @@ impl<'l> ConfigString<'l>
 								't' => '\t',
 								'0' => '\0',
 								'\\' => '\\',
-								_ => '�'
+								_ => '�',
 							};
 						}
 						escape_chars -= 1;
@@ -134,7 +133,8 @@ impl<'l> ConfigString<'l>
 	}
 }
 
-struct Parser<'l, 's, 'm, E, V: 'm> where 's: 'l
+struct Parser<'l, 's, 'm, E, V: 'm>
+	where 's: 'l
 {
 	lexer: Lexer<'l, 's>,
 	visitor: &'m mut V,
@@ -196,7 +196,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		let left_brace = try_eof!(self.lexer.cur_token, Ok(false));
 		if left_brace.kind != TokenKind::LeftBrace
 		{
-			return Ok(false)
+			return Ok(false);
 		}
 		self.lexer.next();
 		try!(self.visitor.set_table(self.lexer.get_source(), left_brace.span));
@@ -257,7 +257,8 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 				}
 				else
 				{
-					let token = try_eof!(self.lexer.cur_token, self.parse_error(assign.span, "Expected '[' or a string to follow, but got EOF"));
+					let token = try_eof!(self.lexer.cur_token,
+					                     self.parse_error(assign.span, "Expected '[' or a string to follow, but got EOF"));
 					return self.parse_error(token.span, "Expected '[' or a string");
 				}
 			}
@@ -267,7 +268,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 			}
 			else
 			{
-				return self.parse_error(assign.span, "Expected '=' or '{'")
+				return self.parse_error(assign.span, "Expected '=' or '{'");
 			}
 		}
 		else
@@ -286,7 +287,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		let left_bracket = try_eof!(self.lexer.cur_token, Ok(false));
 		if left_bracket.kind != TokenKind::LeftBracket
 		{
-			return Ok(false)
+			return Ok(false);
 		}
 		self.lexer.next();
 		try!(self.visitor.set_array(self.lexer.get_source(), left_bracket.span));
@@ -361,17 +362,14 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		loop
 		{
 			let token = try_eof!(self.lexer.cur_token,
-				match last_span
-				{
-					Some(span) =>
-					{
-						return self.parse_error(span, "Expected a string or '$' to follow, but got EOF");
-					}
-					None =>
-					{
-						return Ok(false)
-					}
-				});
+			                     match last_span
+			                     {
+				                     Some(span) =>
+				                     {
+					                     return self.parse_error(span, "Expected a string or '$' to follow, but got EOF");
+					                    }
+				                     None => return Ok(false),
+			                     });
 			if token.kind.is_string()
 			{
 				try!(self.visitor.append_string(self.lexer.get_source(), ConfigString::from_token(token)));
@@ -398,10 +396,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 					{
 						return self.parse_error(span, "Expected a string or '$' to follow, but got EOF");
 					}
-					None =>
-					{
-						return Ok(false)
-					}
+					None => return Ok(false),
 				}
 			}
 
@@ -420,8 +415,7 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'m, E>>(source: &'m mut Sour
 {
 	let mut lexer = Lexer::new(source);
 	lexer.next();
-	let mut parser = Parser
-	{
+	let mut parser = Parser {
 		lexer: lexer,
 		visitor: visitor,
 		error_marker: PhantomData::<E>,
@@ -430,6 +424,6 @@ pub fn parse_source<'l, 'm, E: GetError, V: Visitor<'m, E>>(source: &'m mut Sour
 	match get_token!(parser.lexer.cur_token)
 	{
 		Some(token) => parser.parse_error(token.span, "Expected a string"),
-		None => Ok(())
+		None => Ok(()),
 	}
 }

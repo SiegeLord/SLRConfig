@@ -2,16 +2,16 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+
+pub use self::ConfigElementKind::*;
+
+use slr_parser::{ConfigString, Error, ErrorKind, Printer, Source, Span, Visitor, parse_source};
 use std::collections::BTreeMap;
-use std::io;
 use std::fmt::{self, Display, Formatter};
+use std::io;
 use std::mem;
 use std::path::Path;
 use std::str::{FromStr, from_utf8};
-
-use slr_parser::{Error, ErrorKind, Span, Source, ConfigString, Visitor, Printer, parse_source};
-
-pub use self::ConfigElementKind::*;
 
 /// A configuration element.
 #[derive(Clone)]
@@ -38,19 +38,28 @@ impl ConfigElement
 	/// Creates a new empty table.
 	pub fn new_table() -> ConfigElement
 	{
-		ConfigElement{ kind: Table(BTreeMap::new()), span: Span::new() }
+		ConfigElement {
+			kind: Table(BTreeMap::new()),
+			span: Span::new(),
+		}
 	}
 
 	/// Creates a new value.
 	pub fn new_value<T: ToString>(value: T) -> ConfigElement
 	{
-		ConfigElement{ kind: Value(value.to_string()), span: Span::new() }
+		ConfigElement {
+			kind: Value(value.to_string()),
+			span: Span::new(),
+		}
 	}
 
 	/// Creates a new array.
 	pub fn new_array() -> ConfigElement
 	{
-		ConfigElement{ kind: Array(Vec::new()), span: Span::new() }
+		ConfigElement {
+			kind: Array(Vec::new()),
+			span: Span::new(),
+		}
 	}
 
 	/// Parses a source and returns a table. The source will be reset by this
@@ -79,10 +88,7 @@ impl ConfigElement
 		let mut root = ConfigElement::new_table();
 		mem::swap(&mut root, self);
 		let mut visitor = ConfigElementVisitor::new(root);
-		parse_source(source, &mut visitor).map(|_|
-		{
-			mem::swap(&mut visitor.extract_root(), self);
-		})
+		parse_source(source, &mut visitor).map(|_| { mem::swap(&mut visitor.extract_root(), self); })
 	}
 
 	/// Updates the elements in this table with new values parsed from source.
@@ -116,7 +122,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(ref table) => Some(table),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -126,7 +132,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(ref mut table) => Some(table),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -136,7 +142,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Value(ref value) => Some(value),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -146,7 +152,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Value(ref mut value) => Some(value),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -156,7 +162,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Array(ref array) => Some(array),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -166,7 +172,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Array(ref mut array) => Some(array),
-			_ => None
+			_ => None,
 		}
 	}
 
@@ -179,12 +185,12 @@ impl ConfigElement
 			Table(ref mut table) =>
 			{
 				table.insert(name.to_string(), elem);
-			},
+			}
 			Array(ref mut array) =>
 			{
 				array.push(elem);
-			},
-			_ => panic!("Trying to insert an element into a value!")
+			}
+			_ => panic!("Trying to insert an element into a value!"),
 		}
 	}
 
@@ -217,8 +223,8 @@ impl ConfigElement
 								one_line = false;
 								break;
 							}
-						},
-						_ => ()
+						}
+						_ => (),
 					}
 				}
 				try!(printer.start_array(name, one_line));
@@ -262,10 +268,7 @@ impl ConfigElementVisitor
 {
 	fn new(root: ConfigElement) -> ConfigElementVisitor
 	{
-		ConfigElementVisitor
-		{
-			stack: vec![("root".to_string(), root, true)],
-		}
+		ConfigElementVisitor { stack: vec![("root".to_string(), root, true)] }
 	}
 
 	fn extract_root(mut self) -> ConfigElement
@@ -348,11 +351,11 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 				Table(ref table) =>
 				{
 					found_element = table.get(&name).map(|v| v.clone());
-				},
+				}
 				Array(ref array) =>
 				{
 					found_element = <usize>::from_str(&name).ok().and_then(|idx| array.get(idx)).map(|v| v.clone());
-				},
+				}
 			}
 			if found_element.is_some()
 			{

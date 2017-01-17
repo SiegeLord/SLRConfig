@@ -4,8 +4,8 @@
 
 pub use lexer::*;
 pub use parser::*;
-pub use visitor::*;
 pub use printer::*;
+pub use visitor::*;
 
 mod lexer;
 mod parser;

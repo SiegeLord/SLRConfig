@@ -44,7 +44,7 @@
     </nav>
 
     <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slr_config</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>slr_config</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -52,50 +52,50 @@
 <div class='docblock'><p>This crate implements the parsing for the SLRConfig format. Basic usage revolves
 around the creation and use of the <code>ConfigElement</code> type, like so:</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slr_config</span>;
+<pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">slr_config</span>;
 
-<span class='kw'>use</span> <span class='ident'>slr_config</span>::{<span class='ident'>ConfigElement</span>, <span class='ident'>ElementRepr</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
+<span class="kw">use</span> <span class="ident">slr_config</span>::{<span class="ident">ConfigElement</span>, <span class="ident">ElementRepr</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>()
+<span class="kw">fn</span> <span class="ident">main</span>()
 {
-    <span class='comment'>// Parse config element from value.</span>
-    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;key = value&quot;</span>).<span class='ident'>unwrap</span>();
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;key&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;value&quot;</span>);
+    <span class="comment">// Parse config element from value.</span>
+    <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = value&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;value&quot;</span>);
 
-    <span class='comment'>// Create a new table and print it to a string.</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-    <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;value&quot;</span>);
-    <span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;key&quot;</span>, <span class='ident'>val</span>);
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>to_string</span>(), <span class='string'>&quot;key = value\n&quot;</span>);
+    <span class="comment">// Create a new table and print it to a string.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;value&quot;</span>);
+    <span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;key&quot;</span>, <span class="ident">val</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">to_string</span>(), <span class="string">&quot;key = value\n&quot;</span>);
 
-    <span class='comment'>// Compile-time schemas automate the above process in many situations.</span>
-    <span class='macro'>slr_def</span><span class='macro'>!</span>
+    <span class="comment">// Compile-time schemas automate the above process in many situations.</span>
+    <span class="macro">slr_def</span><span class="macro">!</span>
     {
-        <span class='kw'>struct</span> <span class='ident'>TestSchema</span>
+        <span class="kw">struct</span> <span class="ident">TestSchema</span>
         {
-            <span class='ident'>key</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='number'>0</span>,
-            <span class='ident'>arr</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[]
+            <span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>,
+            <span class="ident">arr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[]
         }
     }
 
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>schema</span> <span class='op'>=</span> <span class='ident'>TestSchema</span>::<span class='ident'>new</span>();
-    <span class='ident'>schema</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;key = 5, arr = [1, 2]&quot;</span>).<span class='ident'>unwrap</span>(), <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>schema</span>.<span class='ident'>key</span>, <span class='number'>5</span>);
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>schema</span>.<span class='ident'>arr</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>schema</span>.<span class='ident'>arr</span>[<span class='number'>0</span>], <span class='number'>1</span>);
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>schema</span>.<span class='ident'>arr</span>[<span class='number'>1</span>], <span class='number'>2</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">TestSchema</span>::<span class="ident">new</span>();
+    <span class="ident">schema</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = 5, arr = [1, 2]&quot;</span>).<span class="ident">unwrap</span>(), <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">key</span>, <span class="number">5</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">0</span>], <span class="number">1</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">1</span>], <span class="number">2</span>);
 
-    <span class='kw'>let</span> <span class='ident'>elem</span> <span class='op'>=</span> <span class='ident'>schema</span>.<span class='ident'>to_element</span>();
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>elem</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;key&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;5&quot;</span>);
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>elem</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;arr&quot;</span>].<span class='ident'>as_array</span>().<span class='ident'>unwrap</span>()[<span class='number'>0</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;1&quot;</span>);
+    <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">schema</span>.<span class="ident">to_element</span>();
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;5&quot;</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;arr&quot;</span>].<span class="ident">as_array</span>().<span class="ident">unwrap</span>()[<span class="number">0</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;1&quot;</span>);
 }</pre>
 </div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='macro' href='macro.slr_def.html'
+                           <td><a class="macro" href="macro.slr_def.html"
                                   title='macro slr_config::slr_def'>slr_def</a></td>
                            <td class='docblock-short'>
                                 <p>A macro to define the compile-time schemas for configuration elements.
@@ -104,21 +104,21 @@ You can use this macro to define structs and enums, like so:</p>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ConfigElement.html'
+                           <td><a class="struct" href="struct.ConfigElement.html"
                                   title='struct slr_config::ConfigElement'>ConfigElement</a></td>
                            <td class='docblock-short'>
                                 <p>A configuration element.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Error.html'
+                           <td><a class="struct" href="struct.Error.html"
                                   title='struct slr_config::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>The error type used throughout this crate.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Source.html'
+                           <td><a class="struct" href="struct.Source.html"
                                   title='struct slr_config::Source'>Source</a></td>
                            <td class='docblock-short'>
                                 <p>Annotated representation of the configuration source string.</p>
@@ -126,14 +126,14 @@ You can use this macro to define structs and enums, like so:</p>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.ConfigElementKind.html'
+                           <td><a class="enum" href="enum.ConfigElementKind.html"
                                   title='enum slr_config::ConfigElementKind'>ConfigElementKind</a></td>
                            <td class='docblock-short'>
                                 <p>The kind of the configuration element.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.ErrorKind.html'
+                           <td><a class="enum" href="enum.ErrorKind.html"
                                   title='enum slr_config::ErrorKind'>ErrorKind</a></td>
                            <td class='docblock-short'>
                                 <p>An enum describing the kind of the error, to allow treating different
@@ -142,7 +142,7 @@ errors differenly.</p>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.ElementRepr.html'
+                           <td><a class="trait" href="trait.ElementRepr.html"
                                   title='trait slr_config::ElementRepr'>ElementRepr</a></td>
                            <td class='docblock-short'>
                                 <p>Describes a way to convert a type to a ConfigElement and back.</p>

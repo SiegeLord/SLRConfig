@@ -275,62 +275,62 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright (c) 2014 by SiegeLord</span>
-<span class='comment'>//</span>
-<span class='comment'>// All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.</span>
+</pre><pre class="rust ">
+<span class="comment">// Copyright (c) 2014 by SiegeLord</span>
+<span class="comment">//</span>
+<span class="comment">// All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>use</span> ::<span class='ident'>ErrorKind</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>config_element</span>::<span class='kw-2'>*</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>element_repr</span>::<span class='kw-2'>*</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>char</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">use</span> ::<span class="ident">ErrorKind</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">use</span> <span class="ident">config_element</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">use</span> <span class="ident">element_repr</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">char</span>;
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>basic_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">basic_test</span>()
 {
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;warudo&quot;</span>);
-	<span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;za&quot;</span>, <span class='ident'>val</span>);
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;za&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;za&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;warudo&quot;</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;warudo&quot;</span>);
+	<span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;za&quot;</span>, <span class="ident">val</span>);
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;za&quot;</span>].<span class="ident">as_value</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;za&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;warudo&quot;</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>basic_printing_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">basic_printing_test</span>()
 {
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;warudo&quot;</span>);
-	<span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;za&quot;</span>, <span class='ident'>val</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>root</span>), <span class='string'>&quot;za = warudo\n&quot;</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;warudo&quot;</span>);
+	<span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;za&quot;</span>, <span class="ident">val</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">root</span>), <span class="string">&quot;za = warudo\n&quot;</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>basic_parsing_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">basic_parsing_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;za = warudo&quot;</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;za&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;za&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;warudo&quot;</span>);
+	<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;za = warudo&quot;</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;za&quot;</span>].<span class="ident">as_value</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;za&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;warudo&quot;</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>init_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">init_test</span>()
 {
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;za&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;warudo&quot;</span>));
-	<span class='ident'>root</span>.<span class='ident'>from_str_with_init</span>(<span class='string'>&quot;what = $za&quot;</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;what&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;warudo&quot;</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;za&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;warudo&quot;</span>));
+	<span class="ident">root</span>.<span class="ident">from_str_with_init</span>(<span class="string">&quot;what = $za&quot;</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;what&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;warudo&quot;</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>roundtrip_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">roundtrip_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='string'>r#&quot;
+	<span class="kw">let</span> <span class="ident">src</span> <span class="op">=</span> <span class="string">r#&quot;
 # Comment
 val1 = {{{&quot; &quot;}}a&quot;}}}
 val2 = b ~ c d
@@ -375,33 +375,33 @@ baz
 	}
 }
 &quot;#</span>;
-	<span class='kw'>let</span> <span class='ident'>original</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='ident'>src</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>original</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;foo2&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;test&quot;</span>);
-	<span class='kw'>let</span> <span class='ident'>original_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>original</span>);
-	<span class='kw'>let</span> <span class='ident'>decoded</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>original_str</span>).<span class='ident'>unwrap</span>();
-	<span class='kw'>let</span> <span class='ident'>encoded_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>decoded</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>original_str</span>, <span class='ident'>encoded_str</span>);
+	<span class="kw">let</span> <span class="ident">original</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="ident">src</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">original</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;foo2&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;test&quot;</span>);
+	<span class="kw">let</span> <span class="ident">original_str</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">original</span>);
+	<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">original_str</span>).<span class="ident">unwrap</span>();
+	<span class="kw">let</span> <span class="ident">encoded_str</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">decoded</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">original_str</span>, <span class="ident">encoded_str</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>unicode_encode_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">unicode_encode_test</span>()
 {
-	<span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>1000u32</span>
+	<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">1000u32</span>
 	{
-		<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='ident'>i</span>).<span class='ident'>unwrap</span>());
-		<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-		<span class='ident'>root</span>.<span class='ident'>insert</span>(<span class='string'>&quot;test&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='kw-2'>&amp;</span><span class='ident'>s</span>));
-		<span class='kw'>let</span> <span class='ident'>encoded</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>root</span>);
-		<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Encoding: {} |{}|\n{}&quot;</span>, <span class='ident'>i</span>, <span class='ident'>s</span>, <span class='ident'>encoded</span>);
-		<span class='kw'>let</span> <span class='ident'>decoded</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>encoded</span>).<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='macro'>print</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>e</span>.<span class='ident'>text</span>)).<span class='ident'>unwrap</span>();
-		<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>s</span>, <span class='ident'>decoded</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;test&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>());
+		<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">i</span>).<span class="ident">unwrap</span>());
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+		<span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;test&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>));
+		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">root</span>);
+		<span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Encoding: {} |{}|\n{}&quot;</span>, <span class="ident">i</span>, <span class="ident">s</span>, <span class="ident">encoded</span>);
+		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>.<span class="ident">text</span>)).<span class="ident">unwrap</span>();
+		<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>, <span class="ident">decoded</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;test&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>());
 	}
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>expand_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">expand_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> <span class='string'>r#&quot;
+	<span class="kw">let</span> <span class="ident">src</span> <span class="op">=</span> <span class="string">r#&quot;
 val = &quot;a&quot;
 arr = []
 tab {}
@@ -416,97 +416,97 @@ tab2
 	val_test2 = $tab
 }
 &quot;#</span>;
-	<span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>from_str</span>(<span class='ident'>src</span>).<span class='ident'>unwrap</span>();
-	<span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>root</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>();
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>[<span class='string'>&quot;val_test&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>[<span class='string'>&quot;val_test&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='string'>&quot;aa&quot;</span>);
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>[<span class='string'>&quot;arr_test&quot;</span>].<span class='ident'>as_array</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>[<span class='string'>&quot;tab_test&quot;</span>].<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>root</span>[<span class='string'>&quot;tab2&quot;</span>].<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;val_test2&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>is_some</span>());
+	<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="ident">src</span>).<span class="ident">unwrap</span>();
+	<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>();
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>[<span class="string">&quot;val_test&quot;</span>].<span class="ident">as_value</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>[<span class="string">&quot;val_test&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>() <span class="op">==</span> <span class="string">&quot;aa&quot;</span>);
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>[<span class="string">&quot;arr_test&quot;</span>].<span class="ident">as_array</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>[<span class="string">&quot;tab_test&quot;</span>].<span class="ident">as_table</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">root</span>[<span class="string">&quot;tab2&quot;</span>].<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;val_test2&quot;</span>].<span class="ident">as_value</span>().<span class="ident">is_some</span>());
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>from_element_test</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">from_element_test</span>()
 {
-	<span class='kw'>let</span> <span class='ident'>elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;55&quot;</span>);
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>val</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>0</span>;
-	<span class='ident'>val</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>val</span>, <span class='number'>55</span>);
+	<span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;55&quot;</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0</span>;
+	<span class="ident">val</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">val</span>, <span class="number">55</span>);
 
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_array</span>();
-	<span class='ident'>elem</span>.<span class='ident'>insert</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;55&quot;</span>));
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>val</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-	<span class='ident'>val</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>val</span>[<span class='number'>0</span>], <span class='number'>55</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_array</span>();
+	<span class="ident">elem</span>.<span class="ident">insert</span>(<span class="string">&quot;&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;55&quot;</span>));
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+	<span class="ident">val</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">val</span>[<span class="number">0</span>], <span class="number">55</span>);
 
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_array</span>();
-	<span class='ident'>elem</span>.<span class='ident'>insert</span>(<span class='string'>&quot;&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;nan&quot;</span>));
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>val</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-	<span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>val</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>elem</span>, <span class='prelude-val'>None</span>);
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>is_err</span>());
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>unwrap_err</span>().<span class='ident'>len</span>(), <span class='number'>1</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>val</span>[<span class='number'>0</span>], <span class='number'>0</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_array</span>();
+	<span class="ident">elem</span>.<span class="ident">insert</span>(<span class="string">&quot;&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;nan&quot;</span>));
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+	<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">val</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">elem</span>, <span class="prelude-val">None</span>);
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">is_err</span>());
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">unwrap_err</span>().<span class="ident">len</span>(), <span class="number">1</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">val</span>[<span class="number">0</span>], <span class="number">0</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>slr_struct</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">slr_struct</span>()
 {
-	<span class='macro'>slr_def</span><span class='macro'>!</span>
+	<span class="macro">slr_def</span><span class="macro">!</span>
 	{
-		<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
-		<span class='kw'>struct</span> <span class='ident'>Test</span>
+		<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+		<span class="kw">struct</span> <span class="ident">Test</span>
 		{
-			<span class='ident'>x</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>0</span>,
-			<span class='ident'>y</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>0</span>
+			<span class="ident">x</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0</span>,
+			<span class="ident">y</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0</span>
 		}
 	}
-	<span class='kw'>let</span> <span class='ident'>orig</span> <span class='op'>=</span> <span class='ident'>Test</span>::<span class='ident'>new</span>();
+	<span class="kw">let</span> <span class="ident">orig</span> <span class="op">=</span> <span class="ident">Test</span>::<span class="ident">new</span>();
 
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>empty_test</span> <span class='op'>=</span> <span class='ident'>orig</span>.<span class='ident'>clone</span>();
-	<span class='kw'>let</span> <span class='ident'>empty_test_elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='ident'>empty_test</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>empty_test_elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_test</span>.<span class='ident'>x</span>, <span class='number'>0</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>empty_test</span>.<span class='ident'>y</span>, <span class='number'>0</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">empty_test</span> <span class="op">=</span> <span class="ident">orig</span>.<span class="ident">clone</span>();
+	<span class="kw">let</span> <span class="ident">empty_test_elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="ident">empty_test</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">empty_test_elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">empty_test</span>.<span class="ident">x</span>, <span class="number">0</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">empty_test</span>.<span class="ident">y</span>, <span class="number">0</span>);
 
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>partial_test</span> <span class='op'>=</span> <span class='ident'>orig</span>.<span class='ident'>clone</span>();
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>partial_test_elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='ident'>partial_test_elem</span>.<span class='ident'>insert</span>(<span class='string'>&quot;x&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;5&quot;</span>));
-	<span class='ident'>partial_test</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>partial_test_elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>partial_test</span>.<span class='ident'>x</span>, <span class='number'>5</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>partial_test</span>.<span class='ident'>y</span>, <span class='number'>0</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">partial_test</span> <span class="op">=</span> <span class="ident">orig</span>.<span class="ident">clone</span>();
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">partial_test_elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="ident">partial_test_elem</span>.<span class="ident">insert</span>(<span class="string">&quot;x&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;5&quot;</span>));
+	<span class="ident">partial_test</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">partial_test_elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">partial_test</span>.<span class="ident">x</span>, <span class="number">5</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">partial_test</span>.<span class="ident">y</span>, <span class="number">0</span>);
 
-	<span class='kw'>let</span> <span class='ident'>partial_test_elem</span> <span class='op'>=</span> <span class='ident'>partial_test</span>.<span class='ident'>to_element</span>();
-	<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>partial_test_elem</span>.<span class='ident'>as_table</span>().<span class='ident'>is_some</span>());
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>partial_test_elem</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;x&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;5&quot;</span>);
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>partial_test_elem</span>.<span class='ident'>as_table</span>().<span class='ident'>unwrap</span>()[<span class='string'>&quot;y&quot;</span>].<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;0&quot;</span>);
+	<span class="kw">let</span> <span class="ident">partial_test_elem</span> <span class="op">=</span> <span class="ident">partial_test</span>.<span class="ident">to_element</span>();
+	<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">partial_test_elem</span>.<span class="ident">as_table</span>().<span class="ident">is_some</span>());
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">partial_test_elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;x&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;5&quot;</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">partial_test_elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;y&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;0&quot;</span>);
 
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>err_test</span> <span class='op'>=</span> <span class='ident'>orig</span>.<span class='ident'>clone</span>();
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>err_test_elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_table</span>();
-	<span class='ident'>err_test_elem</span>.<span class='ident'>insert</span>(<span class='string'>&quot;z&quot;</span>, <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;5&quot;</span>));
-	<span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>err_test</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>err_test_elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap_err</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>res</span>[<span class='number'>0</span>].<span class='ident'>kind</span>, <span class='ident'>ErrorKind</span>::<span class='ident'>UnknownField</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">err_test</span> <span class="op">=</span> <span class="ident">orig</span>.<span class="ident">clone</span>();
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">err_test_elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="ident">err_test_elem</span>.<span class="ident">insert</span>(<span class="string">&quot;z&quot;</span>, <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;5&quot;</span>));
+	<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">err_test</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">err_test_elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap_err</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>[<span class="number">0</span>].<span class="ident">kind</span>, <span class="ident">ErrorKind</span>::<span class="ident">UnknownField</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>test</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>slr_enum</span>()
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">slr_enum</span>()
 {
-	<span class='macro'>slr_def</span><span class='macro'>!</span>
+	<span class="macro">slr_def</span><span class="macro">!</span>
 	{
-		<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
-		<span class='kw'>enum</span> <span class='ident'>Test</span>
+		<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
+		<span class="kw">enum</span> <span class="ident">Test</span>
 		{
-			<span class='ident'>A</span>,
-			<span class='ident'>B</span>
+			<span class="ident">A</span>,
+			<span class="ident">B</span>
 		}
 	}
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>test</span> <span class='op'>=</span> <span class='ident'>Test</span>::<span class='ident'>A</span>;
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">test</span> <span class="op">=</span> <span class="ident">Test</span>::<span class="ident">A</span>;
 
-	<span class='kw'>let</span> <span class='ident'>test_elem</span> <span class='op'>=</span> <span class='ident'>ConfigElement</span>::<span class='ident'>new_value</span>(<span class='string'>&quot;B&quot;</span>);
-	<span class='ident'>test</span>.<span class='ident'>from_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>test_elem</span>, <span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>test</span>, <span class='ident'>Test</span>::<span class='ident'>B</span>);
+	<span class="kw">let</span> <span class="ident">test_elem</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;B&quot;</span>);
+	<span class="ident">test</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">test_elem</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">test</span>, <span class="ident">Test</span>::<span class="ident">B</span>);
 
-	<span class='kw'>let</span> <span class='ident'>test_elem</span> <span class='op'>=</span> <span class='ident'>test</span>.<span class='ident'>to_element</span>();
-	<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>test_elem</span>.<span class='ident'>as_value</span>().<span class='ident'>unwrap</span>(), <span class='string'>&quot;B&quot;</span>);
+	<span class="kw">let</span> <span class="ident">test_elem</span> <span class="op">=</span> <span class="ident">test</span>.<span class="ident">to_element</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">test_elem</span>.<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;B&quot;</span>);
 }
 </pre>
 </section>

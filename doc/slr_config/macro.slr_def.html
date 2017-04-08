@@ -80,7 +80,9 @@
 		}
 	) <span class="op">=&gt;</span> { ... };
 }</pre>
-<div class='docblock'><p>A macro to define the compile-time schemas for configuration elements. You can use this macro to define structs and enums, like so:</p>
+<div class='docblock'><p>A macro to define the compile-time schemas for configuration elements.
+You can use this macro to define structs and enums, like so:</p>
+
 <pre class="rust rust-example-rendered">
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">slr_config</span>;
@@ -104,7 +106,10 @@
     }
 }
 </pre>
-<p>The types declared by both invocations implement <code>ElementRepr</code>, and the struct versions also implement a <code>new</code> constructor which creates the type with the default value specified by the macro invocation.</p></div></section>
+<p>The types declared by both invocations implement <code>ElementRepr</code>, and the struct
+versions also implement a <code>new</code> constructor which creates the type with the
+default value specified by the macro invocation.</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

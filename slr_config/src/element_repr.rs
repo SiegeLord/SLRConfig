@@ -1,12 +1,7 @@
 use config_element::{Array, ConfigElement, Table, Value};
 use slr_parser::{Error, ErrorKind, Source};
 use std::default::Default;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
 use std::str::FromStr;
-
-
 
 /// Describes a way to convert a type to a ConfigElement and back.
 pub trait ElementRepr
@@ -16,6 +11,86 @@ pub trait ElementRepr
 	/// Creates an element that represents the contents of `self`.
 	fn to_element(&self) -> ConfigElement;
 }
+
+macro_rules! element_repr_tuple_impl
+{
+	($($v: ident : $t: ident),*) =>
+	{
+		impl<$($t : $crate::ElementRepr + Default),*> $crate::ElementRepr for ($($t),*,)
+		{
+			fn from_element<'l>(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
+			{
+				match *elem.kind()
+				{
+					Array(ref arr) =>
+					{
+						let mut errors = vec![];
+						let mut arr_itr = arr.iter();
+
+						$(
+							let mut $v: $t = Default::default();
+						)*
+
+						$(
+							match arr_itr.next()
+							{
+								Some(ref val_elem) =>
+								{
+									$v.from_element(val_elem, src).map_err(|new_errors| errors.extend(new_errors)).ok();
+								},
+								None =>
+								{
+									return Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Insufficient elements for a tuple")])
+								}
+							}
+						)*
+
+						if arr_itr.next().is_some()
+						{
+							return Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Too many elements for a tuple")])
+						}
+
+						*self = ($($v),*,);
+
+						if errors.is_empty()
+						{
+							Ok(())
+						}
+						else
+						{
+							Err(errors)
+						}
+					}
+					Table(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Cannot parse a table as a tuple")]),
+					Value(_) => Err(vec![$crate::Error::from_span::<()>(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Cannot parse a value as a tuple")]),
+				}
+			}
+
+			fn to_element(&self) -> $crate::ConfigElement
+			{
+				let mut ret = ConfigElement::new_array();
+				{
+					let arr = ret.as_array_mut().unwrap();
+					let ($(ref $v),*,) = *self;
+
+					$(
+						arr.push($v.to_element());
+					)*
+				}
+				ret
+			}
+		}
+	}
+}
+
+element_repr_tuple_impl!(a: A);
+element_repr_tuple_impl!(a: A, b: B);
+element_repr_tuple_impl!(a: A, b: B, c: C);
+element_repr_tuple_impl!(a: A, b: B, c: C, d: D);
+element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E);
+element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F);
+element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G);
+element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H);
 
 macro_rules! element_repr_via_str_impl
 {
@@ -197,7 +272,7 @@ macro_rules! slr_def_enum_impl
 						match &val[..]
 						{
 							$(
-								stringify!($var_name) => 
+								stringify!($var_name) =>
 								{
 									*self = $name::$var_name;
 									Ok(())

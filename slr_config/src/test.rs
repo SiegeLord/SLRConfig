@@ -168,6 +168,26 @@ fn from_element_test()
 	assert!(res.is_err());
 	assert_eq!(res.unwrap_err().len(), 1);
 	assert_eq!(val[0], 0);
+
+	let mut elem = ConfigElement::new_array();
+	elem.insert("", ConfigElement::new_value("1"));
+	elem.insert("", ConfigElement::new_value("2.0"));
+	let mut val: (i32, f32) = (0, 0.0);
+	val.from_element(&elem, None).unwrap();
+	assert_eq!(val.0, 1);
+	assert_eq!(val.1, 2.0);
+}
+
+#[test]
+fn to_element_test()
+{
+	let val: (i32, f32) = (1, 2.0);
+	let elem = val.to_element();
+
+	let arr = elem.as_array().unwrap();
+	assert_eq!(arr.len(), 2);
+	assert_eq!(arr[0].as_value().unwrap(), "1");
+	assert_eq!(arr[1].as_value().unwrap(), "2");
 }
 
 #[test]

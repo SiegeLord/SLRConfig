@@ -150,6 +150,8 @@ tab2
 #[test]
 fn from_element_test()
 {
+	use std::collections::HashMap;
+
 	let elem = ConfigElement::new_value("55");
 	let mut val: i32 = 0;
 	val.from_element(&elem, None).unwrap();
@@ -176,11 +178,19 @@ fn from_element_test()
 	val.from_element(&elem, None).unwrap();
 	assert_eq!(val.0, 1);
 	assert_eq!(val.1, 2.0);
+
+	let mut elem = ConfigElement::new_table();
+	elem.insert("1", ConfigElement::new_value("2.0"));
+	let mut val: HashMap<i32, f32> = HashMap::new();
+	val.from_element(&elem, None).unwrap();
+	assert_eq!(val[&1], 2.0);
 }
 
 #[test]
 fn to_element_test()
 {
+	use std::collections::HashMap;
+
 	let val: (i32, f32) = (1, 2.0);
 	let elem = val.to_element();
 
@@ -188,6 +198,12 @@ fn to_element_test()
 	assert_eq!(arr.len(), 2);
 	assert_eq!(arr[0].as_value().unwrap(), "1");
 	assert_eq!(arr[1].as_value().unwrap(), "2");
+
+	let mut val: HashMap<i32, f32> = HashMap::new();
+	val.insert(1, 2.0);
+	let elem = val.to_element();
+	let tab = elem.as_table().unwrap();
+	assert_eq!(tab["1"].as_value().unwrap(), "2");
 }
 
 #[test]

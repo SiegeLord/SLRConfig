@@ -21,6 +21,7 @@ pub struct ConfigElement
 	span: Span,
 }
 
+// TODO: It's annoying that we lose the span information from Values and Table keys.
 /// The kind of the configuration element.
 #[derive(Clone)]
 pub enum ConfigElementKind

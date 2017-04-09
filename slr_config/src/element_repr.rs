@@ -1,6 +1,8 @@
 use config_element::{Array, ConfigElement, Table, Value};
 use slr_parser::{Error, ErrorKind, Source};
+use std::collections::HashMap;
 use std::default::Default;
+use std::hash::Hash;
 use std::str::FromStr;
 
 /// Describes a way to convert a type to a ConfigElement and back.
@@ -180,6 +182,69 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 			for v in self
 			{
 				arr.push(v.to_element());
+			}
+		}
+		ret
+	}
+}
+
+impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> ElementRepr for HashMap<K, V>
+    where K::Err: ToString
+{
+	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
+	{
+		match *elem.kind()
+		{
+			Table(ref map) =>
+			{
+				let mut errors = vec![];
+				self.clear();
+
+				for (k, v) in map
+				{
+					let key: K = k.parse()
+						.map_err(|err: K::Err| {
+							let err = err.to_string();
+							errors.push(Error::from_span::<()>(elem.span(),
+							                                   src,
+							                                   ErrorKind::InvalidRepr,
+							                                   &format!("Cannot parse '{}' as 'K': {}", k, err)));
+						})
+						.unwrap_or_default();
+					let mut val: V = Default::default();
+
+					val.from_element(v, src).map_err(|new_errors| errors.extend(new_errors)).ok();
+
+					self.insert(key, val);
+				}
+				if errors.is_empty()
+				{
+					Ok(())
+				}
+				else
+				{
+					Err(errors)
+				}
+			}
+			Array(_) =>
+			{
+				Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse an array as 'HashMap<K, V>'")])
+			}
+			Value(_) =>
+			{
+				Err(vec![Error::from_span::<()>(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'HashMap<K, V>'")])
+			}
+		}
+	}
+
+	fn to_element(&self) -> ConfigElement
+	{
+		let mut ret = ConfigElement::new_table();
+		{
+			let tab = ret.as_table_mut().unwrap();
+			for (k, v) in self
+			{
+				tab.insert(k.to_string(), v.to_element());
 			}
 		}
 		ret

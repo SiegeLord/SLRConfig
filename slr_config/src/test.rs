@@ -353,6 +353,4 @@ fn serde_test()
 	let v2 = v2.unwrap();
 
 	assert_eq!(v, v2);
-
-	panic!("All fine");
 }

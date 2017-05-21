@@ -127,6 +127,16 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is a table, returns its contents.
+	pub fn into_table(self) -> Option<BTreeMap<String, ConfigElement>>
+	{
+		match self.kind
+		{
+			Table(table) => Some(table),
+			_ => None,
+		}
+	}
+
 	/// If this is a table, returns a pointer to its contents.
 	pub fn as_table_mut(&mut self) -> Option<&mut BTreeMap<String, ConfigElement>>
 	{
@@ -147,6 +157,16 @@ impl ConfigElement
 		}
 	}
 
+	/// If this is a value, returns its contents.
+	pub fn into_value(self) -> Option<String>
+	{
+		match self.kind
+		{
+			Value(value) => Some(value),
+			_ => None,
+		}
+	}
+
 	/// If this is a value, returns a pointer to its contents.
 	pub fn as_value_mut(&mut self) -> Option<&mut String>
 	{
@@ -163,6 +183,16 @@ impl ConfigElement
 		match self.kind
 		{
 			Array(ref array) => Some(array),
+			_ => None,
+		}
+	}
+
+	/// If this is an array, returns its contents.
+	pub fn into_array(self) -> Option<Vec<ConfigElement>>
+	{
+		match self.kind
+		{
+			Array(array) => Some(array),
 			_ => None,
 		}
 	}
@@ -256,7 +286,7 @@ impl Display for ConfigElement
 
 fn visit_error<'l>(span: Span, source: &Source<'l>, msg: &str) -> Result<(), Error>
 {
-	Err(Error::from_span::<()>(span, Some(source), ErrorKind::ParseFailure, msg))
+	Err(Error::from_span(span, Some(source), ErrorKind::ParseFailure, msg))
 }
 
 struct ConfigElementVisitor

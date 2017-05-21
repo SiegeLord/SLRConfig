@@ -2,6 +2,8 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+extern crate serde;
+
 pub use lexer::*;
 pub use parser::*;
 pub use printer::*;

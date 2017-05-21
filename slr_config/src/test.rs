@@ -2,14 +2,12 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-#[cfg(test)]
 use ::ErrorKind;
-#[cfg(test)]
 use config_element::*;
-#[cfg(test)]
 use element_repr::*;
-#[cfg(test)]
 use std::char;
+use ser::to_element;
+use de::from_element;
 
 #[test]
 fn basic_test()
@@ -265,4 +263,87 @@ fn slr_enum()
 
 	let test_elem = test.to_element();
 	assert_eq!(test_elem.as_value().unwrap(), "B");
+}
+
+#[test]
+fn serde_test()
+{
+	use std::collections::HashMap;
+	use slr_parser::Source;
+	use std::path::Path;
+	
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	struct A
+	{
+		b: i32,
+		c: Option<i32>,
+		d: Option<f32>,
+		e: Vec<E>,
+		f: HashMap<i32, i32>,
+		h: (i32, i32)
+	}
+	
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	enum E
+	{
+		Var1,
+		Var2(i32),
+		Var3{v: i32},
+		Var4(i32, i32),
+	}
+	
+	let mut f = HashMap::new();
+	f.insert(1, 2);
+	let v = A
+	{
+		b: 1,
+		c: None,
+		d: Some(1.0),
+		e: vec![E::Var1, E::Var2(1), E::Var3{v: 1}, E::Var4(1, 2)],
+		f: f,
+		h: (1, 2),
+	};
+	
+	let elem = to_element(&v).unwrap();
+	println!("\n{}", elem);
+	
+	let src_str = 
+	r#"
+		b = 1
+		c = ""
+		d = 1
+		e =
+		[
+				Var1,
+				{
+						Var2 = 1
+				},
+				{
+						Var3
+						{
+								v = 1
+						}
+				},
+				{
+						Var4 = [1, 2]
+				}
+		]
+		f = [[1, 2]]
+		h = [1, 2]
+	"#;
+	let mut src = Source::new(&Path::new("none"), &src_str);
+	let elem = ConfigElement::from_source(&mut src).unwrap();
+	
+	let v2 = from_element(&elem, Some(&src));
+	
+	if let Err(ref err) = v2
+	{
+		println!("Error");
+		println!("{}", err.text);
+	}
+	let v2 = v2.unwrap();
+	
+	assert_eq!(v, v2);
+	
+	panic!("All fine");
 }

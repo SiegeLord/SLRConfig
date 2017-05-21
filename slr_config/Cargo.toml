@@ -21,3 +21,7 @@ path = "src/slr_test.rs"
 
 path = "../slr_parser"
 version = "=0.0.17" #auto
+
+[dependencies]
+serde = "=1.0.2"
+serde_derive = "=1.0.2"

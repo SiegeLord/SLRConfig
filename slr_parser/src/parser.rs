@@ -188,7 +188,7 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 {
 	fn parse_error<T>(&self, span: Span, msg: &str) -> Result<T, Error>
 	{
-		Err(Error::from_span::<T>(span, Some(self.lexer.get_source()), ErrorKind::ParseFailure, msg))
+		Err(Error::from_span(span, Some(self.lexer.get_source()), ErrorKind::ParseFailure, msg))
 	}
 
 	fn parse_table(&mut self) -> Result<bool, Error>

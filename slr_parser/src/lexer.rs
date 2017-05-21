@@ -2,10 +2,13 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+use std;
 use std::cmp::{max, min};
 use std::path::Path;
 use std::str::CharIndices;
 use std::usize;
+use std::fmt::{self, Display};
+use serde::{ser, de};
 
 pub enum StringQuoteType
 {
@@ -423,7 +426,7 @@ impl Error
 
 	/// Creates an error from a certain span of the source. The source argument,
 	/// if set, must be set to the source that was used when the span was created.
-	pub fn from_span<'l, T>(span: Span, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
+	pub fn from_span(span: Span, source: Option<&Source>, kind: ErrorKind, msg: &str) -> Error
 	{
 		match source
 		{
@@ -476,6 +479,38 @@ impl Error
 			}
 			None => Error::new(kind, format!("error: {}\n", msg)),
 		}
+	}
+}
+
+impl ser::Error for Error
+{
+	fn custom<T: Display>(msg: T) -> Self
+	{
+		Error::new(ErrorKind::InvalidRepr, msg.to_string())
+	}
+}
+
+impl de::Error for Error
+{
+	fn custom<T: Display>(msg: T) -> Self
+	{
+		Error::new(ErrorKind::InvalidRepr, msg.to_string())
+	}
+}
+
+impl Display for Error
+{
+	fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result
+	{
+		formatter.write_str(&self.text)
+	}
+}
+
+impl std::error::Error for Error
+{
+	fn description(&self) -> &str
+	{
+		&self.text
 	}
 }
 

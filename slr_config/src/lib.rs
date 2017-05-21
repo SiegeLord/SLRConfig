@@ -51,12 +51,24 @@ fn main()
 
 
 extern crate slr_parser;
+#[macro_use]
+extern crate serde;
 
 pub use config_element::*;
 pub use element_repr::*;
 pub use slr_parser::{Error, ErrorKind, Source};
+pub use ser::to_element;
 
 #[macro_use]
 mod element_repr;
 mod config_element;
+
+#[cfg(test)]
+#[macro_use]
+extern crate serde_derive;
+
+#[cfg(test)]
 mod test;
+
+mod ser;
+mod de;

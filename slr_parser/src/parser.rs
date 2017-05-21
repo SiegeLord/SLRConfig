@@ -199,7 +199,8 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 			return Ok(false);
 		}
 		self.lexer.next();
-		try!(self.visitor.set_table(self.lexer.get_source(), left_brace.span));
+		try!(self.visitor
+		         .set_table(self.lexer.get_source(), left_brace.span));
 		try!(self.parse_table_contents());
 		let right_brace = try_eof!(self.lexer.cur_token, self.parse_error(left_brace.span, "Unterminated table"));
 		if right_brace.kind != TokenKind::RightBrace
@@ -241,7 +242,8 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
 		let ret = if token.kind.is_string()
 		{
-			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::from_token(token)));
+			try!(self.visitor
+			         .start_element(self.lexer.get_source(), ConfigString::from_token(token)));
 
 			let assign = try_eof!(self.lexer.next(), self.parse_error(token.span, "Expected '=' or '{' to follow, but got EOF"));
 			if assign.kind == TokenKind::Assign
@@ -290,7 +292,8 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 			return Ok(false);
 		}
 		self.lexer.next();
-		try!(self.visitor.set_array(self.lexer.get_source(), left_bracket.span));
+		try!(self.visitor
+		         .set_array(self.lexer.get_source(), left_bracket.span));
 		try!(self.parse_array_contents());
 		let right_bracket = try_eof!(self.lexer.cur_token, self.parse_error(left_bracket.span, "Unterminated array"));
 		if right_bracket.kind != TokenKind::RightBracket
@@ -332,17 +335,20 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		let token = try_eof!(self.lexer.cur_token, Ok(false));
 		let ret = if token.kind.is_string() || token.kind == TokenKind::Dollar
 		{
-			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.visitor
+			         .start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_string_expr())
 		}
 		else if token.kind == TokenKind::LeftBrace
 		{
-			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.visitor
+			         .start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_table())
 		}
 		else if token.kind == TokenKind::LeftBracket
 		{
-			try!(self.visitor.start_element(self.lexer.get_source(), ConfigString::new()));
+			try!(self.visitor
+			         .start_element(self.lexer.get_source(), ConfigString::new()));
 			try!(self.parse_array())
 		}
 		else
@@ -361,18 +367,18 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 		let mut last_span = None;
 		loop
 		{
-			let token = try_eof!(self.lexer.cur_token,
-			                     match last_span
-			                     {
-				                     Some(span) =>
-				                     {
-					                     return self.parse_error(span, "Expected a string or '$' to follow, but got EOF");
-					                    }
-				                     None => return Ok(false),
-			                     });
+			let token = try_eof!(self.lexer.cur_token, match last_span
+			{
+				Some(span) =>
+				{
+					return self.parse_error(span, "Expected a string or '$' to follow, but got EOF");
+				}
+				None => return Ok(false),
+			});
 			if token.kind.is_string()
 			{
-				try!(self.visitor.append_string(self.lexer.get_source(), ConfigString::from_token(token)));
+				try!(self.visitor
+				         .append_string(self.lexer.get_source(), ConfigString::from_token(token)));
 				self.lexer.next();
 			}
 			else if token.kind == TokenKind::Dollar
@@ -380,7 +386,8 @@ impl<'l, 's, 'm, E: GetError, V: Visitor<'l, E>> Parser<'l, 's, 'm, E, V>
 				let string_token = try_eof!(self.lexer.next(), self.parse_error(token.span, "Expected a string to follow, but got EOF"));
 				if string_token.kind.is_string()
 				{
-					try!(self.visitor.expand(self.lexer.get_source(), ConfigString::from_token(string_token)));
+					try!(self.visitor
+					         .expand(self.lexer.get_source(), ConfigString::from_token(string_token)));
 					self.lexer.next();
 				}
 				else

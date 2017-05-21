@@ -313,7 +313,8 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 {
 	fn start_element(&mut self, _src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>
 	{
-		self.stack.push((name.to_string(), ConfigElement::new_value("".to_string()), false));
+		self.stack
+			.push((name.to_string(), ConfigElement::new_value("".to_string()), false));
 		Ok(())
 	}
 
@@ -385,7 +386,10 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 				}
 				Array(ref array) =>
 				{
-					found_element = <usize>::from_str(&name).ok().and_then(|idx| array.get(idx)).map(|v| v.clone());
+					found_element = <usize>::from_str(&name)
+						.ok()
+						.and_then(|idx| array.get(idx))
+						.map(|v| v.clone());
 				}
 			}
 			if found_element.is_some()

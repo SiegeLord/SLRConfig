@@ -20,7 +20,10 @@ fn main()
 	let filename = args.next().unwrap();
 
 	let mut src = String::new();
-	File::open(&filename).unwrap().read_to_string(&mut src).unwrap();
+	File::open(&filename)
+		.unwrap()
+		.read_to_string(&mut src)
+		.unwrap();
 
 	let mut src = Source::new(Path::new(&filename), &src);
 	let mut lexer = Lexer::new(&mut src);

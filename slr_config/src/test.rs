@@ -2,12 +2,12 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use ::ErrorKind;
+use ErrorKind;
 use config_element::*;
-use element_repr::*;
-use std::char;
-use ser::to_element;
 use de::from_element;
+use element_repr::*;
+use ser::to_element;
+use std::char;
 
 #[test]
 fn basic_test()
@@ -113,7 +113,9 @@ fn unicode_encode_test()
 		root.insert("test", ConfigElement::new_value(&s));
 		let encoded = format!("{}", root);
 		println!("Encoding: {} |{}|\n{}", i, s, encoded);
-		let decoded = ConfigElement::from_str(&encoded).map_err(|e| print!("{}", e.text)).unwrap();
+		let decoded = ConfigElement::from_str(&encoded)
+			.map_err(|e| print!("{}", e.text))
+			.unwrap();
 		assert_eq!(&s, decoded.as_table().unwrap()["test"].as_value().unwrap());
 	}
 }
@@ -142,7 +144,9 @@ tab2
 	assert!(root["val_test"].as_value().unwrap() == "aa");
 	assert!(root["arr_test"].as_array().is_some());
 	assert!(root["tab_test"].as_table().is_some());
-	assert!(root["tab2"].as_table().unwrap()["val_test2"].as_value().is_some());
+	assert!(root["tab2"].as_table().unwrap()["val_test2"]
+	            .as_value()
+	            .is_some());
 }
 
 #[test]
@@ -233,8 +237,14 @@ fn slr_struct()
 
 	let partial_test_elem = partial_test.to_element();
 	assert!(partial_test_elem.as_table().is_some());
-	assert_eq!(partial_test_elem.as_table().unwrap()["x"].as_value().unwrap(), "5");
-	assert_eq!(partial_test_elem.as_table().unwrap()["y"].as_value().unwrap(), "0");
+	assert_eq!(partial_test_elem.as_table().unwrap()["x"]
+	               .as_value()
+	               .unwrap(),
+	           "5");
+	assert_eq!(partial_test_elem.as_table().unwrap()["y"]
+	               .as_value()
+	               .unwrap(),
+	           "0");
 
 	let mut err_test = orig.clone();
 	let mut err_test_elem = ConfigElement::new_table();
@@ -271,7 +281,7 @@ fn serde_test()
 	use std::collections::HashMap;
 	use slr_parser::Source;
 	use std::path::Path;
-	
+
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
 	struct A
 	{
@@ -280,35 +290,34 @@ fn serde_test()
 		d: Option<f32>,
 		e: Vec<E>,
 		f: HashMap<i32, i32>,
-		h: (i32, i32)
+		h: (i32, i32),
 	}
-	
+
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
 	enum E
 	{
 		Var1,
 		Var2(i32),
-		Var3{v: i32},
+		Var3
+		{ v: i32 },
 		Var4(i32, i32),
 	}
-	
+
 	let mut f = HashMap::new();
 	f.insert(1, 2);
-	let v = A
-	{
+	let v = A {
 		b: 1,
 		c: None,
 		d: Some(1.0),
-		e: vec![E::Var1, E::Var2(1), E::Var3{v: 1}, E::Var4(1, 2)],
+		e: vec![E::Var1, E::Var2(1), E::Var3 { v: 1 }, E::Var4(1, 2)],
 		f: f,
 		h: (1, 2),
 	};
-	
+
 	let elem = to_element(&v).unwrap();
 	println!("\n{}", elem);
-	
-	let src_str = 
-	r#"
+
+	let src_str = r#"
 		b = 1
 		c = ""
 		d = 1
@@ -333,17 +342,17 @@ fn serde_test()
 	"#;
 	let mut src = Source::new(&Path::new("none"), &src_str);
 	let elem = ConfigElement::from_source(&mut src).unwrap();
-	
+
 	let v2 = from_element(&elem, Some(&src));
-	
+
 	if let Err(ref err) = v2
 	{
 		println!("Error");
 		println!("{}", err.text);
 	}
 	let v2 = v2.unwrap();
-	
+
 	assert_eq!(v, v2);
-	
+
 	panic!("All fine");
 }

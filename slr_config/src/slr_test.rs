@@ -22,10 +22,15 @@ fn main()
 	let filename = args.next().unwrap();
 
 	let mut src = String::new();
-	File::open(&filename).unwrap().read_to_string(&mut src).unwrap();
+	File::open(&filename)
+		.unwrap()
+		.read_to_string(&mut src)
+		.unwrap();
 
 	let mut src = Source::new(&Path::new(&filename), &src);
-	let root = ConfigElement::from_source(&mut src).map_err(|e| print!("{}", e.text)).unwrap();
+	let root = ConfigElement::from_source(&mut src)
+		.map_err(|e| print!("{}", e.text))
+		.unwrap();
 
 	println!("{}", root);
 }

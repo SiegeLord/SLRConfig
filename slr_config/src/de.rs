@@ -1,17 +1,18 @@
-use serde::de::{self, Deserialize, Visitor};
+
 
 use config_element::{ConfigElement, ConfigElementKind};
-use slr_parser::{ErrorKind, Error, Source, Span};
-use std::str::FromStr;
-use std::error;
+use serde::de::{self, Deserialize, Visitor};
+use slr_parser::{Error, ErrorKind, Source, Span};
 use std::collections::BTreeMap;
 use std::collections::btree_map;
+use std::error;
+use std::str::FromStr;
 
 /// Deserialize a value to a ConfigElement.
 pub fn from_element<'de, 'src: 'de, T>(element: &'de ConfigElement, source: Option<&'de Source<'src>>) -> Result<T, Error>
 	where T: Deserialize<'de>
 {
-	let d = Deserializer::new(element, source);	
+	let d = Deserializer::new(element, source);
 	T::deserialize(d)
 }
 
@@ -26,8 +27,7 @@ impl<'de, 'src> SeqHelper<'de, 'src>
 {
 	fn new(elements: &'de Vec<ConfigElement>, source: Option<&'de Source<'src>>) -> Self
 	{
-		Self
-		{
+		Self {
 			elements: elements,
 			source: source,
 			idx: 0,
@@ -38,18 +38,15 @@ impl<'de, 'src> SeqHelper<'de, 'src>
 impl<'de, 'src> de::SeqAccess<'de> for SeqHelper<'de, 'src>
 {
 	type Error = Error;
-	
-	fn next_element_seed<T>(
-        &mut self, 
-        seed: T
-    ) -> Result<Option<T::Value>, Error>
-		where
-        T: de::DeserializeSeed<'de>
-    {
+
+	fn next_element_seed<T>(&mut self, seed: T) -> Result<Option<T::Value>, Error>
+		where T: de::DeserializeSeed<'de>
+	{
 		if self.idx < self.elements.len()
 		{
 			let elem = &self.elements[self.idx];
-			let ret = seed.deserialize(Deserializer::new(elem, self.source)).map(Some);
+			let ret = seed.deserialize(Deserializer::new(elem, self.source))
+				.map(Some);
 			self.idx += 1;
 			ret
 		}
@@ -58,9 +55,9 @@ impl<'de, 'src> de::SeqAccess<'de> for SeqHelper<'de, 'src>
 			Ok(None)
 		}
 	}
-    
-    fn size_hint(&self) -> Option<usize>
-    {
+
+	fn size_hint(&self) -> Option<usize>
+	{
 		Some(self.elements.len())
 	}
 }
@@ -68,7 +65,7 @@ impl<'de, 'src> de::SeqAccess<'de> for SeqHelper<'de, 'src>
 impl<'de, 'src> de::MapAccess<'de> for SeqHelper<'de, 'src>
 {
 	type Error = Error;
-	
+
 	fn next_key_seed<K>(&mut self, seed: K) -> Result<Option<K::Value>, Error>
 		where K: de::DeserializeSeed<'de>
 	{
@@ -79,7 +76,8 @@ impl<'de, 'src> de::MapAccess<'de> for SeqHelper<'de, 'src>
 			{
 				if array.len() == 2
 				{
-					seed.deserialize(Deserializer::new(&array[0], self.source)).map(Some)
+					seed.deserialize(Deserializer::new(&array[0], self.source))
+						.map(Some)
 				}
 				else
 				{
@@ -96,8 +94,8 @@ impl<'de, 'src> de::MapAccess<'de> for SeqHelper<'de, 'src>
 			Ok(None)
 		}
 	}
-    
-    fn next_value_seed<V>(&mut self, seed: V) -> Result<V::Value, Self::Error>
+
+	fn next_value_seed<V>(&mut self, seed: V) -> Result<V::Value, Error>
 		where V: de::DeserializeSeed<'de>
 	{
 		let elem = &self.elements[self.idx];
@@ -132,8 +130,7 @@ impl<'de, 'src> MapHelper<'de, 'src>
 {
 	fn new(elements: &'de BTreeMap<String, ConfigElement>, source: Option<&'de Source<'src>>) -> Self
 	{
-		Self
-		{
+		Self {
 			iter: elements.iter(),
 			value: None,
 			source: source,
@@ -144,7 +141,7 @@ impl<'de, 'src> MapHelper<'de, 'src>
 impl<'de, 'src> de::MapAccess<'de> for MapHelper<'de, 'src>
 {
 	type Error = Error;
-	
+
 	fn next_key_seed<K>(&mut self, seed: K) -> Result<Option<K::Value>, Error>
 		where K: de::DeserializeSeed<'de>
 	{
@@ -159,8 +156,8 @@ impl<'de, 'src> de::MapAccess<'de> for MapHelper<'de, 'src>
 			Ok(None)
 		}
 	}
-    
-    fn next_value_seed<V>(&mut self, seed: V) -> Result<V::Value, Self::Error>
+
+	fn next_value_seed<V>(&mut self, seed: V) -> Result<V::Value, Error>
 		where V: de::DeserializeSeed<'de>
 	{
 		let v = self.value.unwrap();
@@ -177,10 +174,7 @@ impl<'de> HackStringDeserializer<'de>
 {
 	fn new(string: &'de str) -> Self
 	{
-		Self
-		{
-			string: string,
-		}
+		Self { string: string }
 	}
 }
 
@@ -193,10 +187,9 @@ struct VariantHelper<'de, 'src: 'de>
 
 impl<'de, 'src> VariantHelper<'de, 'src>
 {
-	fn new(element: Option<&'de ConfigElement>,	source: Option<&'de Source<'src>>, span: Span) -> Self
+	fn new(element: Option<&'de ConfigElement>, source: Option<&'de Source<'src>>, span: Span) -> Self
 	{
-		Self
-		{
+		Self {
 			element: element,
 			source: source,
 			span: span,
@@ -207,7 +200,7 @@ impl<'de, 'src> VariantHelper<'de, 'src>
 impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 {
 	type Error = Error;
-	fn unit_variant(self) -> Result<(), Self::Error>
+	fn unit_variant(self) -> Result<(), Error>
 	{
 		if self.element.is_some()
 		{
@@ -218,10 +211,10 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 			Ok(())
 		}
 	}
-	
-	fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value, Self::Error> where
-		T: de::DeserializeSeed<'de>
-    {
+
+	fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value, Error>
+		where T: de::DeserializeSeed<'de>
+	{
 		if let Some(elem) = self.element
 		{
 			seed.deserialize(Deserializer::new(elem, self.source))
@@ -231,14 +224,10 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 			Err(Error::from_span(self.span, self.source, ErrorKind::InvalidRepr, "Expected a table with a single element."))
 		}
 	}
-	
-	fn tuple_variant<V>(
-			self, 
-			_len: usize, 
-			visitor: V
-		) -> Result<V::Value, Self::Error> where
-		V: Visitor<'de>
-    {
+
+	fn tuple_variant<V>(self, _len: usize, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(elem) = self.element
 		{
 			if let Some(array) = elem.as_array()
@@ -255,13 +244,9 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 			Err(Error::from_span(self.span, self.source, ErrorKind::InvalidRepr, "Expected a table with a single array element."))
 		}
 	}
-	
-	fn struct_variant<V>(
-		self, 
-		_fields: &'static [&'static str], 
-		visitor: V
-	) -> Result<V::Value, Self::Error> where
-		V: Visitor<'de>
+
+	fn struct_variant<V>(self, _fields: &'static [&'static str], visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
 	{
 		if let Some(elem) = self.element
 		{
@@ -284,14 +269,14 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 impl<'de> de::Deserializer<'de> for HackStringDeserializer<'de>
 {
 	type Error = Error;
-	
-    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
-        visitor.visit_borrowed_str(self.string)
-    }
 
-    forward_to_deserialize_any! {
+	fn deserialize_any<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
+		visitor.visit_borrowed_str(self.string)
+	}
+
+	forward_to_deserialize_any! {
         bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
         byte_buf option unit unit_struct newtype_struct seq tuple
         tuple_struct map struct enum identifier ignored_any
@@ -309,18 +294,14 @@ impl<'de, 'src> Deserializer<'de, 'src>
 {
 	fn new(element: &'de ConfigElement, source: Option<&'de Source<'src>>) -> Self
 	{
-		Self
-		{
-			element: element,
-			source: source,
-		}
+		Self { element: element, source: source }
 	}
-	
+
 	fn error(&self, text: &str) -> Error
 	{
 		Error::from_span(self.element.span(), self.source, ErrorKind::InvalidRepr, text)
 	}
-	
+
 	fn primitive<T: FromStr>(&self, name: &str) -> Result<T, Error>
 		where T::Err: error::Error
 	{
@@ -340,22 +321,14 @@ impl<'de, 'src> de::EnumAccess<'de> for Deserializer<'de, 'src>
 {
 	type Error = Error;
 	type Variant = VariantHelper<'de, 'src>;
-	
-	fn variant_seed<V>(
-        self, 
-        seed: V
-    ) -> Result<(V::Value, Self::Variant), Error>
-    where
-        V: de::DeserializeSeed<'de>
-		
+
+	fn variant_seed<V>(self, seed: V) -> Result<(V::Value, Self::Variant), Error>
+		where V: de::DeserializeSeed<'de>
 	{
 		let span = self.element.span();
 		match *self.element.kind()
 		{
-			ConfigElementKind::Value(_) =>
-			{
-				Ok((seed.deserialize(self)?, VariantHelper::new(None, self.source, span)))
-			},
+			ConfigElementKind::Value(_) => Ok((seed.deserialize(self)?, VariantHelper::new(None, self.source, span))),
 			ConfigElementKind::Table(ref table) =>
 			{
 				let mut iter = table.iter();
@@ -375,11 +348,8 @@ impl<'de, 'src> de::EnumAccess<'de> for Deserializer<'de, 'src>
 				{
 					ret
 				}
-			},
-			_ =>
-			{
-				Err(self.error(&format!("Expected value or table.")))
 			}
+			_ => Err(self.error(&format!("Expected value or table."))),
 		}
 	}
 }
@@ -387,82 +357,82 @@ impl<'de, 'src> de::EnumAccess<'de> for Deserializer<'de, 'src>
 impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 {
 	type Error = Error;
-	
+
 	fn deserialize_any<V>(self, _visitor: V) -> Result<V::Value, Error>
 		where V: Visitor<'de>
-    {
+	{
 		Err(self.error("deserialize_any unimplemented"))
 	}
-	
+
 	fn deserialize_bool<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_bool(self.primitive("bool")?)
-    }
-	
+	}
+
 	fn deserialize_i8<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_i8(self.primitive("i8")?)
-    }
-	
+	}
+
 	fn deserialize_i16<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_i16(self.primitive("i16")?)
-    }
-	
+	}
+
 	fn deserialize_i32<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_i32(self.primitive("i32")?)
-    }
-	
+	}
+
 	fn deserialize_i64<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_i64(self.primitive("i64")?)
-    }
-	
+	}
+
 	fn deserialize_u8<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_u8(self.primitive("u8")?)
-    }
-	
+	}
+
 	fn deserialize_u16<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_u16(self.primitive("u16")?)
-    }
-	
+	}
+
 	fn deserialize_u32<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_u32(self.primitive("u32")?)
-    }
-	
+	}
+
 	fn deserialize_u64<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_u64(self.primitive("u64")?)
-    }
-	
+	}
+
 	fn deserialize_f32<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_f32(self.primitive("f32")?)
-    }
-	
+	}
+
 	fn deserialize_f64<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		visitor.visit_f64(self.primitive("f64")?)
-    }
-	
+	}
+
 	fn deserialize_char<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		if let Some(value) = self.element.as_value()
 		{
 			let mut chars = value.chars();
@@ -480,11 +450,11 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		{
 			Err(self.error(&format!("Can't parse array/table as char.")))
 		}
-    }
-	
+	}
+
 	fn deserialize_str<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		if let Some(value) = self.element.as_value()
 		{
 			visitor.visit_borrowed_str(value)
@@ -493,57 +463,57 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		{
 			Err(self.error(&format!("Can't parse array/table as a string.")))
 		}
-    }
+	}
 
-    fn deserialize_string<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
-        self.deserialize_str(visitor)
-    }
+	fn deserialize_string<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
+		self.deserialize_str(visitor)
+	}
 
-    fn deserialize_bytes<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+	fn deserialize_bytes<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(array) = self.element.as_array()
 		{
 			let mut bytes = vec![];
-			
+
 			for element in array
 			{
 				bytes.push(from_element(element, self.source)?);
 			}
-			
+
 			visitor.visit_bytes(&bytes)
 		}
 		else
 		{
 			Err(self.error(&format!("Can't parse value/table as byte array.")))
 		}
-    }
+	}
 
-    fn deserialize_byte_buf<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+	fn deserialize_byte_buf<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(array) = self.element.as_array()
 		{
 			let mut bytes = vec![];
-			
+
 			for element in array
 			{
 				bytes.push(from_element(element, self.source)?);
 			}
-			
+
 			visitor.visit_byte_buf(bytes)
 		}
 		else
 		{
 			Err(self.error(&format!("Can't parse value/table as byte array.")))
 		}
-    }
-    
-    fn deserialize_option<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+	}
+
+	fn deserialize_option<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(value) = self.element.as_value()
 		{
 			if value.is_empty()
@@ -560,10 +530,10 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			visitor.visit_some(self)
 		}
 	}
-    
-    fn deserialize_unit<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_unit<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(value) = self.element.as_value()
 		{
 			if value.is_empty()
@@ -580,30 +550,22 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			Err(self.error(&format!("Expected an empty value.")))
 		}
 	}
-	
-	fn deserialize_unit_struct<V>(
-        self,
-        _name: &'static str,
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
-        self.deserialize_unit(visitor)
-    }
-    
-    fn deserialize_newtype_struct<V>(
-        self,
-        _name: &'static str,
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
-        visitor.visit_newtype_struct(self)
-    }
-    
-    fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_unit_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
+		self.deserialize_unit(visitor)
+	}
+
+	fn deserialize_newtype_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
+		visitor.visit_newtype_struct(self)
+	}
+
+	fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(array) = self.element.as_array()
 		{
 			visitor.visit_seq(SeqHelper::new(array, self.source))
@@ -613,14 +575,10 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			Err(self.error(&format!("Expected an array.")))
 		}
 	}
-	
-	fn deserialize_tuple<V>(
-        self,
-        len: usize,
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_tuple<V>(self, len: usize, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		if let Some(array) = self.element.as_array()
 		{
 			if array.len() == len
@@ -637,21 +595,16 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			Err(self.error(&format!("Expected an array.")))
 		}
 	}
-	
-	fn deserialize_tuple_struct<V>(
-        self,
-        _name: &'static str,
-        len: usize,
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_tuple_struct<V>(self, _name: &'static str, len: usize, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		self.deserialize_tuple(len, visitor)
 	}
-	
+
 	fn deserialize_map<V>(self, visitor: V) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+		where V: Visitor<'de>
+	{
 		if let Some(array) = self.element.as_array()
 		{
 			visitor.visit_map(SeqHelper::new(array, self.source))
@@ -661,15 +614,11 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			Err(self.error(&format!("Expected an array.")))
 		}
 	}
-	
-	fn deserialize_struct<V>(
-        self,
-        _name: &'static str,
-        _fields: &'static [&'static str],
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {		if let Some(table) = self.element.as_table()
+
+	fn deserialize_struct<V>(self, _name: &'static str, _fields: &'static [&'static str], visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
+		if let Some(table) = self.element.as_table()
 		{
 			visitor.visit_map(MapHelper::new(table, self.source))
 		}
@@ -678,33 +627,22 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			Err(self.error(&format!("Expected an array.")))
 		}
 	}
-	
-	fn deserialize_enum<V>(
-        self,
-        _name: &'static str,
-        _variants: &'static [&'static str],
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_enum<V>(self, _name: &'static str, _variants: &'static [&'static str], visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		visitor.visit_enum(self)
 	}
-	
-	fn deserialize_identifier<V>(
-        self,
-        visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_identifier<V>(self, visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		self.deserialize_str(visitor)
 	}
-	
-	fn deserialize_ignored_any<V>(
-        self,
-        _visitor: V
-    ) -> Result<V::Value, Error>
-        where V: Visitor<'de>
-    {
+
+	fn deserialize_ignored_any<V>(self, _visitor: V) -> Result<V::Value, Error>
+		where V: Visitor<'de>
+	{
 		Err(self.error("deserialize_ignored_any unimplemented"))
 	}
 }

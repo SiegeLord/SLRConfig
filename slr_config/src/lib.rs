@@ -56,8 +56,8 @@ extern crate serde;
 
 pub use config_element::*;
 pub use element_repr::*;
-pub use slr_parser::{Error, ErrorKind, Source};
 pub use ser::to_element;
+pub use slr_parser::{Error, ErrorKind, Source};
 
 #[macro_use]
 mod element_repr;

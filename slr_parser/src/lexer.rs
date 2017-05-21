@@ -2,13 +2,13 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
+use serde::{de, ser};
 use std;
 use std::cmp::{max, min};
+use std::fmt::{self, Display};
 use std::path::Path;
 use std::str::CharIndices;
 use std::usize;
-use std::fmt::{self, Display};
-use serde::{ser, de};
 
 pub enum StringQuoteType
 {
@@ -450,13 +450,19 @@ impl Error
 					let mut col_str = String::with_capacity(end_col);
 					if start_col > 0
 					{
-						let num_start_tabs = source_line[..start_col].chars().filter(|&c| c == '\t').count();
+						let num_start_tabs = source_line[..start_col]
+							.chars()
+							.filter(|&c| c == '\t')
+							.count();
 						grow_str(&mut col_str, start_col + num_start_tabs * 3, ' ');
 					}
 					col_str.push('^');
 					if end_col > start_col + 1
 					{
-						let num_end_tabs = source_line[start_col..end_col].chars().filter(|&c| c == '\t').count();
+						let num_end_tabs = source_line[start_col..end_col]
+							.chars()
+							.filter(|&c| c == '\t')
+							.count();
 						grow_str(&mut col_str, end_col - start_col + num_end_tabs * 3, '~');
 					}
 
@@ -581,7 +587,9 @@ impl<'l, 's> Lexer<'l, 's>
 	fn eat_string(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("naked: {}", self.source.cur_char);
-		if !self.source.cur_char.map_or(false, |c| is_string_border(c) || c == '\\')
+		if !self.source
+		        .cur_char
+		        .map_or(false, |c| is_string_border(c) || c == '\\')
 		{
 			return None;
 		}
@@ -743,6 +751,7 @@ impl<'l, 's> Lexer<'l, 's>
 	fn eat_char_tokens(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("char");
+		#[cfg_attr(rustfmt, rustfmt_skip)]
 		self.source
 			.cur_char
 			.and_then(|c| match c
@@ -758,10 +767,10 @@ impl<'l, 's> Lexer<'l, 's>
 				_ => None,
 			})
 			.map(|kind| {
-				self.source.start_span();
-				self.source.bump();
-				Ok(Token::new(kind, self.source.get_span()))
-			})
+					self.source.start_span();
+					self.source.bump();
+					Ok(Token::new(kind, self.source.get_span()))
+				})
 	}
 
 	pub fn next(&mut self) -> Option<Result<Token<'s>, Error>>

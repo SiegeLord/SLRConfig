@@ -156,7 +156,9 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 				for val_elem in arr
 				{
 					let mut val: T = Default::default();
-					val.from_element(val_elem, src).map_err(|new_errors| errors.extend(new_errors)).ok();
+					val.from_element(val_elem, src)
+						.map_err(|new_errors| errors.extend(new_errors))
+						.ok();
 					self.push(val);
 				}
 				if errors.is_empty()
@@ -204,16 +206,18 @@ impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> Elem
 				{
 					let key: K = k.parse()
 						.map_err(|err: K::Err| {
-							let err = err.to_string();
-							errors.push(Error::from_span(elem.span(),
-							                                   src,
-							                                   ErrorKind::InvalidRepr,
-							                                   &format!("Cannot parse '{}' as 'K': {}", k, err)));
-						})
+							         let err = err.to_string();
+							         errors.push(Error::from_span(elem.span(),
+							                                      src,
+							                                      ErrorKind::InvalidRepr,
+							                                      &format!("Cannot parse '{}' as 'K': {}", k, err)));
+							        })
 						.unwrap_or_default();
 					let mut val: V = Default::default();
 
-					val.from_element(v, src).map_err(|new_errors| errors.extend(new_errors)).ok();
+					val.from_element(v, src)
+						.map_err(|new_errors| errors.extend(new_errors))
+						.ok();
 
 					self.insert(key, val);
 				}
@@ -226,14 +230,8 @@ impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> Elem
 					Err(errors)
 				}
 			}
-			Array(_) =>
-			{
-				Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse an array as 'HashMap<K, V>'")])
-			}
-			Value(_) =>
-			{
-				Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'HashMap<K, V>'")])
-			}
+			Array(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse an array as 'HashMap<K, V>'")]),
+			Value(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'HashMap<K, V>'")]),
 		}
 	}
 

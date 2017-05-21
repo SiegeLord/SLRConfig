@@ -1,5 +1,8 @@
 (function() {var implementors = {};
-implementors["slr_config"] = [];
+implementors["serde"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"struct\" href=\"serde/de/value/struct.Error.html\" title=\"struct serde::de::value::Error\">Error</a>",];
+implementors["slr_config"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"struct\" href=\"serde/de/value/struct.Error.html\" title=\"struct serde::de::value::Error\">Error</a>","impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"struct\" href=\"slr_config/struct.Error.html\" title=\"struct slr_config::Error\">Error</a>",];
+implementors["slr_parser"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/std/error/trait.Error.html\" title=\"trait std::error::Error\">Error</a> for <a class=\"struct\" href=\"slr_parser/struct.Error.html\" title=\"struct slr_parser::Error\">Error</a>",];
+implementors["syn"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

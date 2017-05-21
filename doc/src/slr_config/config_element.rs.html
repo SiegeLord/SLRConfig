@@ -443,6 +443,40 @@
 <span id="398">398</span>
 <span id="399">399</span>
 <span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright (c) 2014 by SiegeLord</span>
 <span class="comment">//</span>
@@ -573,6 +607,16 @@
 		}
 	}
 
+	<span class="doccomment">/// If this is a table, returns its contents.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_table</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">ConfigElement</span><span class="op">&gt;&gt;</span>
+	{
+		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span>
+		{
+			<span class="ident">Table</span>(<span class="ident">table</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">table</span>),
+			_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+		}
+	}
+
 	<span class="doccomment">/// If this is a table, returns a pointer to its contents.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_table_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">ConfigElement</span><span class="op">&gt;&gt;</span>
 	{
@@ -593,6 +637,16 @@
 		}
 	}
 
+	<span class="doccomment">/// If this is a value, returns its contents.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_value</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
+	{
+		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span>
+		{
+			<span class="ident">Value</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+			_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+		}
+	}
+
 	<span class="doccomment">/// If this is a value, returns a pointer to its contents.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_value_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">String</span><span class="op">&gt;</span>
 	{
@@ -609,6 +663,16 @@
 		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span>
 		{
 			<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">array</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">array</span>),
+			_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+		}
+	}
+
+	<span class="doccomment">/// If this is an array, returns its contents.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_array</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ConfigElement</span><span class="op">&gt;&gt;</span>
+	{
+		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span>
+		{
+			<span class="ident">Array</span>(<span class="ident">array</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">array</span>),
 			_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
 		}
 	}
@@ -702,7 +766,7 @@
 
 <span class="kw">fn</span> <span class="ident">visit_error</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>(<span class="ident">span</span>: <span class="ident">Span</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">Source</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>, <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
 {
-	<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">from_span</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="ident">source</span>), <span class="ident">ErrorKind</span>::<span class="ident">ParseFailure</span>, <span class="ident">msg</span>))
+	<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">from_span</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="ident">source</span>), <span class="ident">ErrorKind</span>::<span class="ident">ParseFailure</span>, <span class="ident">msg</span>))
 }
 
 <span class="kw">struct</span> <span class="ident">ConfigElementVisitor</span>
@@ -729,7 +793,8 @@
 {
 	<span class="kw">fn</span> <span class="ident">start_element</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_src</span>: <span class="kw-2">&amp;</span><span class="ident">Source</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>, <span class="ident">name</span>: <span class="ident">ConfigString</span><span class="op">&lt;</span><span class="lifetime">&#39;l</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>
 	{
-		<span class="self">self</span>.<span class="ident">stack</span>.<span class="ident">push</span>((<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()), <span class="bool-val">false</span>));
+		<span class="self">self</span>.<span class="ident">stack</span>
+			.<span class="ident">push</span>((<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()), <span class="bool-val">false</span>));
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -801,7 +866,10 @@
 				}
 				<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">array</span>) <span class="op">=&gt;</span>
 				{
-					<span class="ident">found_element</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="ident">ok</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="ident">array</span>.<span class="ident">get</span>(<span class="ident">idx</span>)).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">clone</span>());
+					<span class="ident">found_element</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>)
+						.<span class="ident">ok</span>()
+						.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="ident">array</span>.<span class="ident">get</span>(<span class="ident">idx</span>))
+						.<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">clone</span>());
 				}
 			}
 			<span class="kw">if</span> <span class="ident">found_element</span>.<span class="ident">is_some</span>()

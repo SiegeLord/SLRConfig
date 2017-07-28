@@ -56,7 +56,8 @@
 }</pre><div class='docblock'><p>A compile-time attribute item.</p>
 
 <p>E.g. <code>#[test]</code>, <code>#[derive(..)]</code> or <code>#[feature = &quot;foo&quot;]</code></p>
-</div><h2 id='variants' class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants section-header'>
+                   <a href='#variants'>Variants</a></h2>
 <span id='variant.Word' class='variant'><span id='Word.v' class='invisible'><code>Word(<a class="struct" href="../syn/struct.Ident.html" title="struct syn::Ident">Ident</a>)</code></span></span><div class='docblock'><p>Word meta item.</p>
 
 <p>E.g. <code>test</code> as in <code>#[test]</code></p>
@@ -66,13 +67,21 @@
 </div><span id='variant.NameValue' class='variant'><span id='NameValue.v' class='invisible'><code>NameValue(<a class="struct" href="../syn/struct.Ident.html" title="struct syn::Ident">Ident</a>,&nbsp;<a class="enum" href="../syn/enum.Lit.html" title="enum syn::Lit">Lit</a>)</code></span></span><div class='docblock'><p>Name-value meta item.</p>
 
 <p>E.g. <code>feature = &quot;foo&quot;</code> as in <code>#[feature = &quot;foo&quot;]</code></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#52-64' title='goto source code'>[src]</a></span></h3>
+</div>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#52-64' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.name' class="method"><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></h4>
 <div class='docblock'><p>Name of the item.</p>
 
 <p>E.g. <code>test</code> as in <code>#[test]</code>, <code>derive</code> as in <code>#[derive(..)]</code>, and
 <code>feature</code> as in <code>#[feature = &quot;foo&quot;]</code>.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#272-291' title='goto source code'>[src]</a></span></h3>
+</div></div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#272-291' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.to_tokens' class="method"><span id='to_tokens.v' class='invisible'><code>fn <a href='../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens' class='fnname'>to_tokens</a>(&amp;self, tokens: &amp;mut <a class="struct" href="../quote/tokens/struct.Tokens.html" title="struct quote::tokens::Tokens">Tokens</a>)</code></span></h4>
 <div class='docblock'><p>Write <code>self</code> to the given <code>Tokens</code>. <a href="../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#34' title='goto source code'>[src]</a></span></h3>

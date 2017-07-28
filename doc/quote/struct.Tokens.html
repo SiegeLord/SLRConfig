@@ -50,7 +50,11 @@
                    </a>
                </span><a class='srclink' href='../src/quote/tokens.rs.html#7' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Tokens(_);</pre><div class='docblock'><p>Tokens produced by a <code>quote!(...)</code> invocation.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../quote/struct.Tokens.html" title="struct quote::Tokens">Tokens</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/quote/tokens.rs.html#9-138' title='goto source code'>[src]</a></span></h3>
+</div>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../quote/struct.Tokens.html" title="struct quote::Tokens">Tokens</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/quote/tokens.rs.html#9-138' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Empty tokens.</p>
 </div><h4 id='method.append' class="method"><span id='append.v' class='invisible'><code>fn <a href='#method.append' class='fnname'>append</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;(&amp;mut self, token: T)</code></span></h4>
@@ -114,7 +118,11 @@
 </div><h4 id='method.as_str' class="method"><span id='as_str.v' class='invisible'><code>fn <a href='#method.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></h4>
 <h4 id='method.into_string' class="method"><span id='into_string.v' class='invisible'><code>fn <a href='#method.into_string' class='fnname'>into_string</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span></h4>
 <h4 id='method.parse' class="method"><span id='parse.v' class='invisible'><code>fn <a href='#method.parse' class='fnname'>parse</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html" title="trait core::str::FromStr">FromStr</a>&gt;(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, T::<a class="type" href="https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#associatedtype.Err" title="type core::str::FromStr::Err">Err</a>&gt;</code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../quote/struct.Tokens.html" title="struct quote::Tokens">Tokens</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/quote/tokens.rs.html#6' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../quote/struct.Tokens.html" title="struct quote::Tokens">Tokens</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/quote/tokens.rs.html#6' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../quote/struct.Tokens.html" title="struct quote::Tokens">Tokens</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/quote/tokens.rs.html#6' title='goto source code'>[src]</a></span></h3>

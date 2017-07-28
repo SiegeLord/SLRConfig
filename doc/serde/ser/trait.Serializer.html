@@ -212,7 +212,9 @@ is the <code>serde_json::value::Serializer</code> (distinct from the main <code>
 serializer) that produces a <code>serde_json::Value</code> data structure in memory as
 output.</p>
 </div>
-            <h2 id='associated-types'>Associated Types</h2>
+            <h2 id='associated-types' class='section-header'>
+              <a href='#associated-types'>Associated Types</a>
+            </h2>
             <div class='methods'>
         <h3 id='associatedtype.Ok' class='method'><span id='Ok.t' class='invisible'><code>type <a href='#associatedtype.Ok' class="type">Ok</a></code></span></h3><div class='docblock'><p>The output type produced by this <code>Serializer</code> during successful
 serialization. Most serializers that produce text or binary output
@@ -236,7 +238,9 @@ the struct.</p>
 </div><h3 id='associatedtype.SerializeStructVariant' class='method'><span id='SerializeStructVariant.t' class='invisible'><code>type <a href='#associatedtype.SerializeStructVariant' class="type">SerializeStructVariant</a>: <a class="trait" href="../../serde/ser/trait.SerializeStructVariant.html" title="trait serde::ser::SerializeStructVariant">SerializeStructVariant</a>&lt;Ok = Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Ok" title="type serde::Serializer::Ok">Ok</a>, Error = Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Error" title="type serde::Serializer::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>Type returned from <a href="#tymethod.serialize_struct_variant"><code>serialize_struct_variant</code></a> for serializing the
 content of the struct variant.</p>
 </div></div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='section-header'>
+              <a href='#required-methods'>Required Methods</a>
+            </h2>
             <div class='methods'>
         <h3 id='tymethod.serialize_bool' class='method'><span id='serialize_bool.v' class='invisible'><code>fn <a href='#tymethod.serialize_bool' class='fnname'>serialize_bool</a>(self, v: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Ok" title="type serde::Serializer::Ok">Ok</a>, Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Error" title="type serde::Serializer::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>Serialize a <code>bool</code> value.</p>
 
@@ -742,7 +746,9 @@ and the <code>len</code> is the number of data fields that will be serialized.</
     }
 }</pre>
 </div></div>
-            <h2 id='provided-methods'>Provided Methods</h2>
+            <h2 id='provided-methods' class='section-header'>
+              <a href='#provided-methods'>Provided Methods</a>
+            </h2>
             <div class='methods'>
         <h3 id='method.collect_seq' class='method'><span id='collect_seq.v' class='invisible'><code>fn <a href='#method.collect_seq' class='fnname'>collect_seq</a>&lt;I&gt;(self, iter: I) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Ok" title="type serde::Serializer::Ok">Ok</a>, Self::<a class="type" href="../../serde/trait.Serializer.html#associatedtype.Error" title="type serde::Serializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;I as <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a>&gt;::<a class="type" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item" title="type core::iter::traits::IntoIterator::Item">Item</a>: <a class="trait" href="../../serde/trait.Serialize.html" title="trait serde::Serialize">Serialize</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Collect an iterator as a sequence.</p>
 
@@ -805,7 +811,9 @@ more efficient implementation if possible.</p>
     }
 }</pre>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='section-header'>
+          <a href='#implementors'>Implementors</a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
     </ul><script type="text/javascript" async
                          src="../../implementors/serde/ser/trait.Serializer.js">

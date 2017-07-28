@@ -57,7 +57,8 @@
     SnakeCase,
     ScreamingSnakeCase,
     KebabCase,
-}</pre><h2 id='variants' class='variants'>Variants</h2>
+}</pre><h2 id='variants' class='variants section-header'>
+                   <a href='#variants'>Variants</a></h2>
 <span id='variant.None' class='variant'><span id='None.v' class='invisible'><code>None</code></span></span><div class='docblock'><p>Don&#39;t apply a default rename rule.</p>
 </div><span id='variant.LowerCase' class='variant'><span id='LowerCase.v' class='invisible'><code>LowerCase</code></span></span><div class='docblock'><p>Rename direct children to &quot;lowercase&quot; style.</p>
 </div><span id='variant.PascalCase' class='variant'><span id='PascalCase.v' class='invisible'><code>PascalCase</code></span></span><div class='docblock'><p>Rename direct children to &quot;PascalCase&quot; style, as typically used for enum variants.</p>
@@ -65,10 +66,18 @@
 </div><span id='variant.SnakeCase' class='variant'><span id='SnakeCase.v' class='invisible'><code>SnakeCase</code></span></span><div class='docblock'><p>Rename direct children to &quot;snake_case&quot; style, as commonly used for fields.</p>
 </div><span id='variant.ScreamingSnakeCase' class='variant'><span id='ScreamingSnakeCase.v' class='invisible'><code>ScreamingSnakeCase</code></span></span><div class='docblock'><p>Rename direct children to &quot;SCREAMING_SNAKE_CASE&quot; style, as commonly used for constants.</p>
 </div><span id='variant.KebabCase' class='variant'><span id='KebabCase.v' class='invisible'><code>KebabCase</code></span></span><div class='docblock'><p>Rename direct children to &quot;kebab-case&quot; style.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../../serde_derive_internals/attr/enum.RenameRule.html" title="enum serde_derive_internals::attr::RenameRule">RenameRule</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/case.rs.html#32-79' title='goto source code'>[src]</a></span></h3>
+</div>
+                    <h2 id='methods' class='section-header'>
+                      <a href='#methods'>Methods</a>
+                    </h2>
+                <h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../../serde_derive_internals/attr/enum.RenameRule.html" title="enum serde_derive_internals::attr::RenameRule">RenameRule</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/case.rs.html#32-79' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.apply_to_variant' class="method"><span id='apply_to_variant.v' class='invisible'><code>fn <a href='#method.apply_to_variant' class='fnname'>apply_to_variant</a>(&amp;self, variant: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span></h4>
 <h4 id='method.apply_to_field' class="method"><span id='apply_to_field.v' class='invisible'><code>fn <a href='#method.apply_to_field' class='fnname'>apply_to_field</a>(&amp;self, field: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.RenameRule.html" title="enum serde_derive_internals::attr::RenameRule">RenameRule</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/case.rs.html#14' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.RenameRule.html" title="enum serde_derive_internals::attr::RenameRule">RenameRule</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/case.rs.html#14' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.RenameRule.html" title="enum serde_derive_internals::attr::RenameRule">RenameRule</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/case.rs.html#14' title='goto source code'>[src]</a></span></h3>

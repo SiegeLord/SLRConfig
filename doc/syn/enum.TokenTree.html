@@ -64,10 +64,15 @@ match, will transcribe the RHS token tree, splicing in any captured
 
 <p>The RHS of an MBE macro is the only place <code>SubstNt</code>s are substituted.
 Nothing special happens to misnamed or misplaced <code>SubstNt</code>s.</p>
-</div><h2 id='variants' class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants section-header'>
+                   <a href='#variants'>Variants</a></h2>
 <span id='variant.Token' class='variant'><span id='Token.v' class='invisible'><code>Token(<a class="enum" href="../syn/enum.Token.html" title="enum syn::Token">Token</a>)</code></span></span><div class='docblock'><p>A single token</p>
 </div><span id='variant.Delimited' class='variant'><span id='Delimited.v' class='invisible'><code>Delimited(<a class="struct" href="../syn/struct.Delimited.html" title="struct syn::Delimited">Delimited</a>)</code></span></span><div class='docblock'><p>A delimited sequence of token trees</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.TokenTree.html" title="enum syn::TokenTree">TokenTree</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/mac.rs.html#315-322' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.TokenTree.html" title="enum syn::TokenTree">TokenTree</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/mac.rs.html#315-322' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.to_tokens' class="method"><span id='to_tokens.v' class='invisible'><code>fn <a href='../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens' class='fnname'>to_tokens</a>(&amp;self, tokens: &amp;mut <a class="struct" href="../quote/tokens/struct.Tokens.html" title="struct quote::tokens::Tokens">Tokens</a>)</code></span></h4>
 <div class='docblock'><p>Write <code>self</code> to the given <code>Tokens</code>. <a href="../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../syn/enum.TokenTree.html" title="enum syn::TokenTree">TokenTree</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/mac.rs.html#27' title='goto source code'>[src]</a></span></h3>

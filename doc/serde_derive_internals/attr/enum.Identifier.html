@@ -55,14 +55,19 @@
     Variant,
 }</pre><div class='docblock'><p>Whether this enum represents the fields of a struct or the variants of an
 enum.</p>
-</div><h2 id='variants' class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants section-header'>
+                   <a href='#variants'>Variants</a></h2>
 <span id='variant.No' class='variant'><span id='No.v' class='invisible'><code>No</code></span></span><div class='docblock'><p>It does not.</p>
 </div><span id='variant.Field' class='variant'><span id='Field.v' class='invisible'><code>Field</code></span></span><div class='docblock'><p>This enum represents the fields of a struct. All of the variants must be
 unit variants, except possibly one which is annotated with
 <code>#[serde(other)]</code> and is a newtype variant.</p>
 </div><span id='variant.Variant' class='variant'><span id='Variant.v' class='invisible'><code>Variant</code></span></span><div class='docblock'><p>This enum represents the variants of an enum. All of the variants must
 be unit variants.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.Identifier.html" title="enum serde_derive_internals::attr::Identifier">Identifier</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/attr.rs.html#152' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.Identifier.html" title="enum serde_derive_internals::attr::Identifier">Identifier</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/attr.rs.html#152' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../serde_derive_internals/attr/enum.Identifier.html" title="enum serde_derive_internals::attr::Identifier">Identifier</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_derive_internals/attr.rs.html#152' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../../serde_derive_internals/attr/enum.Identifier.html" title="enum serde_derive_internals::attr::Identifier">Identifier</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>

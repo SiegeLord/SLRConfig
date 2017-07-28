@@ -55,14 +55,19 @@
 }</pre><div class='docblock'><p>Possible values inside of compile-time attribute lists.</p>
 
 <p>E.g. the &#39;..&#39; in <code>#[name(..)]</code>.</p>
-</div><h2 id='variants' class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants section-header'>
+                   <a href='#variants'>Variants</a></h2>
 <span id='variant.MetaItem' class='variant'><span id='MetaItem.v' class='invisible'><code>MetaItem(<a class="enum" href="../syn/enum.MetaItem.html" title="enum syn::MetaItem">MetaItem</a>)</code></span></span><div class='docblock'><p>A full <code>MetaItem</code>.</p>
 
 <p>E.g. <code>Copy</code> in <code>#[derive(Copy)]</code> would be a <code>MetaItem::Word(Ident::from(&quot;Copy&quot;))</code>.</p>
 </div><span id='variant.Literal' class='variant'><span id='Literal.v' class='invisible'><code>Literal(<a class="enum" href="../syn/enum.Lit.html" title="enum syn::Lit">Lit</a>)</code></span></span><div class='docblock'><p>A Rust literal.</p>
 
 <p>E.g. <code>&quot;name&quot;</code> in <code>#[rename(&quot;name&quot;)]</code>.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.NestedMetaItem.html" title="enum syn::NestedMetaItem">NestedMetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#293-304' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.NestedMetaItem.html" title="enum syn::NestedMetaItem">NestedMetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#293-304' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.to_tokens' class="method"><span id='to_tokens.v' class='invisible'><code>fn <a href='../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens' class='fnname'>to_tokens</a>(&amp;self, tokens: &amp;mut <a class="struct" href="../quote/tokens/struct.Tokens.html" title="struct quote::tokens::Tokens">Tokens</a>)</code></span></h4>
 <div class='docblock'><p>Write <code>self</code> to the given <code>Tokens</code>. <a href="../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../syn/enum.NestedMetaItem.html" title="enum syn::NestedMetaItem">NestedMetaItem</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/attr.rs.html#69' title='goto source code'>[src]</a></span></h3>

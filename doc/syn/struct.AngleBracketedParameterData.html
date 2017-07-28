@@ -54,7 +54,8 @@
     pub types: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.Ty.html" title="enum syn::Ty">Ty</a>&gt;,
     pub bindings: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../syn/struct.TypeBinding.html" title="struct syn::TypeBinding">TypeBinding</a>&gt;,
 }</pre><div class='docblock'><p>A path like <code>Foo&lt;&#39;a, T&gt;</code></p>
-</div><h2 id='fields' class='fields'>Fields</h2><span id='structfield.lifetimes' class="structfield">
+</div><h2 id='fields' class='fields section-header'>
+                       <a href='#fields'>Fields</a></h2><span id='structfield.lifetimes' class="structfield">
                            <span id='lifetimes.v' class='invisible'>
                            <code>lifetimes: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../syn/struct.Lifetime.html" title="struct syn::Lifetime">Lifetime</a>&gt;</code>
                            </span></span><div class='docblock'><p>The lifetime parameters for this path segment.</p>
@@ -68,7 +69,11 @@
                            </span></span><div class='docblock'><p>Bindings (equality constraints) on associated types, if present.</p>
 
 <p>E.g., <code>Foo&lt;A=Bar&gt;</code>.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="struct" href="../syn/struct.AngleBracketedParameterData.html" title="struct syn::AngleBracketedParameterData">AngleBracketedParameterData</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/ty.rs.html#717-753' title='goto source code'>[src]</a></span></h3>
+</div>
+            <h2 id='implementations' class='section-header'>
+              <a href='#implementations'>Trait Implementations</a>
+            </h2>
+        <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="struct" href="../syn/struct.AngleBracketedParameterData.html" title="struct syn::AngleBracketedParameterData">AngleBracketedParameterData</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/ty.rs.html#717-753' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.to_tokens' class="method"><span id='to_tokens.v' class='invisible'><code>fn <a href='../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens' class='fnname'>to_tokens</a>(&amp;self, tokens: &amp;mut <a class="struct" href="../quote/tokens/struct.Tokens.html" title="struct quote::tokens::Tokens">Tokens</a>)</code></span></h4>
 <div class='docblock'><p>Write <code>self</code> to the given <code>Tokens</code>. <a href="../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens">Read more</a></p>
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../syn/struct.AngleBracketedParameterData.html" title="struct syn::AngleBracketedParameterData">AngleBracketedParameterData</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/ty.rs.html#132' title='goto source code'>[src]</a></span></h3>

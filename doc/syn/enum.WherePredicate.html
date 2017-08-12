@@ -54,14 +54,14 @@
     RegionPredicate(<a class="struct" href="../syn/struct.WhereRegionPredicate.html" title="struct syn::WhereRegionPredicate">WhereRegionPredicate</a>),
     EqPredicate(<a class="struct" href="../syn/struct.WhereEqPredicate.html" title="struct syn::WhereEqPredicate">WhereEqPredicate</a>),
 }</pre><div class='docblock'><p>A single predicate in a <code>where</code> clause</p>
-</div><h2 id='variants' class='variants section-header'>
-                   <a href='#variants'>Variants</a></h2>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
 <span id='variant.BoundPredicate' class='variant'><span id='BoundPredicate.v' class='invisible'><code>BoundPredicate(<a class="struct" href="../syn/struct.WhereBoundPredicate.html" title="struct syn::WhereBoundPredicate">WhereBoundPredicate</a>)</code></span></span><div class='docblock'><p>A type binding, e.g. <code>for&lt;&#39;c&gt; Foo: Send+Clone+&#39;c</code></p>
 </div><span id='variant.RegionPredicate' class='variant'><span id='RegionPredicate.v' class='invisible'><code>RegionPredicate(<a class="struct" href="../syn/struct.WhereRegionPredicate.html" title="struct syn::WhereRegionPredicate">WhereRegionPredicate</a>)</code></span></span><div class='docblock'><p>A lifetime predicate, e.g. <code>&#39;a: &#39;b+&#39;c</code></p>
 </div><span id='variant.EqPredicate' class='variant'><span id='EqPredicate.v' class='invisible'><code>EqPredicate(<a class="struct" href="../syn/struct.WhereEqPredicate.html" title="struct syn::WhereEqPredicate">WhereEqPredicate</a>)</code></span></span><div class='docblock'><p>An equality predicate (unsupported)</p>
 </div>
-            <h2 id='implementations' class='section-header'>
-              <a href='#implementations'>Trait Implementations</a>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
             </h2>
         <h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a> for <a class="enum" href="../syn/enum.WherePredicate.html" title="enum syn::WherePredicate">WherePredicate</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/generics.rs.html#464-478' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.to_tokens' class="method"><span id='to_tokens.v' class='invisible'><code>fn <a href='../quote/to_tokens/trait.ToTokens.html#tymethod.to_tokens' class='fnname'>to_tokens</a>(&amp;self, tokens: &amp;mut <a class="struct" href="../quote/tokens/struct.Tokens.html" title="struct quote::tokens::Tokens">Tokens</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/syn/generics.rs.html#465-477' title='goto source code'>[src]</a></span></h4>

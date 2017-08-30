@@ -1010,22 +1010,22 @@
 
     <span class="kw">let</span> <span class="ident">impl_block</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">remote</span>) <span class="op">=</span> <span class="ident">cont</span>.<span class="ident">attrs</span>.<span class="ident">remote</span>() {
         <span class="macro">quote</span><span class="macro">!</span> {
-            <span class="kw">impl</span> <span class="attribute">#<span class="ident">impl_generics</span> <span class="attribute">#<span class="ident">ident</span> <span class="attribute">#<span class="ident">ty_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
-                <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">__S</span><span class="op">&gt;</span>(<span class="ident">__self</span>: <span class="kw-2">&amp;</span><span class="attribute">#<span class="ident">remote</span> <span class="attribute">#<span class="ident">ty_generics</span>, <span class="ident">__serializer</span>: <span class="ident">__S</span>) <span class="op">-&gt;</span> <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">__S</span>::<span class="prelude-val">Ok</span>, <span class="ident">__S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+            <span class="kw">impl</span> #<span class="ident">impl_generics</span> #<span class="ident">ident</span> #<span class="ident">ty_generics</span> #<span class="ident">where_clause</span> {
+                <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">__S</span><span class="op">&gt;</span>(<span class="ident">__self</span>: <span class="kw-2">&amp;</span>#<span class="ident">remote</span> #<span class="ident">ty_generics</span>, <span class="ident">__serializer</span>: <span class="ident">__S</span>) <span class="op">-&gt;</span> <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">__S</span>::<span class="prelude-val">Ok</span>, <span class="ident">__S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
                     <span class="kw">where</span> <span class="ident">__S</span>: <span class="ident">_serde</span>::<span class="ident">Serializer</span>
                 {
-                    <span class="attribute">#<span class="ident">body</span>
+                    #<span class="ident">body</span>
                 }
             }
         }
     } <span class="kw">else</span> {
         <span class="macro">quote</span><span class="macro">!</span> {
             <span class="attribute">#[<span class="ident">automatically_derived</span>]</span>
-            <span class="kw">impl</span> <span class="attribute">#<span class="ident">impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="attribute">#<span class="ident">ident</span> <span class="attribute">#<span class="ident">ty_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
+            <span class="kw">impl</span> #<span class="ident">impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> #<span class="ident">ident</span> #<span class="ident">ty_generics</span> #<span class="ident">where_clause</span> {
                 <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">__S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">__serializer</span>: <span class="ident">__S</span>) <span class="op">-&gt;</span> <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">__S</span>::<span class="prelude-val">Ok</span>, <span class="ident">__S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
                     <span class="kw">where</span> <span class="ident">__S</span>: <span class="ident">_serde</span>::<span class="ident">Serializer</span>
                 {
-                    <span class="attribute">#<span class="ident">body</span>
+                    #<span class="ident">body</span>
                 }
             }
         }
@@ -1033,9 +1033,9 @@
 
     <span class="kw">let</span> <span class="ident">generated</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span> {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>, <span class="ident">unused_attributes</span>, <span class="ident">unused_qualifications</span>)]</span>
-        <span class="kw">const</span> <span class="attribute">#<span class="ident">dummy_const</span>: () <span class="op">=</span> {
+        <span class="kw">const</span> #<span class="ident">dummy_const</span>: () <span class="op">=</span> {
             <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span> <span class="kw">as</span> <span class="ident">_serde</span>;
-            <span class="attribute">#<span class="ident">impl_block</span>
+            #<span class="ident">impl_block</span>
         };
     };
     <span class="prelude-val">Ok</span>(<span class="ident">generated</span>)
@@ -1149,7 +1149,7 @@
                 <span class="ident">serialize_tuple_struct</span>(<span class="ident">params</span>, <span class="ident">fields</span>, <span class="kw-2">&amp;</span><span class="ident">cont</span>.<span class="ident">attrs</span>)
             }
             <span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">Style</span>::<span class="ident">Newtype</span>, <span class="kw-2">ref</span> <span class="ident">fields</span>) <span class="op">=&gt;</span> {
-                <span class="ident">serialize_newtype_struct</span>(<span class="ident">params</span>, <span class="kw-2">&amp;</span><span class="ident">fields</span>[<span class="number">0</span>]</span>, <span class="kw-2">&amp;</span><span class="ident">cont</span>.<span class="ident">attrs</span>)
+                <span class="ident">serialize_newtype_struct</span>(<span class="ident">params</span>, <span class="kw-2">&amp;</span><span class="ident">fields</span>[<span class="number">0</span>], <span class="kw-2">&amp;</span><span class="ident">cont</span>.<span class="ident">attrs</span>)
             }
             <span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">Style</span>::<span class="ident">Unit</span>, _) <span class="op">=&gt;</span> <span class="ident">serialize_unit_struct</span>(<span class="kw-2">&amp;</span><span class="ident">cont</span>.<span class="ident">attrs</span>),
         }
@@ -1160,7 +1160,7 @@
     <span class="kw">let</span> <span class="ident">self_var</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">self_var</span>;
     <span class="macro">quote_block</span><span class="macro">!</span> {
         <span class="ident">_serde</span>::<span class="ident">Serialize</span>::<span class="ident">serialize</span>(
-            <span class="kw-2">&amp;</span><span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">Into</span>::<span class="op">&lt;</span><span class="attribute">#<span class="ident">into_type</span><span class="op">&gt;</span>::<span class="ident">into</span>(<span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">Clone</span>::<span class="ident">clone</span>(<span class="attribute">#<span class="ident">self_var</span>)),
+            <span class="kw-2">&amp;</span><span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">Into</span>::<span class="op">&lt;</span>#<span class="ident">into_type</span><span class="op">&gt;</span>::<span class="ident">into</span>(<span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">Clone</span>::<span class="ident">clone</span>(#<span class="ident">self_var</span>)),
             <span class="ident">__serializer</span>)
     }
 }
@@ -1169,7 +1169,7 @@
     <span class="kw">let</span> <span class="ident">type_name</span> <span class="op">=</span> <span class="ident">cattrs</span>.<span class="ident">name</span>().<span class="ident">serialize_name</span>();
 
     <span class="macro">quote_expr</span><span class="macro">!</span> {
-        <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_unit_struct</span>(<span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>)
+        <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_unit_struct</span>(<span class="ident">__serializer</span>, #<span class="ident">type_name</span>)
     }
 }
 
@@ -1186,13 +1186,13 @@
     }
 
     <span class="macro">quote_expr</span><span class="macro">!</span> {
-        <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_newtype_struct</span>(<span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="attribute">#<span class="ident">field_expr</span>)
+        <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_newtype_struct</span>(<span class="ident">__serializer</span>, #<span class="ident">type_name</span>, #<span class="ident">field_expr</span>)
     }
 }
 
 <span class="kw">fn</span> <span class="ident">serialize_tuple_struct</span>(
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>,
+    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>],
     <span class="ident">cattrs</span>: <span class="kw-2">&amp;</span><span class="ident">attr</span>::<span class="ident">Container</span>,
 ) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
     <span class="kw">let</span> <span class="ident">serialize_stmts</span> <span class="op">=</span> <span class="ident">serialize_tuple_struct_visitor</span>(
@@ -1207,13 +1207,13 @@
     <span class="kw">let</span> <span class="ident">let_mut</span> <span class="op">=</span> <span class="ident">mut_if</span>(<span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span>);
 
     <span class="macro">quote_block</span><span class="macro">!</span> {
-        <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple_struct</span>(<span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="attribute">#<span class="ident">len</span>));
-        <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
+        <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple_struct</span>(<span class="ident">__serializer</span>, #<span class="ident">type_name</span>, #<span class="ident">len</span>));
+        #(#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
         <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeTupleStruct</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">serialize_struct</span>(<span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>, <span class="ident">cattrs</span>: <span class="kw-2">&amp;</span><span class="ident">attr</span>::<span class="ident">Container</span>) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
+<span class="kw">fn</span> <span class="ident">serialize_struct</span>(<span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>], <span class="ident">cattrs</span>: <span class="kw-2">&amp;</span><span class="ident">attr</span>::<span class="ident">Container</span>) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">fields</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">&lt;=</span> <span class="ident">u32</span>::<span class="ident">MAX</span> <span class="kw">as</span> <span class="ident">u64</span>);
 
     <span class="kw">let</span> <span class="ident">serialize_fields</span> <span class="op">=</span> <span class="ident">serialize_struct_visitor</span>(
@@ -1239,20 +1239,20 @@
                 <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=&gt;</span> {
                     <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ident</span>.<span class="ident">clone</span>().<span class="ident">expect</span>(<span class="string">&quot;struct has unnamed fields&quot;</span>);
                     <span class="kw">let</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">get_field</span>(<span class="ident">params</span>, <span class="ident">field</span>, <span class="ident">ident</span>);
-                    <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="attribute">#<span class="ident">path</span>(<span class="attribute">#<span class="ident">field_expr</span>) { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> })
+                    <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> #<span class="ident">path</span>(#<span class="ident">field_expr</span>) { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> })
                 }
             },
         )
-        .<span class="ident">fold</span>(<span class="macro">quote</span><span class="macro">!</span>(<span class="number">0</span>), <span class="op">|</span><span class="ident">sum</span>, <span class="ident">expr</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">sum</span> <span class="op">+</span> <span class="attribute">#<span class="ident">expr</span>));
+        .<span class="ident">fold</span>(<span class="macro">quote</span><span class="macro">!</span>(<span class="number">0</span>), <span class="op">|</span><span class="ident">sum</span>, <span class="ident">expr</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">sum</span> <span class="op">+</span> #<span class="ident">expr</span>));
 
     <span class="macro">quote_block</span><span class="macro">!</span> {
-        <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(<span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="attribute">#<span class="ident">len</span>));
-        <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_fields</span>)<span class="op">*</span>
+        <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(<span class="ident">__serializer</span>, #<span class="ident">type_name</span>, #<span class="ident">len</span>));
+        #(#<span class="ident">serialize_fields</span>)<span class="op">*</span>
         <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
     }
 }
 
-<span class="kw">fn</span> <span class="ident">serialize_enum</span>(<span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>, <span class="ident">variants</span>: <span class="kw-2">&amp;</span>[<span class="ident">Variant</span>]</span>, <span class="ident">cattrs</span>: <span class="kw-2">&amp;</span><span class="ident">attr</span>::<span class="ident">Container</span>) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
+<span class="kw">fn</span> <span class="ident">serialize_enum</span>(<span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>, <span class="ident">variants</span>: <span class="kw-2">&amp;</span>[<span class="ident">Variant</span>], <span class="ident">cattrs</span>: <span class="kw-2">&amp;</span><span class="ident">attr</span>::<span class="ident">Container</span>) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">variants</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">&lt;=</span> <span class="ident">u32</span>::<span class="ident">MAX</span> <span class="kw">as</span> <span class="ident">u64</span>);
 
     <span class="kw">let</span> <span class="ident">self_var</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">self_var</span>;
@@ -1268,8 +1268,8 @@
         .<span class="ident">collect</span>();
 
     <span class="macro">quote_expr</span><span class="macro">!</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="attribute">#<span class="ident">self_var</span> {
-            <span class="attribute">#(<span class="attribute">#<span class="ident">arms</span>)<span class="op">*</span>
+        <span class="kw">match</span> <span class="kw-2">*</span>#<span class="ident">self_var</span> {
+            #(#<span class="ident">arms</span>)<span class="op">*</span>
         }
     }
 }
@@ -1290,7 +1290,7 @@
             <span class="ident">variant_ident</span>
         );
         <span class="kw">let</span> <span class="ident">skipped_err</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span> {
-            <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-val">Err</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">Error</span>::<span class="ident">custom</span>(<span class="attribute">#<span class="ident">skipped_msg</span>))
+            <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-val">Err</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">Error</span>::<span class="ident">custom</span>(#<span class="ident">skipped_msg</span>))
         };
         <span class="kw">let</span> <span class="ident">fields_pat</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">style</span> {
             <span class="ident">Style</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(),
@@ -1304,26 +1304,26 @@
             }
         };
         <span class="macro">quote</span><span class="macro">!</span> {
-            <span class="attribute">#<span class="ident">this</span>::<span class="attribute">#<span class="ident">variant_ident</span> <span class="attribute">#<span class="ident">fields_pat</span> <span class="op">=&gt;</span> <span class="attribute">#<span class="ident">skipped_err</span>,
+            #<span class="ident">this</span>::#<span class="ident">variant_ident</span> #<span class="ident">fields_pat</span> <span class="op">=&gt;</span> #<span class="ident">skipped_err</span>,
         }
     } <span class="kw">else</span> {
         <span class="comment">// variant wasn&#39;t skipped</span>
         <span class="kw">let</span> <span class="ident">case</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">style</span> {
             <span class="ident">Style</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> {
                 <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="attribute">#<span class="ident">this</span>::<span class="attribute">#<span class="ident">variant_ident</span>
+                    #<span class="ident">this</span>::#<span class="ident">variant_ident</span>
                 }
             }
             <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> {
                 <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="attribute">#<span class="ident">this</span>::<span class="attribute">#<span class="ident">variant_ident</span>(<span class="kw-2">ref</span> <span class="ident">__field0</span>)
+                    #<span class="ident">this</span>::#<span class="ident">variant_ident</span>(<span class="kw-2">ref</span> <span class="ident">__field0</span>)
                 }
             }
             <span class="ident">Style</span>::<span class="ident">Tuple</span> <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">field_names</span> <span class="op">=</span>
                     (<span class="number">0</span>..<span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">len</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">Ident</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;__field{}&quot;</span>, <span class="ident">i</span>)));
                 <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="attribute">#<span class="ident">this</span>::<span class="attribute">#<span class="ident">variant_ident</span>(<span class="attribute">#(<span class="kw-2">ref</span> <span class="attribute">#<span class="ident">field_names</span>),<span class="kw-2">*</span>)
+                    #<span class="ident">this</span>::#<span class="ident">variant_ident</span>(#(<span class="kw-2">ref</span> #<span class="ident">field_names</span>),<span class="kw-2">*</span>)
                 }
             }
             <span class="ident">Style</span>::<span class="ident">Struct</span> <span class="op">=&gt;</span> {
@@ -1338,7 +1338,7 @@
                         },
                     );
                 <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="attribute">#<span class="ident">this</span>::<span class="attribute">#<span class="ident">variant_ident</span> { <span class="attribute">#(<span class="kw-2">ref</span> <span class="attribute">#<span class="ident">fields</span>),<span class="op">*</span> }
+                    #<span class="ident">this</span>::#<span class="ident">variant_ident</span> { #(<span class="kw-2">ref</span> #<span class="ident">fields</span>),<span class="op">*</span> }
                 }
             }
         };
@@ -1360,7 +1360,7 @@
         );
 
         <span class="macro">quote</span><span class="macro">!</span> {
-            <span class="attribute">#<span class="ident">case</span> <span class="op">=&gt;</span> <span class="attribute">#<span class="ident">body</span>
+            #<span class="ident">case</span> <span class="op">=&gt;</span> #<span class="ident">body</span>
         }
     }
 }
@@ -1379,14 +1379,14 @@
             <span class="macro">quote_expr</span><span class="macro">!</span> {
                 <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_unit_variant</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">type_name</span>,
-                    <span class="attribute">#<span class="ident">variant_index</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
+                    #<span class="ident">type_name</span>,
+                    #<span class="ident">variant_index</span>,
+                    #<span class="ident">variant_name</span>,
                 )
             }
         }
         <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> {
-            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>]</span>;
+            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>];
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">__field0</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                 <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>);
@@ -1395,10 +1395,10 @@
             <span class="macro">quote_expr</span><span class="macro">!</span> {
                 <span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_newtype_variant</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">type_name</span>,
-                    <span class="attribute">#<span class="ident">variant_index</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
-                    <span class="attribute">#<span class="ident">field_expr</span>,
+                    #<span class="ident">type_name</span>,
+                    #<span class="ident">variant_index</span>,
+                    #<span class="ident">variant_name</span>,
+                    #<span class="ident">field_expr</span>,
                 )
             }
         }
@@ -1443,14 +1443,14 @@
         <span class="ident">Style</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> {
             <span class="macro">quote_block</span><span class="macro">!</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">__struct</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
-                    <span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="number">1</span>));
+                    <span class="ident">__serializer</span>, #<span class="ident">type_name</span>, <span class="number">1</span>));
                 <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">serialize_field</span>(
-                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, <span class="attribute">#<span class="ident">tag</span>, <span class="attribute">#<span class="ident">variant_name</span>));
+                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, #<span class="ident">tag</span>, #<span class="ident">variant_name</span>));
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__struct</span>)
             }
         }
         <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> {
-            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>]</span>;
+            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>];
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">__field0</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                 <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>);
@@ -1459,11 +1459,11 @@
             <span class="macro">quote_expr</span><span class="macro">!</span> {
                 <span class="ident">_serde</span>::<span class="ident">private</span>::<span class="ident">ser</span>::<span class="ident">serialize_tagged_newtype</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">enum_ident_str</span>,
-                    <span class="attribute">#<span class="ident">variant_ident_str</span>,
-                    <span class="attribute">#<span class="ident">tag</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
-                    <span class="attribute">#<span class="ident">field_expr</span>,
+                    #<span class="ident">enum_ident_str</span>,
+                    #<span class="ident">variant_ident_str</span>,
+                    #<span class="ident">tag</span>,
+                    #<span class="ident">variant_name</span>,
+                    #<span class="ident">field_expr</span>,
                 )
             }
         }
@@ -1498,21 +1498,21 @@
             <span class="ident">Style</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> {
                 <span class="kw">return</span> <span class="macro">quote_block</span><span class="macro">!</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">__struct</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
-                        <span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="number">1</span>));
+                        <span class="ident">__serializer</span>, #<span class="ident">type_name</span>, <span class="number">1</span>));
                     <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">serialize_field</span>(
-                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, <span class="attribute">#<span class="ident">tag</span>, <span class="attribute">#<span class="ident">variant_name</span>));
+                        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, #<span class="ident">tag</span>, #<span class="ident">variant_name</span>));
                     <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__struct</span>)
                 };
             }
             <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>]</span>;
+                <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>];
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">__field0</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                     <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>);
                 }
 
                 <span class="macro">quote_expr</span><span class="macro">!</span> {
-                    <span class="ident">_serde</span>::<span class="ident">Serialize</span>::<span class="ident">serialize</span>(<span class="attribute">#<span class="ident">field_expr</span>, <span class="ident">__serializer</span>)
+                    <span class="ident">_serde</span>::<span class="ident">Serialize</span>::<span class="ident">serialize</span>(#<span class="ident">field_expr</span>, <span class="ident">__serializer</span>)
                 }
             }
             <span class="ident">Style</span>::<span class="ident">Tuple</span> <span class="op">=&gt;</span> {
@@ -1532,7 +1532,7 @@
     <span class="kw">let</span> <span class="ident">fields_ty</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">ty</span>);
     <span class="kw">let</span> <span class="kw-2">ref</span> <span class="ident">fields_ident</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">style</span> {
         <span class="ident">Style</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
-        <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Ident</span>::<span class="ident">new</span>(<span class="string">&quot;__field0&quot;</span>)]</span>,
+        <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Ident</span>::<span class="ident">new</span>(<span class="string">&quot;__field0&quot;</span>)],
         <span class="ident">Style</span>::<span class="ident">Tuple</span> <span class="op">=&gt;</span> {
             (<span class="number">0</span>..<span class="ident">variant</span>.<span class="ident">fields</span>.<span class="ident">len</span>())
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">Ident</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;__field{}&quot;</span>, <span class="ident">i</span>)))
@@ -1559,28 +1559,28 @@
     <span class="kw">let</span> (<span class="ident">wrapper_impl_generics</span>, <span class="ident">wrapper_ty_generics</span>, _) <span class="op">=</span> <span class="ident">wrapper_generics</span>.<span class="ident">split_for_impl</span>();
 
     <span class="macro">quote_block</span><span class="macro">!</span> {
-        <span class="kw">struct</span> <span class="ident">__AdjacentlyTagged</span> <span class="attribute">#<span class="ident">wrapper_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
-            <span class="ident">data</span>: (<span class="attribute">#(<span class="kw-2">&amp;</span><span class="lifetime">&#39;__a</span> <span class="attribute">#<span class="ident">fields_ty</span>,)<span class="kw-2">*</span>),
-            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="attribute">#<span class="ident">this</span> <span class="attribute">#<span class="ident">ty_generics</span><span class="op">&gt;</span>,
+        <span class="kw">struct</span> <span class="ident">__AdjacentlyTagged</span> #<span class="ident">wrapper_generics</span> #<span class="ident">where_clause</span> {
+            <span class="ident">data</span>: (#(<span class="kw-2">&amp;</span><span class="lifetime">&#39;__a</span> #<span class="ident">fields_ty</span>,)<span class="kw-2">*</span>),
+            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span>#<span class="ident">this</span> #<span class="ident">ty_generics</span><span class="op">&gt;</span>,
         }
 
-        <span class="kw">impl</span> <span class="attribute">#<span class="ident">wrapper_impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">__AdjacentlyTagged</span> <span class="attribute">#<span class="ident">wrapper_ty_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
+        <span class="kw">impl</span> #<span class="ident">wrapper_impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">__AdjacentlyTagged</span> #<span class="ident">wrapper_ty_generics</span> #<span class="ident">where_clause</span> {
             <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">__S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">__serializer</span>: <span class="ident">__S</span>) <span class="op">-&gt;</span> <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">__S</span>::<span class="prelude-val">Ok</span>, <span class="ident">__S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
                 <span class="kw">where</span> <span class="ident">__S</span>: <span class="ident">_serde</span>::<span class="ident">Serializer</span>
             {
-                <span class="kw">let</span> (<span class="attribute">#(<span class="attribute">#<span class="ident">fields_ident</span>,)<span class="kw-2">*</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>;
-                <span class="attribute">#<span class="ident">inner</span>
+                <span class="kw">let</span> (#(#<span class="ident">fields_ident</span>,)<span class="kw-2">*</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>;
+                #<span class="ident">inner</span>
             }
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">__struct</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
-            <span class="ident">__serializer</span>, <span class="attribute">#<span class="ident">type_name</span>, <span class="number">2</span>));
+            <span class="ident">__serializer</span>, #<span class="ident">type_name</span>, <span class="number">2</span>));
         <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">serialize_field</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, <span class="attribute">#<span class="ident">tag</span>, <span class="attribute">#<span class="ident">variant_name</span>));
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, #<span class="ident">tag</span>, #<span class="ident">variant_name</span>));
         <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">serialize_field</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, <span class="attribute">#<span class="ident">content</span>, <span class="kw-2">&amp;</span><span class="ident">__AdjacentlyTagged</span> {
-                <span class="ident">data</span>: (<span class="attribute">#(<span class="attribute">#<span class="ident">fields_ident</span>,)<span class="kw-2">*</span>),
-                <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="attribute">#<span class="ident">this</span> <span class="attribute">#<span class="ident">ty_generics</span><span class="op">&gt;</span>,
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__struct</span>, #<span class="ident">content</span>, <span class="kw-2">&amp;</span><span class="ident">__AdjacentlyTagged</span> {
+                <span class="ident">data</span>: (#(#<span class="ident">fields_ident</span>,)<span class="kw-2">*</span>),
+                <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span>::<span class="op">&lt;</span>#<span class="ident">this</span> #<span class="ident">ty_generics</span><span class="op">&gt;</span>,
             }));
         <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__struct</span>)
     }
@@ -1598,14 +1598,14 @@
             }
         }
         <span class="ident">Style</span>::<span class="ident">Newtype</span> <span class="op">=&gt;</span> {
-            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>]</span>;
+            <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>[<span class="number">0</span>];
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">__field0</span>);
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                 <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>);
             }
 
             <span class="macro">quote_expr</span><span class="macro">!</span> {
-                <span class="ident">_serde</span>::<span class="ident">Serialize</span>::<span class="ident">serialize</span>(<span class="attribute">#<span class="ident">field_expr</span>, <span class="ident">__serializer</span>)
+                <span class="ident">_serde</span>::<span class="ident">Serialize</span>::<span class="ident">serialize</span>(#<span class="ident">field_expr</span>, <span class="ident">__serializer</span>)
             }
         }
         <span class="ident">Style</span>::<span class="ident">Tuple</span> <span class="op">=&gt;</span> <span class="ident">serialize_tuple_variant</span>(<span class="ident">TupleVariant</span>::<span class="ident">Untagged</span>, <span class="ident">params</span>, <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">fields</span>),
@@ -1628,7 +1628,7 @@
 <span class="kw">fn</span> <span class="ident">serialize_tuple_variant</span>(
     <span class="ident">context</span>: <span class="ident">TupleVariant</span>,
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>,
+    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>],
 ) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
     <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">context</span> {
         <span class="ident">TupleVariant</span>::<span class="ident">ExternallyTagged</span> { .. } <span class="op">=&gt;</span> {
@@ -1649,22 +1649,22 @@
             <span class="ident">variant_name</span>,
         } <span class="op">=&gt;</span> {
             <span class="macro">quote_block</span><span class="macro">!</span> {
-                <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple_variant</span>(
+                <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple_variant</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">type_name</span>,
-                    <span class="attribute">#<span class="ident">variant_index</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
-                    <span class="attribute">#<span class="ident">len</span>));
-                <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
+                    #<span class="ident">type_name</span>,
+                    #<span class="ident">variant_index</span>,
+                    #<span class="ident">variant_name</span>,
+                    #<span class="ident">len</span>));
+                #(#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeTupleVariant</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
             }
         }
         <span class="ident">TupleVariant</span>::<span class="ident">Untagged</span> <span class="op">=&gt;</span> {
             <span class="macro">quote_block</span><span class="macro">!</span> {
-                <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple</span>(
+                <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_tuple</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">len</span>));
-                <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
+                    #<span class="ident">len</span>));
+                #(#<span class="ident">serialize_stmts</span>)<span class="op">*</span>
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeTuple</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
             }
         }
@@ -1683,7 +1683,7 @@
 <span class="kw">fn</span> <span class="ident">serialize_struct_variant</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
     <span class="ident">context</span>: <span class="ident">StructVariant</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>,
+    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>],
     <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
 ) <span class="op">-&gt;</span> <span class="ident">Fragment</span> {
     <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">context</span> {
@@ -1709,12 +1709,12 @@
                 <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ident</span>.<span class="ident">clone</span>().<span class="ident">expect</span>(<span class="string">&quot;struct has unnamed fields&quot;</span>);
 
                 <span class="kw">match</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">skip_serializing_if</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="attribute">#<span class="ident">path</span>(<span class="attribute">#<span class="ident">ident</span>) { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> }),
+                    <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> #<span class="ident">path</span>(#<span class="ident">ident</span>) { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> }),
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="number">1</span>),
                 }
             },
         )
-        .<span class="ident">fold</span>(<span class="macro">quote</span><span class="macro">!</span>(<span class="number">0</span>), <span class="op">|</span><span class="ident">sum</span>, <span class="ident">expr</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">sum</span> <span class="op">+</span> <span class="attribute">#<span class="ident">expr</span>));
+        .<span class="ident">fold</span>(<span class="macro">quote</span><span class="macro">!</span>(<span class="number">0</span>), <span class="op">|</span><span class="ident">sum</span>, <span class="ident">expr</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">sum</span> <span class="op">+</span> #<span class="ident">expr</span>));
 
     <span class="kw">match</span> <span class="ident">context</span> {
         <span class="ident">StructVariant</span>::<span class="ident">ExternallyTagged</span> {
@@ -1722,14 +1722,14 @@
             <span class="ident">variant_name</span>,
         } <span class="op">=&gt;</span> {
             <span class="macro">quote_block</span><span class="macro">!</span> {
-                <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct_variant</span>(
+                <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct_variant</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">name</span>,
-                    <span class="attribute">#<span class="ident">variant_index</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
-                    <span class="attribute">#<span class="ident">len</span>,
+                    #<span class="ident">name</span>,
+                    #<span class="ident">variant_index</span>,
+                    #<span class="ident">variant_name</span>,
+                    #<span class="ident">len</span>,
                 ));
-                <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_fields</span>)<span class="op">*</span>
+                #(#<span class="ident">serialize_fields</span>)<span class="op">*</span>
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStructVariant</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
             }
         }
@@ -1737,26 +1737,26 @@
             <span class="macro">quote_block</span><span class="macro">!</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">name</span>,
-                    <span class="attribute">#<span class="ident">len</span> <span class="op">+</span> <span class="number">1</span>,
+                    #<span class="ident">name</span>,
+                    #<span class="ident">len</span> <span class="op">+</span> <span class="number">1</span>,
                 ));
                 <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">serialize_field</span>(
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__serde_state</span>,
-                    <span class="attribute">#<span class="ident">tag</span>,
-                    <span class="attribute">#<span class="ident">variant_name</span>,
+                    #<span class="ident">tag</span>,
+                    #<span class="ident">variant_name</span>,
                 ));
-                <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_fields</span>)<span class="op">*</span>
+                #(#<span class="ident">serialize_fields</span>)<span class="op">*</span>
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
             }
         }
         <span class="ident">StructVariant</span>::<span class="ident">Untagged</span> <span class="op">=&gt;</span> {
             <span class="macro">quote_block</span><span class="macro">!</span> {
-                <span class="kw">let</span> <span class="attribute">#<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
+                <span class="kw">let</span> #<span class="ident">let_mut</span> <span class="ident">__serde_state</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">Serializer</span>::<span class="ident">serialize_struct</span>(
                     <span class="ident">__serializer</span>,
-                    <span class="attribute">#<span class="ident">name</span>,
-                    <span class="attribute">#<span class="ident">len</span>,
+                    #<span class="ident">name</span>,
+                    #<span class="ident">len</span>,
                 ));
-                <span class="attribute">#(<span class="attribute">#<span class="ident">serialize_fields</span>)<span class="op">*</span>
+                #(#<span class="ident">serialize_fields</span>)<span class="op">*</span>
                 <span class="ident">_serde</span>::<span class="ident">ser</span>::<span class="ident">SerializeStruct</span>::<span class="ident">end</span>(<span class="ident">__serde_state</span>)
             }
         }
@@ -1764,7 +1764,7 @@
 }
 
 <span class="kw">fn</span> <span class="ident">serialize_tuple_struct_visitor</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>,
+    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>],
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
     <span class="ident">is_enum</span>: <span class="ident">bool</span>,
     <span class="ident">func</span>: <span class="ident">Tokens</span>,
@@ -1776,7 +1776,7 @@
             <span class="op">|</span>(<span class="ident">i</span>, <span class="ident">field</span>)<span class="op">|</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_enum</span> {
                     <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">Ident</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;__field{}&quot;</span>, <span class="ident">i</span>));
-                    <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">id</span>)
+                    <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">id</span>)
                 } <span class="kw">else</span> {
                     <span class="ident">get_field</span>(<span class="ident">params</span>, <span class="ident">field</span>, <span class="ident">i</span>)
                 };
@@ -1784,19 +1784,19 @@
                 <span class="kw">let</span> <span class="ident">skip</span> <span class="op">=</span> <span class="ident">field</span>
                     .<span class="ident">attrs</span>
                     .<span class="ident">skip_serializing_if</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">path</span>(<span class="attribute">#<span class="ident">field_expr</span>)));
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">path</span>(#<span class="ident">field_expr</span>)));
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                     <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>);
                 }
 
                 <span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">func</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__serde_state</span>, <span class="attribute">#<span class="ident">field_expr</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(#<span class="ident">func</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__serde_state</span>, #<span class="ident">field_expr</span>));
                 };
 
                 <span class="kw">match</span> <span class="ident">skip</span> {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">ser</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">skip</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="op">!</span><span class="attribute">#<span class="ident">skip</span> { <span class="attribute">#<span class="ident">ser</span> }),
+                    <span class="prelude-val">Some</span>(<span class="ident">skip</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="op">!</span>#<span class="ident">skip</span> { #<span class="ident">ser</span> }),
                 }
             },
         )
@@ -1804,7 +1804,7 @@
 }
 
 <span class="kw">fn</span> <span class="ident">serialize_struct_visitor</span>(
-    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>]</span>,
+    <span class="ident">fields</span>: <span class="kw-2">&amp;</span>[<span class="ident">Field</span>],
     <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
     <span class="ident">is_enum</span>: <span class="ident">bool</span>,
     <span class="ident">func</span>: <span class="ident">Tokens</span>,
@@ -1816,7 +1816,7 @@
             <span class="op">|</span><span class="ident">field</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">field_ident</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ident</span>.<span class="ident">clone</span>().<span class="ident">expect</span>(<span class="string">&quot;struct has unnamed field&quot;</span>);
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_expr</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">is_enum</span> {
-                    <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">field_ident</span>)
+                    <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">field_ident</span>)
                 } <span class="kw">else</span> {
                     <span class="ident">get_field</span>(<span class="ident">params</span>, <span class="ident">field</span>, <span class="ident">field_ident</span>)
                 };
@@ -1826,19 +1826,19 @@
                 <span class="kw">let</span> <span class="ident">skip</span> <span class="op">=</span> <span class="ident">field</span>
                     .<span class="ident">attrs</span>
                     .<span class="ident">skip_serializing_if</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">path</span>(<span class="attribute">#<span class="ident">field_expr</span>)));
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">path</span><span class="op">|</span> <span class="macro">quote</span><span class="macro">!</span>(#<span class="ident">path</span>(#<span class="ident">field_expr</span>)));
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">serialize_with</span>() {
                     <span class="ident">field_expr</span> <span class="op">=</span> <span class="ident">wrap_serialize_with</span>(<span class="ident">params</span>, <span class="ident">field</span>.<span class="ident">ty</span>, <span class="ident">path</span>, <span class="ident">field_expr</span>)
                 }
 
                 <span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="macro">quote</span><span class="macro">!</span> {
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="attribute">#<span class="ident">func</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__serde_state</span>, <span class="attribute">#<span class="ident">key_expr</span>, <span class="attribute">#<span class="ident">field_expr</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(#<span class="ident">func</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">__serde_state</span>, #<span class="ident">key_expr</span>, #<span class="ident">field_expr</span>));
                 };
 
                 <span class="kw">match</span> <span class="ident">skip</span> {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">ser</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">skip</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="op">!</span><span class="attribute">#<span class="ident">skip</span> { <span class="attribute">#<span class="ident">ser</span> }),
+                    <span class="prelude-val">Some</span>(<span class="ident">skip</span>) <span class="op">=&gt;</span> <span class="macro">quote</span><span class="macro">!</span>(<span class="kw">if</span> <span class="op">!</span>#<span class="ident">skip</span> { #<span class="ident">ser</span> }),
                 }
             },
         )
@@ -1858,22 +1858,22 @@
     <span class="kw">let</span> (<span class="ident">wrapper_impl_generics</span>, <span class="ident">wrapper_ty_generics</span>, _) <span class="op">=</span> <span class="ident">wrapper_generics</span>.<span class="ident">split_for_impl</span>();
 
     <span class="macro">quote</span><span class="macro">!</span>({
-        <span class="kw">struct</span> <span class="ident">__SerializeWith</span> <span class="attribute">#<span class="ident">wrapper_impl_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
-            <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;__a</span> <span class="attribute">#<span class="ident">field_ty</span>,
-            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="attribute">#<span class="ident">this</span> <span class="attribute">#<span class="ident">ty_generics</span><span class="op">&gt;</span>,
+        <span class="kw">struct</span> <span class="ident">__SerializeWith</span> #<span class="ident">wrapper_impl_generics</span> #<span class="ident">where_clause</span> {
+            <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;__a</span> #<span class="ident">field_ty</span>,
+            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span>#<span class="ident">this</span> #<span class="ident">ty_generics</span><span class="op">&gt;</span>,
         }
 
-        <span class="kw">impl</span> <span class="attribute">#<span class="ident">wrapper_impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">__SerializeWith</span> <span class="attribute">#<span class="ident">wrapper_ty_generics</span> <span class="attribute">#<span class="ident">where_clause</span> {
+        <span class="kw">impl</span> #<span class="ident">wrapper_impl_generics</span> <span class="ident">_serde</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">__SerializeWith</span> #<span class="ident">wrapper_ty_generics</span> #<span class="ident">where_clause</span> {
             <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">__S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">__s</span>: <span class="ident">__S</span>) <span class="op">-&gt;</span> <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">__S</span>::<span class="prelude-val">Ok</span>, <span class="ident">__S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
                 <span class="kw">where</span> <span class="ident">__S</span>: <span class="ident">_serde</span>::<span class="ident">Serializer</span>
             {
-                <span class="attribute">#<span class="ident">serialize_with</span>(<span class="self">self</span>.<span class="ident">value</span>, <span class="ident">__s</span>)
+                #<span class="ident">serialize_with</span>(<span class="self">self</span>.<span class="ident">value</span>, <span class="ident">__s</span>)
             }
         }
 
         <span class="kw-2">&amp;</span><span class="ident">__SerializeWith</span> {
-            <span class="ident">value</span>: <span class="attribute">#<span class="ident">value</span>,
-            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="attribute">#<span class="ident">this</span> <span class="attribute">#<span class="ident">ty_generics</span><span class="op">&gt;</span>,
+            <span class="ident">value</span>: #<span class="ident">value</span>,
+            <span class="ident">phantom</span>: <span class="ident">_serde</span>::<span class="ident">export</span>::<span class="ident">PhantomData</span>::<span class="op">&lt;</span>#<span class="ident">this</span> #<span class="ident">ty_generics</span><span class="op">&gt;</span>,
         }
     })
 }
@@ -1896,16 +1896,16 @@
     <span class="kw">match</span> (<span class="ident">params</span>.<span class="ident">is_remote</span>, <span class="ident">field</span>.<span class="ident">attrs</span>.<span class="ident">getter</span>()) {
         (<span class="bool-val">false</span>, <span class="prelude-val">None</span>) <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">into</span>();
-            <span class="macro">quote</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="attribute">#<span class="ident">self_var</span>.<span class="attribute">#<span class="ident">ident</span>)
+            <span class="macro">quote</span><span class="macro">!</span>(<span class="kw-2">&amp;</span>#<span class="ident">self_var</span>.#<span class="ident">ident</span>)
         }
         (<span class="bool-val">true</span>, <span class="prelude-val">None</span>) <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ty</span>;
             <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="ident">ident</span>.<span class="ident">into</span>();
-            <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">private</span>::<span class="ident">ser</span>::<span class="ident">constrain</span>::<span class="op">&lt;</span><span class="attribute">#<span class="ident">ty</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="attribute">#<span class="ident">self_var</span>.<span class="attribute">#<span class="ident">ident</span>))
+            <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">private</span>::<span class="ident">ser</span>::<span class="ident">constrain</span>::<span class="op">&lt;</span>#<span class="ident">ty</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>#<span class="ident">self_var</span>.#<span class="ident">ident</span>))
         }
         (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="ident">getter</span>)) <span class="op">=&gt;</span> {
             <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ty</span>;
-            <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">private</span>::<span class="ident">ser</span>::<span class="ident">constrain</span>::<span class="op">&lt;</span><span class="attribute">#<span class="ident">ty</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="attribute">#<span class="ident">getter</span>(<span class="attribute">#<span class="ident">self_var</span>)))
+            <span class="macro">quote</span><span class="macro">!</span>(<span class="ident">_serde</span>::<span class="ident">private</span>::<span class="ident">ser</span>::<span class="ident">constrain</span>::<span class="op">&lt;</span>#<span class="ident">ty</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>#<span class="ident">getter</span>(#<span class="ident">self_var</span>)))
         }
         (<span class="bool-val">false</span>, <span class="prelude-val">Some</span>(_)) <span class="op">=&gt;</span> {
             <span class="macro">unreachable</span><span class="macro">!</span>(<span class="string">&quot;getter is only allowed for remote impls&quot;</span>);

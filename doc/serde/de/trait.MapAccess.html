@@ -114,7 +114,7 @@ if there are no more remaining entries.</p>
 <p>This method exists as a convenience for <code>Deserialize</code> implementations.
 <code>MapAccess</code> implementations should not override the default behavior.</p>
 
-<h1 id='panics-2' class='section-header'><a href='#panics-2'>Panics</a></h1>
+<h1 id='panics-1' class='section-header'><a href='#panics-1'>Panics</a></h1>
 <p>Calling <code>next_value</code> before <code>next_key</code> is incorrect and is allowed to
 panic or return bogus results.</p>
 </div><h3 id='method.next_entry' class='method'><span id='next_entry.v' class='invisible'><code>fn <a href='#method.next_entry' class='fnname'>next_entry</a>&lt;K, V&gt;(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a>K, V<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;, Self::<a class="type" href="../../serde/de/trait.MapAccess.html#associatedtype.Error" title="type serde::de::MapAccess::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;K: <a class="trait" href="../../serde/trait.Deserialize.html" title="trait serde::Deserialize">Deserialize</a>&lt;'de&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/trait.Deserialize.html" title="trait serde::Deserialize">Deserialize</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>This returns <code>Ok(Some((key, value)))</code> for the next (key-value) pair in

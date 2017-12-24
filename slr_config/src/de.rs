@@ -266,6 +266,13 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 	}
 }
 
+/*
+ * This is a hack because we do not support anything but string deserialization.
+ * As far as I understand it we use it currently to deserialize enum variant
+ * names as well as any static mapping (structs etc). One thing that this ends
+ * up blocking is the table syntax for general mappings (since they might have
+ * non-string keys).
+ */
 impl<'de> de::Deserializer<'de> for HackStringDeserializer<'de>
 {
 	type Error = Error;
@@ -624,7 +631,7 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		}
 		else
 		{
-			Err(self.error(&format!("Expected an array.")))
+			Err(self.error(&format!("Expected a table.")))
 		}
 	}
 

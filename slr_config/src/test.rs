@@ -317,25 +317,26 @@ fn serde_test()
 	let elem = to_element(&v).unwrap();
 	println!("\n{}", elem);
 
+	// TODO: enum variants have a very ugly serialization format.
 	let src_str = r#"
 		b = 1
 		c = ""
 		d = 1
 		e =
 		[
-				Var1,
+			Var1,
+			{
+				Var2 = 1
+			},
+			{
+				Var3
 				{
-						Var2 = 1
-				},
-				{
-						Var3
-						{
-								v = 1
-						}
-				},
-				{
-						Var4 = [1, 2]
+					v = 1
 				}
+			},
+			{
+				Var4 = [1, 2]
+			}
 		]
 		f = [[1, 2]]
 		h = [1, 2]

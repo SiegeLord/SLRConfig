@@ -692,6 +692,13 @@
 <span id="646">646</span>
 <span id="647">647</span>
 <span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
 </pre><pre class="rust ">
 
 
@@ -961,6 +968,13 @@
 	}
 }
 
+<span class="comment">/*
+ * This is a hack because we do not support anything but string deserialization.
+ * As far as I understand it we use it currently to deserialize enum variant
+ * names as well as any static mapping (structs etc). One thing that this ends
+ * up blocking is the table syntax for general mappings (since they might have
+ * non-string keys).
+ */</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">HackStringDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>
 {
 	<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
@@ -1319,7 +1333,7 @@
 		}
 		<span class="kw">else</span>
 		{
-			<span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">error</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Expected an array.&quot;</span>)))
+			<span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">error</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Expected a table.&quot;</span>)))
 		}
 	}
 

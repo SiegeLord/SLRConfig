@@ -83,122 +83,117 @@
 <div class='item-spacer'></div>    fn <a href='#tymethod.deserialize_ignored_any' class='fnname'>deserialize_ignored_any</a>&lt;V&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visitor: V<br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;</span>;
 }</pre><div class='docblock'><p>A <strong>data format</strong> that can deserialize any data structure supported by
 Serde.</p>
-
 <p>The role of this trait is to define the deserialization half of the Serde
 data model, which is a way to categorize every Rust data type into one of 27
 possible types. Each method of the <code>Serializer</code> trait corresponds to one of
 the types of the data model.</p>
-
 <p>Implementations of <code>Deserialize</code> map themselves into this data model by
 passing to the <code>Deserializer</code> a <code>Visitor</code> implementation that can receive
 these various types.</p>
-
 <p>The types that make up the Serde data model are:</p>
-
 <ul>
 <li><strong>12 primitive types</strong>
-
 <ul>
 <li>bool</li>
 <li>i8, i16, i32, i64</li>
 <li>u8, u16, u32, u64</li>
 <li>f32, f64</li>
 <li>char</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>string</strong>
-
 <ul>
 <li>UTF-8 bytes with a length and no null terminator.</li>
 <li>When serializing, all strings are handled equally. When deserializing,
 there are three flavors of strings: transient, owned, and borrowed.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>byte array</strong> - [u8]
-
 <ul>
 <li>Similar to strings, during deserialization byte arrays can be transient,
 owned, or borrowed.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>option</strong>
-
 <ul>
 <li>Either none or some value.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>unit</strong>
-
 <ul>
 <li>The type of <code>()</code> in Rust. It represents an anonymous value containing no
 data.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>unit_struct</strong>
-
 <ul>
 <li>For example <code>struct Unit</code> or <code>PhantomData&lt;T&gt;</code>. It represents a named value
 containing no data.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>unit_variant</strong>
-
 <ul>
 <li>For example the <code>E::A</code> and <code>E::B</code> in <code>enum E { A, B }</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>newtype_struct</strong>
-
 <ul>
 <li>For example <code>struct Millimeters(u8)</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>newtype_variant</strong>
-
 <ul>
 <li>For example the <code>E::N</code> in <code>enum E { N(u8) }</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>seq</strong>
-
 <ul>
 <li>A variably sized heterogeneous sequence of values, for example <code>Vec&lt;T&gt;</code> or
 <code>HashSet&lt;T&gt;</code>. When serializing, the length may or may not be known before
 iterating through all the data. When deserializing, the length is determined
 by looking at the serialized data.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>tuple</strong>
-
 <ul>
 <li>A statically sized heterogeneous sequence of values for which the length
 will be known at deserialization time without looking at the serialized
 data, for example <code>(u8,)</code> or <code>(String, u64, Vec&lt;T&gt;)</code> or <code>[u64; 10]</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>tuple_struct</strong>
-
 <ul>
 <li>A named tuple, for example <code>struct Rgb(u8, u8, u8)</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>tuple_variant</strong>
-
 <ul>
 <li>For example the <code>E::T</code> in <code>enum E { T(u8, u8) }</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>map</strong>
-
 <ul>
 <li>A heterogeneous key-value pairing, for example <code>BTreeMap&lt;K, V&gt;</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>struct</strong>
-
 <ul>
 <li>A heterogeneous key-value pairing in which the keys are strings and will be
 known at deserialization time without looking at the serialized data, for
 example <code>struct S { r: u8, g: u8, b: u8 }</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>struct_variant</strong>
-
 <ul>
 <li>For example the <code>E::S</code> in <code>enum E { S { r: u8, g: u8, b: u8 } }</code>.</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>The <code>Deserializer</code> trait supports two entry point styles which enables
 different kinds of deserialization.</p>
-
 <ol>
-<li><p>The <code>deserialize</code> method. Self-describing data formats like JSON are able
+<li>
+<p>The <code>deserialize</code> method. Self-describing data formats like JSON are able
 to look at the serialized data and tell what it represents. For example
 the JSON deserializer may see an opening curly brace (<code>{</code>) and know that
 it is seeing a map. If the data format supports
@@ -206,15 +201,17 @@ it is seeing a map. If the data format supports
 type it sees in the input. JSON uses this approach when deserializing
 <code>serde_json::Value</code> which is an enum that can represent any JSON
 document. Without knowing what is in a JSON document, we can deserialize
-it to <code>serde_json::Value</code> by going through <code>Deserializer::deserialize_any</code>.</p></li>
-<li><p>The various <code>deserialize_*</code> methods. Non-self-describing formats like
+it to <code>serde_json::Value</code> by going through <code>Deserializer::deserialize_any</code>.</p>
+</li>
+<li>
+<p>The various <code>deserialize_*</code> methods. Non-self-describing formats like
 Bincode need to be told what is in the input in order to deserialize it.
 The <code>deserialize_*</code> methods are hints to the deserializer for how to
 interpret the next piece of input. Non-self-describing formats are not
 able to deserialize something like <code>serde_json::Value</code> which relies on
-<code>Deserializer::deserialize_any</code>.</p></li>
+<code>Deserializer::deserialize_any</code>.</p>
+</li>
 </ol>
-
 <p>When implementing <code>Deserialize</code>, you should avoid relying on
 <code>Deserializer::deserialize_any</code> unless you need to be told by the Deserializer
 what type is in the input. Know that relying on <code>Deserializer::deserialize_any</code>
@@ -234,7 +231,6 @@ deserialization.</p>
             <div class='methods'>
         <h3 id='tymethod.deserialize_any' class='method'><span id='deserialize_any.v' class='invisible'><code>fn <a href='#tymethod.deserialize_any' class='fnname'>deserialize_any</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Require the <code>Deserializer</code> to figure out how to drive the visitor based
 on what data type is in the input.</p>
-
 <p>When implementing <code>Deserialize</code>, you should avoid relying on
 <code>Deserializer::deserialize_any</code> unless you need to be told by the
 Deserializer what type is in the input. Know that relying on
@@ -256,33 +252,28 @@ many others.</p>
 </div><h3 id='tymethod.deserialize_str' class='method'><span id='deserialize_str.v' class='invisible'><code>fn <a href='#tymethod.deserialize_str' class='fnname'>deserialize_str</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting a string value and does
 not benefit from taking ownership of buffered data owned by the
 <code>Deserializer</code>.</p>
-
 <p>If the <code>Visitor</code> would benefit from taking ownership of <code>String</code> data,
 indiciate this to the <code>Deserializer</code> by using <code>deserialize_string</code>
 instead.</p>
 </div><h3 id='tymethod.deserialize_string' class='method'><span id='deserialize_string.v' class='invisible'><code>fn <a href='#tymethod.deserialize_string' class='fnname'>deserialize_string</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting a string value and would
 benefit from taking ownership of buffered data owned by the
 <code>Deserializer</code>.</p>
-
 <p>If the <code>Visitor</code> would not benefit from taking ownership of <code>String</code>
 data, indicate that to the <code>Deserializer</code> by using <code>deserialize_str</code>
 instead.</p>
 </div><h3 id='tymethod.deserialize_bytes' class='method'><span id='deserialize_bytes.v' class='invisible'><code>fn <a href='#tymethod.deserialize_bytes' class='fnname'>deserialize_bytes</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting a byte array and does not
 benefit from taking ownership of buffered data owned by the
 <code>Deserializer</code>.</p>
-
 <p>If the <code>Visitor</code> would benefit from taking ownership of <code>Vec&lt;u8&gt;</code> data,
 indicate this to the <code>Deserializer</code> by using <code>deserialize_byte_buf</code>
 instead.</p>
 </div><h3 id='tymethod.deserialize_byte_buf' class='method'><span id='deserialize_byte_buf.v' class='invisible'><code>fn <a href='#tymethod.deserialize_byte_buf' class='fnname'>deserialize_byte_buf</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting a byte array and would
 benefit from taking ownership of buffered data owned by the
 <code>Deserializer</code>.</p>
-
 <p>If the <code>Visitor</code> would not benefit from taking ownership of <code>Vec&lt;u8&gt;</code>
 data, indicate that to the <code>Deserializer</code> by using <code>deserialize_bytes</code>
 instead.</p>
 </div><h3 id='tymethod.deserialize_option' class='method'><span id='deserialize_option.v' class='invisible'><code>fn <a href='#tymethod.deserialize_option' class='fnname'>deserialize_option</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting an optional value.</p>
-
 <p>This allows deserializers that encode an optional value as a nullable
 value to convert the null value into <code>None</code> and a regular value into
 <code>Some(value)</code>.</p>
@@ -304,8 +295,7 @@ particular name and possible variants.</p>
 </div><h3 id='tymethod.deserialize_identifier' class='method'><span id='deserialize_identifier.v' class='invisible'><code>fn <a href='#tymethod.deserialize_identifier' class='fnname'>deserialize_identifier</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type is expecting the name of a struct
 field or the discriminant of an enum variant.</p>
 </div><h3 id='tymethod.deserialize_ignored_any' class='method'><span id='deserialize_ignored_any.v' class='invisible'><code>fn <a href='#tymethod.deserialize_ignored_any' class='fnname'>deserialize_ignored_any</a>&lt;V&gt;(self, visitor: V) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;V::<a class="type" href="../../serde/de/trait.Visitor.html#associatedtype.Value" title="type serde::de::Visitor::Value">Value</a>, Self::<a class="type" href="../../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../../serde/de/trait.Visitor.html" title="trait serde::de::Visitor">Visitor</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Hint that the <code>Deserialize</code> type needs to deserialize a value whose type
-doesn&#39;t matter because it is ignored.</p>
-
+doesn't matter because it is ignored.</p>
 <p>Deserializers for non-self-describing formats may not support this mode.</p>
 </div></div>
         <h2 id='implementors' class='small-section-header'>

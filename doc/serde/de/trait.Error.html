@@ -63,14 +63,12 @@
 }</pre><div class='docblock'><p>The <code>Error</code> trait allows <code>Deserialize</code> implementations to create descriptive
 error messages belonging to the <code>Deserializer</code> against which they are
 currently running.</p>
-
 <p>Every <code>Deserializer</code> declares an <code>Error</code> type that encompasses both
 general-purpose deserialization errors as well as errors specific to the
 particular deserialization format. For example the <code>Error</code> type of
 <code>serde_json</code> can represent errors like an invalid JSON escape sequence or an
 unterminated string literal, in addition to the error cases that are part of
 this trait.</p>
-
 <p>Most deserializers should only need to provide the <code>Error::custom</code> method
 and inherit the default behavior for the other methods.</p>
 </div>
@@ -79,7 +77,6 @@ and inherit the default behavior for the other methods.</p>
             </h2>
             <div class='methods'>
         <h3 id='tymethod.custom' class='method'><span id='custom.v' class='invisible'><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T&gt;(msg: T) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Raised when there is general error when deserializing a type.</p>
-
 <p>The message should not be capitalized and should not end with a period.</p>
 
 <pre class="rust rust-example-rendered">
@@ -100,36 +97,28 @@ and inherit the default behavior for the other methods.</p>
             <div class='methods'>
         <h3 id='method.invalid_type' class='method'><span id='invalid_type.v' class='invisible'><code>fn <a href='#method.invalid_type' class='fnname'>invalid_type</a>(unexp: <a class="enum" href="../../serde/de/enum.Unexpected.html" title="enum serde::de::Unexpected">Unexpected</a>, exp: &amp;<a class="trait" href="../../serde/de/trait.Expected.html" title="trait serde::de::Expected">Expected</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Raised when a <code>Deserialize</code> receives a type different from what it was
 expecting.</p>
-
 <p>The <code>unexp</code> argument provides information about what type was received.
 This is the type that was present in the input file or other source data
 of the Deserializer.</p>
-
 <p>The <code>exp</code> argument provides information about what type was being
 expected. This is the type that is written in the program.</p>
-
 <p>For example if we try to deserialize a String out of a JSON file
 containing an integer, the unexpected type is the integer and the
 expected type is the string.</p>
 </div><h3 id='method.invalid_value' class='method'><span id='invalid_value.v' class='invisible'><code>fn <a href='#method.invalid_value' class='fnname'>invalid_value</a>(unexp: <a class="enum" href="../../serde/de/enum.Unexpected.html" title="enum serde::de::Unexpected">Unexpected</a>, exp: &amp;<a class="trait" href="../../serde/de/trait.Expected.html" title="trait serde::de::Expected">Expected</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Raised when a <code>Deserialize</code> receives a value of the right type but that
 is wrong for some other reason.</p>
-
 <p>The <code>unexp</code> argument provides information about what value was received.
 This is the value that was present in the input file or other source
 data of the Deserializer.</p>
-
 <p>The <code>exp</code> argument provides information about what value was being
 expected. This is the type that is written in the program.</p>
-
 <p>For example if we try to deserialize a String out of some binary data
 that is not valid UTF-8, the unexpected value is the bytes and the
 expected value is a string.</p>
 </div><h3 id='method.invalid_length' class='method'><span id='invalid_length.v' class='invisible'><code>fn <a href='#method.invalid_length' class='fnname'>invalid_length</a>(len: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, exp: &amp;<a class="trait" href="../../serde/de/trait.Expected.html" title="trait serde::de::Expected">Expected</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Raised when deserializing a sequence or map and the input data contains
 too many or too few elements.</p>
-
 <p>The <code>len</code> argument is the number of elements encountered. The sequence
 or map may have expected more arguments or fewer arguments.</p>
-
 <p>The <code>exp</code> argument provides information about what data was being
 expected. For example <code>exp</code> might say that a tuple of size 6 was
 expected.</p>

@@ -56,12 +56,10 @@
 }</pre>
 <div class='docblock'><p>Parse the given string from exactly the current position in the input. You
 almost always want <code>punct!</code> or <code>keyword!</code> instead of this.</p>
-
 <p>The <code>tag!</code> parser is equivalent to <code>punct!</code> but does not ignore leading
 whitespace. Both <code>punct!</code> and <code>keyword!</code> skip over leading whitespace. See
-an explanation of synom&#39;s whitespace handling strategy in the top-level
+an explanation of synom's whitespace handling strategy in the top-level
 crate documentation.</p>
-
 <ul>
 <li><strong>Syntax:</strong> <code>tag!(&quot;...&quot;)</code></li>
 <li><strong>Output:</strong> <code>&quot;...&quot;</code></li>

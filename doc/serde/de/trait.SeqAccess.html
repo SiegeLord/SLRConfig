@@ -58,7 +58,6 @@
     { ... }
 <div class='item-spacer'></div>    fn <a href='#method.size_hint' class='fnname'>size_hint</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt; { ... }
 }</pre><div class='docblock'><p>Provides a <code>Visitor</code> access to each element of a sequence in the input.</p>
-
 <p>This is a trait that a <code>Deserializer</code> passes to a <code>Visitor</code> implementation,
 which deserializes each item in a sequence.</p>
 </div>
@@ -75,7 +74,6 @@ deserialization.</p>
             <div class='methods'>
         <h3 id='tymethod.next_element_seed' class='method'><span id='next_element_seed.v' class='invisible'><code>fn <a href='#tymethod.next_element_seed' class='fnname'>next_element_seed</a>&lt;T&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;seed: T<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T::<a class="type" href="../../serde/de/trait.DeserializeSeed.html#associatedtype.Value" title="type serde::de::DeserializeSeed::Value">Value</a>&gt;, Self::<a class="type" href="../../serde/de/trait.SeqAccess.html#associatedtype.Error" title="type serde::de::SeqAccess::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="../../serde/de/trait.DeserializeSeed.html" title="trait serde::de::DeserializeSeed">DeserializeSeed</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>This returns <code>Ok(Some(value))</code> for the next value in the sequence, or
 <code>Ok(None)</code> if there are no more remaining items.</p>
-
 <p><code>Deserialize</code> implementations should typically use
 <code>SeqAcccess::next_element</code> instead.</p>
 </div></div>
@@ -85,7 +83,6 @@ deserialization.</p>
             <div class='methods'>
         <h3 id='method.next_element' class='method'><span id='next_element.v' class='invisible'><code>fn <a href='#method.next_element' class='fnname'>next_element</a>&lt;T&gt;(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;, Self::<a class="type" href="../../serde/de/trait.SeqAccess.html#associatedtype.Error" title="type serde::de::SeqAccess::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="../../serde/trait.Deserialize.html" title="trait serde::Deserialize">Deserialize</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>This returns <code>Ok(Some(value))</code> for the next value in the sequence, or
 <code>Ok(None)</code> if there are no more remaining items.</p>
-
 <p>This method exists as a convenience for <code>Deserialize</code> implementations.
 <code>SeqAccess</code> implementations should not override the default behavior.</p>
 </div><h3 id='method.size_hint' class='method'><span id='size_hint.v' class='invisible'><code>fn <a href='#method.size_hint' class='fnname'>size_hint</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span></h3><div class='docblock'><p>Returns the number of elements remaining in the sequence, if known.</p>

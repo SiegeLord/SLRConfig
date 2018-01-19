@@ -62,10 +62,8 @@ currently running.</p>
             <div class='methods'>
         <h3 id='tymethod.custom' class='method'><span id='custom.v' class='invisible'><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T&gt;(msg: T) -&gt; Self <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Used when a <a href="../trait.Serialize.html"><code>Serialize</code></a> implementation encounters any error
 while serializing a type.</p>
-
 <p>The message should not be capitalized and should not end with a
 period.</p>
-
 <p>For example, a filesystem <a href="https://doc.rust-lang.org/std/path/struct.Path.html"><code>Path</code></a> may refuse to serialize
 itself if it contains invalid UTF-8 data.</p>
 

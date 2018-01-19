@@ -57,12 +57,10 @@
 parses the arguments to the invocation as a token-tree. This is a very
 loose structure, such that all sorts of different AST-fragments can
 be passed to syntax extensions using a uniform type.</p>
-
 <p>If the syntax extension is an MBE macro, it will attempt to match its
 LHS token tree against the provided token tree, and if it finds a
 match, will transcribe the RHS token tree, splicing in any captured
 <code>macro_parser::matched_nonterminals</code> into the <code>SubstNt</code>s it finds.</p>
-
 <p>The RHS of an MBE macro is the only place <code>SubstNt</code>s are substituted.
 Nothing special happens to misnamed or misplaced <code>SubstNt</code>s.</p>
 </div><h2 id='variants' class='variants small-section-header'>

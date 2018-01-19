@@ -54,19 +54,15 @@
     fn <a href='#tymethod.serialize' class='fnname'>serialize</a>&lt;S&gt;(&amp;self, serializer: S) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;S::<a class="type" href="../serde/trait.Serializer.html#associatedtype.Ok" title="type serde::Serializer::Ok">Ok</a>, S::<a class="type" href="../serde/trait.Serializer.html#associatedtype.Error" title="type serde::Serializer::Error">Error</a>&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="../serde/trait.Serializer.html" title="trait serde::Serializer">Serializer</a></span>;
 }</pre><div class='docblock'><p>A <strong>data structure</strong> that can be serialized into any data format supported
 by Serde.</p>
-
 <p>Serde provides <code>Serialize</code> implementations for many Rust primitive and
 standard library types. The complete list is <a href="https://docs.serde.rs/serde/ser/index.html">here</a>. All of these can
 be serialized using Serde out of the box.</p>
-
 <p>Additionally, Serde provides a procedural macro called <a href="https://crates.io/crates/serde_derive"><code>serde_derive</code></a> to
 automatically generate <code>Serialize</code> implementations for structs and enums in
 your program. See the <a href="https://serde.rs/codegen.html">codegen section of the manual</a> for how to use this.</p>
-
 <p>In rare cases it may be necessary to implement <code>Serialize</code> manually for some
 type in your program. See the <a href="https://serde.rs/impl-serialize.html">Implementing <code>Serialize</code></a> section of the
 manual for more about this.</p>
-
 <p>Third-party crates may provide <code>Serialize</code> implementations for types that
 they expose. For example the <a href="https://crates.io/crates/linked-hash-map"><code>linked-hash-map</code></a> crate provides a
 <a href="https://docs.rs/linked-hash-map/*/linked_hash_map/struct.LinkedHashMap.html"><code>LinkedHashMap&lt;K, V&gt;</code></a> type that is serializable by Serde because the crate
@@ -77,7 +73,6 @@ provides an implementation of <code>Serialize</code> for it.</p>
             </h2>
             <div class='methods'>
         <h3 id='tymethod.serialize' class='method'><span id='serialize.v' class='invisible'><code>fn <a href='#tymethod.serialize' class='fnname'>serialize</a>&lt;S&gt;(&amp;self, serializer: S) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;S::<a class="type" href="../serde/trait.Serializer.html#associatedtype.Ok" title="type serde::Serializer::Ok">Ok</a>, S::<a class="type" href="../serde/trait.Serializer.html#associatedtype.Error" title="type serde::Serializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;S: <a class="trait" href="../serde/trait.Serializer.html" title="trait serde::Serializer">Serializer</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Serialize this value into the given Serde serializer.</p>
-
 <p>See the <a href="https://serde.rs/impl-serialize.html">Implementing <code>Serialize</code></a> section of the manual for more
 information about how to implement this method.</p>
 

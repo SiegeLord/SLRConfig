@@ -52,7 +52,6 @@
                </span><a class='srclink' href='../../src/serde/de/mod.rs.html#529' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait DeserializeOwned: for&lt;'de&gt; <a class="trait" href="../../serde/trait.Deserialize.html" title="trait serde::Deserialize">Deserialize</a>&lt;'de&gt; { }</pre><div class='docblock'><p>A data structure that can be deserialized without borrowing any data from
 the deserializer.</p>
-
 <p>This is primarily useful for trait bounds on functions. For example a
 <code>from_str</code> function may be able to deserialize a data structure that borrows
 from the input string, but a <code>from_reader</code> function may only deserialize

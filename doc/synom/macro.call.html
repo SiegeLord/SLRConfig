@@ -55,12 +55,14 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fun</span>:<span class="ident">expr</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>:<span class="ident">expr</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Invoke the given parser function with the passed in arguments.</p>
-
 <ul>
-<li><p><strong>Syntax:</strong> <code>call!(FUNCTION, ARGS...)</code></p>
-
-<p>where the signature of the function is <code>fn(&amp;str, ARGS...) -&gt; IResult&lt;&amp;str, T&gt;</code></p></li>
-<li><p><strong>Output:</strong> <code>T</code>, the result of invoking the function <code>FUNCTION</code></p></li>
+<li>
+<p><strong>Syntax:</strong> <code>call!(FUNCTION, ARGS...)</code></p>
+<p>where the signature of the function is <code>fn(&amp;str, ARGS...) -&gt; IResult&lt;&amp;str, T&gt;</code></p>
+</li>
+<li>
+<p><strong>Output:</strong> <code>T</code>, the result of invoking the function <code>FUNCTION</code></p>
+</li>
 </ul>
 
 <pre class="rust rust-example-rendered">

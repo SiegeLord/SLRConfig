@@ -52,7 +52,6 @@
                </span><a class='srclink' href='../../src/syn/lib.rs.html#185-211' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This module contains a set of exported nom parsers which can be used to
 parse custom grammars when used alongside the <code>synom</code> crate.</p>
-
 <p>Internally, <code>syn</code> uses a fork of <code>nom</code> called <code>synom</code> which resolves a
 persistent pitfall of using <code>nom</code> to parse Rust by eliminating the
 <code>IResult::Incomplete</code> variant. The <code>synom</code> crate should be used instead
@@ -64,6 +63,7 @@ of <code>nom</code> when working with the parsers in this module.</p>
                                   title='enum syn::parse::IResult'>IResult</a></td>
                            <td class='docblock-short'>
                                 <p>The result of a parser.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>

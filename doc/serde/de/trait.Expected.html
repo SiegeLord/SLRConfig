@@ -54,14 +54,12 @@
     fn <a href='#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, formatter: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a>;
 }</pre><div class='docblock'><p><code>Expected</code> represents an explanation of what data a <code>Visitor</code> was expecting
 to receive.</p>
-
 <p>This is used as an argument to the <code>invalid_type</code>, <code>invalid_value</code>, and
 <code>invalid_length</code> methods of the <code>Error</code> trait to build error messages. The
 message should be a noun or noun phrase that completes the sentence &quot;This
 Visitor expects to receive ...&quot;, for example the message could be &quot;an
 integer between 0 and 64&quot;. The message should not be capitalized and should
 not end with a period.</p>
-
 <p>Within the context of a <code>Visitor</code> implementation, the <code>Visitor</code> itself
 (<code>&amp;self</code>) is an implementation of this trait.</p>
 
@@ -71,7 +69,6 @@ not end with a period.</p>
 {
     <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">Unexpected</span>::<span class="ident">Bool</span>(<span class="ident">v</span>), <span class="kw-2">&amp;</span><span class="self">self</span>))
 }</pre>
-
 <p>Outside of a <code>Visitor</code>, <code>&amp;&quot;...&quot;</code> can be used.</p>
 
 <pre class="rust rust-example-rendered">

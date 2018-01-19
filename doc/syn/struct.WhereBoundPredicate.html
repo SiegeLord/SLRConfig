@@ -55,8 +55,7 @@
     pub bounded_ty: <a class="enum" href="../syn/enum.Ty.html" title="enum syn::Ty">Ty</a>,
     pub bounds: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.TyParamBound.html" title="enum syn::TyParamBound">TyParamBound</a>&gt;,
 }</pre><div class='docblock'><p>A type bound.</p>
-
-<p>E.g. <code>for&lt;&#39;c&gt; Foo: Send+Clone+&#39;c</code></p>
+<p>E.g. <code>for&lt;'c&gt; Foo: Send+Clone+'c</code></p>
 </div><h2 id='fields' class='fields small-section-header'>
                        Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.bound_lifetimes" class="structfield small-section-header">
                            <a href="#structfield.bound_lifetimes" class="anchor field"></a>
@@ -72,7 +71,7 @@
                            <a href="#structfield.bounds" class="anchor field"></a>
                            <span id="bounds.v" class='invisible'>
                            <code>bounds: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.TyParamBound.html" title="enum syn::TyParamBound">TyParamBound</a>&gt;</code>
-                           </span></span><div class='docblock'><p>Trait and lifetime bounds (<code>Clone+Send+&#39;static</code>)</p>
+                           </span></span><div class='docblock'><p>Trait and lifetime bounds (<code>Clone+Send+'static</code>)</p>
 </div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>

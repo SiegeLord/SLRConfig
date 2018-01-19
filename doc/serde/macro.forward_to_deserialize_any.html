@@ -57,7 +57,6 @@
 }</pre>
 <div class='docblock'><p>Helper macro when implementing the <code>Deserializer</code> part of a new data format
 for Serde.</p>
-
 <p>Some <a href="trait.Deserializer.html"><code>Deserializer</code></a> implementations for self-describing formats do not
 care what hint the <a href="de/trait.Visitor.html"><code>Visitor</code></a> gives them, they just want to blindly call
 the <a href="de/trait.Visitor.html"><code>Visitor</code></a> method corresponding to the data they can tell is in the
@@ -71,7 +70,6 @@ trait methods.</p>
 {
     <span class="self">self</span>.<span class="ident">deserialize_any</span>(<span class="ident">visitor</span>)
 }</pre>
-
 <p>The <code>forward_to_deserialize_any!</code> macro implements these simple forwarding
 methods so that they forward directly to <a href="trait.Deserializer.html#tymethod.deserialize_any"><code>Deserializer::deserialize_any</code></a>.
 You can choose which methods to forward.</p>
@@ -90,9 +88,8 @@ You can choose which methods to forward.</p>
         <span class="ident">tuple_struct</span> <span class="ident">map</span> <span class="kw">struct</span> <span class="kw">enum</span> <span class="ident">identifier</span> <span class="ident">ignored_any</span>
     }
 }</pre>
-
 <p>The macro assumes the convention that your <code>Deserializer</code> lifetime parameter
-is called <code>&#39;de</code> and that the <code>Visitor</code> type parameters on each method are
+is called <code>'de</code> and that the <code>Visitor</code> type parameters on each method are
 called <code>V</code>. A different type parameter and a different lifetime can be
 specified explicitly if necessary.</p>
 

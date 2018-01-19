@@ -56,9 +56,7 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">cond</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Conditionally execute the given parser.</p>
-
-<p>If you are familiar with nom, this is nom&#39;s <code>cond_with_error</code> parser.</p>
-
+<p>If you are familiar with nom, this is nom's <code>cond_with_error</code> parser.</p>
 <ul>
 <li><strong>Syntax:</strong> <code>cond!(CONDITION, THING)</code></li>
 <li><strong>Output:</strong> <code>Some(THING)</code> if the condition is true, else <code>None</code></li>

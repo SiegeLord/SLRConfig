@@ -54,20 +54,16 @@
     fn <a href='#tymethod.deserialize' class='fnname'>deserialize</a>&lt;D&gt;(deserializer: D) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, D::<a class="type" href="../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D: <a class="trait" href="../serde/trait.Deserializer.html" title="trait serde::Deserializer">Deserializer</a>&lt;'de&gt;</span>;
 }</pre><div class='docblock'><p>A <strong>data structure</strong> that can be deserialized from any data format supported
 by Serde.</p>
-
 <p>Serde provides <code>Deserialize</code> implementations for many Rust primitive and
 standard library types. The complete list is <a href="https://docs.serde.rs/serde/de/index.html">here</a>. All of these can
 be deserialized using Serde out of the box.</p>
-
 <p>Additionally, Serde provides a procedural macro called <code>serde_derive</code> to
 automatically generate <code>Deserialize</code> implementations for structs and enums
 in your program. See the <a href="https://serde.rs/codegen.html">codegen section of the manual</a> for how to
 use this.</p>
-
 <p>In rare cases it may be necessary to implement <code>Deserialize</code> manually for
 some type in your program. See the <a href="https://serde.rs/impl-deserialize.html">Implementing
 <code>Deserialize</code></a> section of the manual for more about this.</p>
-
 <p>Third-party crates may provide <code>Deserialize</code> implementations for types that
 they expose. For example the <code>linked-hash-map</code> crate provides a
 <code>LinkedHashMap&lt;K, V&gt;</code> type that is deserializable by Serde because the crate
@@ -78,7 +74,6 @@ provides an implementation of <code>Deserialize</code> for it.</p>
             </h2>
             <div class='methods'>
         <h3 id='tymethod.deserialize' class='method'><span id='deserialize.v' class='invisible'><code>fn <a href='#tymethod.deserialize' class='fnname'>deserialize</a>&lt;D&gt;(deserializer: D) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, D::<a class="type" href="../serde/trait.Deserializer.html#associatedtype.Error" title="type serde::Deserializer::Error">Error</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;D: <a class="trait" href="../serde/trait.Deserializer.html" title="trait serde::Deserializer">Deserializer</a>&lt;'de&gt;,&nbsp;</span></code></span></h3><div class='docblock'><p>Deserialize this value from the given Serde deserializer.</p>
-
 <p>See the <a href="https://serde.rs/impl-deserialize.html">Implementing <code>Deserialize</code></a> section of the
 manual for more information about how to implement this method.</p>
 </div></div>

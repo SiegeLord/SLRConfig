@@ -56,30 +56,25 @@
 }</pre><div class='docblock'><p><code>DeserializeSeed</code> is the stateful form of the <code>Deserialize</code> trait. If you
 ever find yourself looking for a way to pass data into a <code>Deserialize</code> impl,
 this trait is the way to do it.</p>
-
 <p>As one example of stateful deserialization consider deserializing a JSON
 array into an existing buffer. Using the <code>Deserialize</code> trait we could
 deserialize a JSON array into a <code>Vec&lt;T&gt;</code> but it would be a freshly allocated
 <code>Vec&lt;T&gt;</code>; there is no way for <code>Deserialize</code> to reuse a previously allocated
 buffer. Using <code>DeserializeSeed</code> instead makes this possible as in the
 example code below.</p>
-
 <p>The canonical API for stateless deserialization looks like this:</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">fn</span> <span class="ident">func</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre>
-
 <p>Adjusting an API like this to support stateful deserialization is a matter
 of accepting a seed as input:</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">fn</span> <span class="ident">func_seed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="ident">seed</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Value</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre>
-
 <p>In practice the majority of deserialization is stateless. An API expecting a
 seed can be appeased by passing <code>std::marker::PhantomData</code> as a seed in the
 case of stateless deserialization.</p>
-
-<h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
+<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
 <p>Suppose we have JSON that looks like <code>[[1, 2], [3, 4, 5], [6]]</code> and we need
 to deserialize it into a flat representation like <code>vec![1, 2, 3, 4, 5, 6]</code>.
 Allocating a brand new <code>Vec&lt;T&gt;</code> for each subarray would be slow. Instead we

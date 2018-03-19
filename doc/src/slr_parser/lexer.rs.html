@@ -929,7 +929,7 @@
 <span class="kw">fn</span> <span class="ident">grow_str</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">String</span>, <span class="ident">count</span>: <span class="ident">usize</span>, <span class="ident">ch</span>: <span class="ident">char</span>)
 {
 	<span class="ident">string</span>.<span class="ident">reserve</span>(<span class="ident">count</span>);
-	<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span>
+	<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span>
 	{
 		<span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">ch</span>);
 	}
@@ -1006,9 +1006,9 @@
 	{
 		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span>
 		{
-			<span class="ident">TokenKind</span>::<span class="ident">EscapedString</span>(_) <span class="op">|</span>
-			<span class="ident">TokenKind</span>::<span class="ident">RawString</span>(_) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-			_ <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+			<span class="ident">TokenKind</span>::<span class="ident">EscapedString</span>(<span class="kw">_</span>) <span class="op">|</span>
+			<span class="ident">TokenKind</span>::<span class="ident">RawString</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+			<span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
 		}
 	}
 }
@@ -1156,7 +1156,7 @@
 			<span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> <span class="ident">n</span>,
 			<span class="prelude-val">Err</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> <span class="ident">n</span>,
 		};
-		<span class="kw">let</span> (<span class="ident">start</span>, _) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_line_start_end</span>(<span class="ident">line</span>);
+		<span class="kw">let</span> (<span class="ident">start</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_line_start_end</span>(<span class="ident">line</span>);
 		<span class="kw">if</span> <span class="ident">pos</span> <span class="op">&lt;</span> <span class="ident">start</span>
 		{
 			<span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Position less than line start (somehow got a position inside a newline!)&quot;</span>)
@@ -1527,7 +1527,7 @@
 							<span class="self">self</span>.<span class="ident">source</span>.<span class="ident">bump</span>();
 							<span class="kw">break</span>;
 						}
-						_ <span class="op">=&gt;</span>
+						<span class="kw">_</span> <span class="op">=&gt;</span>
 						{
 							<span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">lex_error</span>(<span class="self">self</span>.<span class="ident">source</span>.<span class="ident">span_start</span>,
 							                      <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">source</span>,
@@ -1612,7 +1612,7 @@
 				<span class="string">&#39;$&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">TokenKind</span>::<span class="ident">Dollar</span>),
 				<span class="string">&#39;,&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">TokenKind</span>::<span class="ident">Comma</span>),
 				<span class="string">&#39;~&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">TokenKind</span>::<span class="ident">Tilde</span>),
-				_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+				<span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
 			})
 			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">kind</span><span class="op">|</span> {
 					<span class="self">self</span>.<span class="ident">source</span>.<span class="ident">start_span</span>();

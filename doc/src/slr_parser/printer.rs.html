@@ -319,7 +319,7 @@
 
 	<span class="kw">fn</span> <span class="ident">write_indent</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>
 	{
-		<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">depth</span>
+		<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">depth</span>
 		{
 			<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;\t&quot;</span>));
 		}
@@ -378,12 +378,12 @@
 			<span class="ident">StringQuoteType</span>::<span class="ident">Naked</span> <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>)),
 			<span class="ident">StringQuoteType</span>::<span class="ident">Quoted</span>(<span class="ident">num_braces</span>) <span class="op">=&gt;</span>
 			{
-				<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">num_braces</span>
+				<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">num_braces</span>
 				{
 					<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{{&quot;</span>));
 				}
 				<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">r#&quot;&quot;{}&quot;&quot;#</span>, <span class="ident">s</span>));
-				<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">num_braces</span>
+				<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">num_braces</span>
 				{
 					<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;}}&quot;</span>));
 				}
@@ -402,7 +402,7 @@
 				<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_string</span>(<span class="ident">name</span>));
 				<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot; = &quot;</span>));
 			}
-			_ <span class="op">=&gt;</span> (),
+			<span class="kw">_</span> <span class="op">=&gt;</span> (),
 		}
 		<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_string</span>(<span class="ident">value</span>));
 		<span class="self">self</span>.<span class="ident">set_empty</span>(<span class="bool-val">false</span>);
@@ -428,7 +428,7 @@
 					<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_indent</span>());
 				}
 			}
-			_ <span class="op">=&gt;</span> (),
+			<span class="kw">_</span> <span class="op">=&gt;</span> (),
 		}
 		<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;[&quot;</span>));
 		<span class="self">self</span>.<span class="ident">set_empty</span>(<span class="bool-val">false</span>);
@@ -480,7 +480,7 @@
 					<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_indent</span>());
 				}
 			}
-			_ <span class="op">=&gt;</span> (),
+			<span class="kw">_</span> <span class="op">=&gt;</span> (),
 		}
 		<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{{&quot;</span>));
 

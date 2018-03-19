@@ -303,72 +303,72 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
     <span class="macro">named</span><span class="macro">!</span>(<span class="kw">pub</span> <span class="ident">binop</span> <span class="op">-&gt;</span> <span class="ident">BinOp</span>, <span class="macro">alt</span><span class="macro">!</span>(
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;&amp;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">And</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;&amp;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">And</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;||&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Or</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;||&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Or</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&lt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shl</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&lt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shl</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&gt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shr</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&gt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shr</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;==&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Eq</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;==&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Eq</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Le</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Le</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;!=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Ne</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;!=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Ne</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Ge</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Ge</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;+&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Add</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;+&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Add</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Sub</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Sub</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Mul</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Mul</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;/&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Div</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;/&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Div</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;%&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Rem</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;%&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Rem</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;^&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitXor</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;^&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitXor</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitAnd</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitAnd</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;|&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitOr</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;|&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitOr</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Lt</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Lt</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Gt</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Gt</span> }
     ));
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;full&quot;</span>)]</span>
     <span class="macro">named</span><span class="macro">!</span>(<span class="kw">pub</span> <span class="ident">assign_op</span> <span class="op">-&gt;</span> <span class="ident">BinOp</span>, <span class="macro">alt</span><span class="macro">!</span>(
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;+=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Add</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;+=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Add</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Sub</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Sub</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Mul</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Mul</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;/=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Div</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;/=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Div</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;%=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Rem</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;%=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Rem</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;^=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitXor</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;^=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitXor</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitAnd</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&amp;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitAnd</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;|=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitOr</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;|=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">BitOr</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&lt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shl</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&lt;&lt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shl</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&gt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shr</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;&gt;&gt;=&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BinOp</span>::<span class="ident">Shr</span> }
     ));
 
     <span class="macro">named</span><span class="macro">!</span>(<span class="kw">pub</span> <span class="ident">unop</span> <span class="op">-&gt;</span> <span class="ident">UnOp</span>, <span class="macro">alt</span><span class="macro">!</span>(
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Deref</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;*&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Deref</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;!&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Not</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;!&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Not</span> }
         <span class="op">|</span>
-        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Neg</span> }
+        <span class="macro">punct</span><span class="macro">!</span>(<span class="string">&quot;-&quot;</span>) <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">UnOp</span>::<span class="ident">Neg</span> }
     ));
 }
 
@@ -413,7 +413,7 @@
                 <span class="ident">BinOp</span>::<span class="ident">BitOr</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;|=&quot;</span>),
                 <span class="ident">BinOp</span>::<span class="ident">Shl</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;&lt;&lt;=&quot;</span>),
                 <span class="ident">BinOp</span>::<span class="ident">Shr</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;&gt;&gt;=&quot;</span>),
-                _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
             }
         }
     }

@@ -1491,10 +1491,10 @@
                     <span class="comment">// Parse `#[serde(default)]`</span>
                     <span class="ident">MetaItem</span>(<span class="ident">Word</span>(<span class="kw-2">ref</span> <span class="ident">name</span>)) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;default&quot;</span> <span class="op">=&gt;</span> {
                         <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">body</span> {
-                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(_)) <span class="op">=&gt;</span> {
+                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
                                 <span class="ident">default</span>.<span class="ident">set</span>(<span class="ident">Default</span>::<span class="ident">Default</span>);
                             }
-                            _ <span class="op">=&gt;</span> {
+                            <span class="kw">_</span> <span class="op">=&gt;</span> {
                                 <span class="ident">cx</span>.<span class="ident">error</span>(
                                     <span class="string">&quot;#[serde(default)] can only be used on structs \
                                           with named fields&quot;</span>,
@@ -1507,10 +1507,10 @@
                     <span class="ident">MetaItem</span>(<span class="ident">NameValue</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">lit</span>)) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;default&quot;</span> <span class="op">=&gt;</span> {
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">parse_lit_into_path</span>(<span class="ident">cx</span>, <span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">lit</span>) {
                             <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">body</span> {
-                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(_)) <span class="op">=&gt;</span> {
+                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
                                     <span class="ident">default</span>.<span class="ident">set</span>(<span class="ident">Default</span>::<span class="ident">Path</span>(<span class="ident">path</span>));
                                 }
-                                _ <span class="op">=&gt;</span> {
+                                <span class="kw">_</span> <span class="op">=&gt;</span> {
                                     <span class="ident">cx</span>.<span class="ident">error</span>(
                                         <span class="string">&quot;#[serde(default = \&quot;...\&quot;)] can only be used \
                                               on structs with named fields&quot;</span>,
@@ -1540,10 +1540,10 @@
                     <span class="comment">// Parse `#[serde(untagged)]`</span>
                     <span class="ident">MetaItem</span>(<span class="ident">Word</span>(<span class="kw-2">ref</span> <span class="ident">name</span>)) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;untagged&quot;</span> <span class="op">=&gt;</span> {
                         <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">body</span> {
-                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(_) <span class="op">=&gt;</span> {
+                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                 <span class="ident">untagged</span>.<span class="ident">set_true</span>();
                             }
-                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(_) <span class="op">=&gt;</span> {
+                            <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                 <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;#[serde(untagged)] can only be used on enums&quot;</span>)
                             }
                         }
@@ -1553,10 +1553,10 @@
                     <span class="ident">MetaItem</span>(<span class="ident">NameValue</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">lit</span>)) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;tag&quot;</span> <span class="op">=&gt;</span> {
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">get_string_from_lit</span>(<span class="ident">cx</span>, <span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">lit</span>) {
                             <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">body</span> {
-                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(_) <span class="op">=&gt;</span> {
+                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                     <span class="ident">internal_tag</span>.<span class="ident">set</span>(<span class="ident">s</span>);
                                 }
-                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(_) <span class="op">=&gt;</span> {
+                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                     <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;#[serde(tag = \&quot;...\&quot;)] can only be used on enums&quot;</span>)
                                 }
                             }
@@ -1567,10 +1567,10 @@
                     <span class="ident">MetaItem</span>(<span class="ident">NameValue</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">lit</span>)) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;content&quot;</span> <span class="op">=&gt;</span> {
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">get_string_from_lit</span>(<span class="ident">cx</span>, <span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">lit</span>) {
                             <span class="kw">match</span> <span class="ident">item</span>.<span class="ident">body</span> {
-                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(_) <span class="op">=&gt;</span> {
+                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                     <span class="ident">content</span>.<span class="ident">set</span>(<span class="ident">s</span>);
                                 }
-                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(_) <span class="op">=&gt;</span> {
+                                <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                                     <span class="ident">cx</span>.<span class="ident">error</span>(
                                         <span class="string">&quot;#[serde(content = \&quot;...\&quot;)] can only be used on \
                                               enums&quot;</span>,
@@ -1616,7 +1616,7 @@
                                          <span class="ident">meta_item</span>.<span class="ident">name</span>()));
                     }
 
-                    <span class="ident">Literal</span>(_) <span class="op">=&gt;</span> {
+                    <span class="ident">Literal</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                         <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;unexpected literal in serde container attribute&quot;</span>);
                     }
                 }
@@ -1701,7 +1701,7 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw-2">ref</span> <span class="ident">variants</span>) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">body</span> {
                 <span class="kw">for</span> <span class="ident">variant</span> <span class="kw">in</span> <span class="ident">variants</span> {
                     <span class="kw">match</span> <span class="ident">variant</span>.<span class="ident">data</span> {
-                        <span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(_) <span class="op">|</span>
+                        <span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Struct</span>(<span class="kw">_</span>) <span class="op">|</span>
                         <span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> {}
                         <span class="ident">syn</span>::<span class="ident">VariantData</span>::<span class="ident">Tuple</span>(<span class="kw-2">ref</span> <span class="ident">fields</span>) <span class="op">=&gt;</span> {
                             <span class="kw">if</span> <span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">1</span> {
@@ -1717,15 +1717,15 @@
             }
             <span class="ident">EnumTag</span>::<span class="ident">Internal</span> { <span class="ident">tag</span>: <span class="ident">tag</span> }
         }
-        (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(_), <span class="prelude-val">None</span>) <span class="op">=&gt;</span> {
+        (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">None</span>) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;enum cannot be both untagged and internally tagged&quot;</span>);
             <span class="ident">EnumTag</span>::<span class="ident">External</span> <span class="comment">// doesn&#39;t matter, will error</span>
         }
-        (<span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(_)) <span class="op">=&gt;</span> {
+        (<span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;#[serde(tag = \&quot;...\&quot;, content = \&quot;...\&quot;)] must be used together&quot;</span>,);
             <span class="ident">EnumTag</span>::<span class="ident">External</span>
         }
-        (<span class="bool-val">true</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(_)) <span class="op">=&gt;</span> {
+        (<span class="bool-val">true</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;untagged enum cannot have #[serde(content = \&quot;...\&quot;)]&quot;</span>);
             <span class="ident">EnumTag</span>::<span class="ident">External</span>
         }
@@ -1735,7 +1735,7 @@
                 <span class="ident">content</span>: <span class="ident">content</span>,
             }
         }
-        (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(_), <span class="prelude-val">Some</span>(_)) <span class="op">=&gt;</span> {
+        (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;untagged enum cannot have #[serde(tag = \&quot;...\&quot;, content = \&quot;...\&quot;)]&quot;</span>,);
             <span class="ident">EnumTag</span>::<span class="ident">External</span>
         }
@@ -1749,21 +1749,21 @@
     <span class="ident">variant_identifier</span>: <span class="ident">BoolAttr</span>,
 ) <span class="op">-&gt;</span> <span class="ident">Identifier</span> {
     <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="ident">body</span>, <span class="ident">field_identifier</span>.<span class="ident">get</span>(), <span class="ident">variant_identifier</span>.<span class="ident">get</span>()) {
-        (_, <span class="bool-val">false</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">No</span>,
-        (_, <span class="bool-val">true</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> {
+        (<span class="kw">_</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">No</span>,
+        (<span class="kw">_</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;`field_identifier` and `variant_identifier` cannot both be set&quot;</span>,);
             <span class="ident">Identifier</span>::<span class="ident">No</span>
         }
-        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(_), <span class="bool-val">true</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> {
+        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="kw">_</span>), <span class="bool-val">true</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;`field_identifier` can only be used on an enum&quot;</span>);
             <span class="ident">Identifier</span>::<span class="ident">No</span>
         }
-        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(_), <span class="bool-val">false</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> {
+        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Struct</span>(<span class="kw">_</span>), <span class="bool-val">false</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;`variant_identifier` can only be used on an enum&quot;</span>);
             <span class="ident">Identifier</span>::<span class="ident">No</span>
         }
-        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(_), <span class="bool-val">true</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">Field</span>,
-        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(_), <span class="bool-val">false</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">Variant</span>,
+        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw">_</span>), <span class="bool-val">true</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">Field</span>,
+        (<span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Body</span>::<span class="ident">Enum</span>(<span class="kw">_</span>), <span class="bool-val">false</span>, <span class="bool-val">true</span>) <span class="op">=&gt;</span> <span class="ident">Identifier</span>::<span class="ident">Variant</span>,
     }
 }
 
@@ -1840,7 +1840,7 @@
                         <span class="ident">cx</span>.<span class="ident">error</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unknown serde variant attribute `{}`&quot;</span>, <span class="ident">meta_item</span>.<span class="ident">name</span>()));
                     }
 
-                    <span class="ident">Literal</span>(_) <span class="op">=&gt;</span> {
+                    <span class="ident">Literal</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                         <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;unexpected literal in serde variant attribute&quot;</span>);
                     }
                 }
@@ -2074,7 +2074,7 @@
                         <span class="ident">cx</span>.<span class="ident">error</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unknown serde field attribute `{}`&quot;</span>, <span class="ident">meta_item</span>.<span class="ident">name</span>()),);
                     }
 
-                    <span class="ident">Literal</span>(_) <span class="op">=&gt;</span> {
+                    <span class="ident">Literal</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
                         <span class="ident">cx</span>.<span class="ident">error</span>(<span class="string">&quot;unexpected literal in serde field attribute&quot;</span>);
                     }
                 }
@@ -2217,7 +2217,7 @@
                 }
             }
 
-            _ <span class="op">=&gt;</span> {
+            <span class="kw">_</span> <span class="op">=&gt;</span> {
                 <span class="ident">cx</span>.<span class="ident">error</span>(
                     <span class="macro">format</span><span class="macro">!</span>(
                         <span class="string">&quot;malformed {0} attribute, expected `{0}(serialize = ..., \
@@ -2247,7 +2247,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_serde_meta_items</span>(<span class="ident">attr</span>: <span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Attribute</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">syn</span>::<span class="ident">NestedMetaItem</span><span class="op">&gt;&gt;</span> {
     <span class="kw">match</span> <span class="ident">attr</span>.<span class="ident">value</span> {
         <span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">items</span>) <span class="kw">if</span> <span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;serde&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">items</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>()),
-        _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
     }
 }
 
@@ -2257,7 +2257,7 @@
     <span class="ident">meta_item_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">lit</span>: <span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Lit</span>,
 ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, ()<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn</span>::<span class="ident">Lit</span>::<span class="ident">Str</span>(<span class="kw-2">ref</span> <span class="ident">s</span>, _) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">lit</span> {
+    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">syn</span>::<span class="ident">Lit</span>::<span class="ident">Str</span>(<span class="kw-2">ref</span> <span class="ident">s</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">lit</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">s</span>.<span class="ident">clone</span>())
     } <span class="kw">else</span> {
         <span class="ident">cx</span>.<span class="ident">error</span>(
@@ -2298,7 +2298,7 @@
     <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">get_string_from_lit</span>(<span class="ident">cx</span>, <span class="ident">attr_name</span>, <span class="ident">attr_name</span>, <span class="ident">lit</span>));
 
     <span class="ident">syn</span>::<span class="ident">parse_type</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>).<span class="ident">map_err</span>(
-        <span class="op">|</span>_<span class="op">|</span> {
+        <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="ident">cx</span>.<span class="ident">error</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;failed to parse type: {} = {:?}&quot;</span>, <span class="ident">attr_name</span>, <span class="ident">string</span>),)
         },
     )
@@ -2360,7 +2360,7 @@
 <span class="kw">fn</span> <span class="ident">is_cow</span>(<span class="ident">ty</span>: <span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Ty</span>, <span class="ident">elem</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">ty</span> {
         <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Path</span>(<span class="prelude-val">None</span>, <span class="kw-2">ref</span> <span class="ident">path</span>) <span class="op">=&gt;</span> <span class="ident">path</span>,
-        _ <span class="op">=&gt;</span> {
+        <span class="kw">_</span> <span class="op">=&gt;</span> {
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
     };
@@ -2372,7 +2372,7 @@
     };
     <span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">seg</span>.<span class="ident">parameters</span> {
         <span class="ident">syn</span>::<span class="ident">PathParameters</span>::<span class="ident">AngleBracketed</span>(<span class="kw-2">ref</span> <span class="ident">params</span>) <span class="op">=&gt;</span> <span class="ident">params</span>,
-        _ <span class="op">=&gt;</span> {
+        <span class="kw">_</span> <span class="op">=&gt;</span> {
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
     };
@@ -2402,11 +2402,11 @@
 <span class="comment">//     }</span>
 <span class="kw">fn</span> <span class="ident">is_rptr</span>(<span class="ident">ty</span>: <span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Ty</span>, <span class="ident">elem</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">ty</span> {
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Rptr</span>(<span class="prelude-val">Some</span>(_), <span class="kw-2">ref</span> <span class="ident">mut_ty</span>) <span class="op">=&gt;</span> {
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Rptr</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="kw-2">ref</span> <span class="ident">mut_ty</span>) <span class="op">=&gt;</span> {
             <span class="ident">mut_ty</span>.<span class="ident">mutability</span> <span class="op">==</span> <span class="ident">syn</span>::<span class="ident">Mutability</span>::<span class="ident">Immutable</span> <span class="op">&amp;&amp;</span>
             <span class="ident">mut_ty</span>.<span class="ident">ty</span> <span class="op">==</span> <span class="ident">syn</span>::<span class="ident">parse_type</span>(<span class="ident">elem</span>).<span class="ident">unwrap</span>()
         }
-        _ <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
     }
 }
 
@@ -2434,7 +2434,7 @@
 <span class="kw">fn</span> <span class="ident">collect_lifetimes</span>(<span class="ident">ty</span>: <span class="kw-2">&amp;</span><span class="ident">syn</span>::<span class="ident">Ty</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="ident">syn</span>::<span class="ident">Lifetime</span><span class="op">&gt;</span>) {
     <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">ty</span> {
         <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Slice</span>(<span class="kw-2">ref</span> <span class="ident">elem</span>) <span class="op">|</span>
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">elem</span>, _) <span class="op">|</span>
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Array</span>(<span class="kw-2">ref</span> <span class="ident">elem</span>, <span class="kw">_</span>) <span class="op">|</span>
         <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Paren</span>(<span class="kw-2">ref</span> <span class="ident">elem</span>) <span class="op">=&gt;</span> {
             <span class="ident">collect_lifetimes</span>(<span class="ident">elem</span>, <span class="ident">out</span>);
         }
@@ -2466,12 +2466,12 @@
                 }
             }
         }
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">BareFn</span>(_) <span class="op">|</span>
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">BareFn</span>(<span class="kw">_</span>) <span class="op">|</span>
         <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Never</span> <span class="op">|</span>
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">TraitObject</span>(_) <span class="op">|</span>
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">ImplTrait</span>(_) <span class="op">|</span>
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">TraitObject</span>(<span class="kw">_</span>) <span class="op">|</span>
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">ImplTrait</span>(<span class="kw">_</span>) <span class="op">|</span>
         <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Infer</span> <span class="op">|</span>
-        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Mac</span>(_) <span class="op">=&gt;</span> {}
+        <span class="ident">syn</span>::<span class="ident">Ty</span>::<span class="ident">Mac</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {}
     }
 }
 </pre>

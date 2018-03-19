@@ -521,7 +521,7 @@
 	<span class="kw">match</span> <span class="ident">u32</span>::<span class="ident">from_str_radix</span>(<span class="ident">s</span>, <span class="number">16</span>)
 	{
 		<span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">n</span>).<span class="ident">unwrap_or</span>(<span class="string">&#39;�&#39;</span>),
-		<span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="string">&#39;�&#39;</span>,
+		<span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="string">&#39;�&#39;</span>,
 	}
 }
 
@@ -541,7 +541,7 @@
 		{
 			<span class="ident">TokenKind</span>::<span class="ident">EscapedString</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">StringKind</span>::<span class="ident">EscapedString</span>(<span class="ident">s</span>),
 			<span class="ident">TokenKind</span>::<span class="ident">RawString</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">StringKind</span>::<span class="ident">RawString</span>(<span class="ident">s</span>),
-			_ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Invalid token passed to visitor! {:?}&quot;</span>, <span class="ident">tok</span>.<span class="ident">kind</span>),
+			<span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Invalid token passed to visitor! {:?}&quot;</span>, <span class="ident">tok</span>.<span class="ident">kind</span>),
 		};
 
 		<span class="ident">ConfigString</span> { <span class="ident">kind</span>: <span class="ident">kind</span>, <span class="ident">span</span>: <span class="ident">tok</span>.<span class="ident">span</span> }
@@ -590,7 +590,7 @@
 								<span class="string">&#39;t&#39;</span> <span class="op">=&gt;</span> <span class="string">&#39;\t&#39;</span>,
 								<span class="string">&#39;0&#39;</span> <span class="op">=&gt;</span> <span class="string">&#39;\0&#39;</span>,
 								<span class="string">&#39;\\&#39;</span> <span class="op">=&gt;</span> <span class="string">&#39;\\&#39;</span>,
-								_ <span class="op">=&gt;</span> <span class="string">&#39;�&#39;</span>,
+								<span class="kw">_</span> <span class="op">=&gt;</span> <span class="string">&#39;�&#39;</span>,
 							};
 						}
 						<span class="ident">escape_chars</span> <span class="op">-=</span> <span class="number">1</span>;

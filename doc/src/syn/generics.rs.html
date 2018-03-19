@@ -777,7 +777,7 @@
                 (<span class="ident">lifetimes</span>, <span class="ident">ty_params</span>)
             )
             <span class="op">|</span>
-            <span class="macro">epsilon</span><span class="macro">!</span>() <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> (<span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Vec</span>::<span class="ident">new</span>()) }
+            <span class="macro">epsilon</span><span class="macro">!</span>() <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="ident">Vec</span>::<span class="ident">new</span>(), <span class="ident">Vec</span>::<span class="ident">new</span>()) }
         ),
         <span class="op">|</span>(<span class="ident">lifetimes</span>, <span class="ident">ty_params</span>)<span class="op">|</span> <span class="ident">Generics</span> {
             <span class="ident">lifetimes</span>: <span class="ident">lifetimes</span>,
@@ -793,7 +793,7 @@
                 <span class="ident">ident</span>: <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;&#39;{}&quot;</span>, <span class="ident">id</span>).<span class="ident">into</span>(),
             })
             <span class="op">|</span>
-            <span class="macro">map</span><span class="macro">!</span>(<span class="macro">keyword</span><span class="macro">!</span>(<span class="string">&quot;static&quot;</span>), <span class="op">|</span>_<span class="op">|</span> <span class="ident">Lifetime</span> {
+            <span class="macro">map</span><span class="macro">!</span>(<span class="macro">keyword</span><span class="macro">!</span>(<span class="string">&quot;static&quot;</span>), <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Lifetime</span> {
                 <span class="ident">ident</span>: <span class="string">&quot;&#39;static&quot;</span>.<span class="ident">into</span>(),
             })
         )
@@ -860,7 +860,7 @@
             (<span class="ident">WhereClause</span> { <span class="ident">predicates</span>: <span class="ident">predicates</span> })
         )
         <span class="op">|</span>
-        <span class="macro">epsilon</span><span class="macro">!</span>() <span class="op">=&gt;</span> { <span class="op">|</span>_<span class="op">|</span> <span class="ident">Default</span>::<span class="ident">default</span>() }
+        <span class="macro">epsilon</span><span class="macro">!</span>() <span class="op">=&gt;</span> { <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Default</span>::<span class="ident">default</span>() }
     ));
 
     <span class="macro">named</span><span class="macro">!</span>(<span class="ident">where_predicate</span> <span class="op">-&gt;</span> <span class="ident">WherePredicate</span>, <span class="macro">alt</span><span class="macro">!</span>(

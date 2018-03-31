@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,13 +55,11 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>syn</a>::<wbr><a class="enum" href=''>ConstExpr</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>syn</a>::<wbr><a class="enum" href=''>ConstExpr</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/syn/constant.rs.html#4-36' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum ConstExpr {
+               </span><a class='srclink' href='../src/syn/constant.rs.html#4-36' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum ConstExpr {
     Call(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;),
     Binary(<a class="enum" href="../syn/enum.BinOp.html" title="enum syn::BinOp">BinOp</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;),
     Unary(<a class="enum" href="../syn/enum.UnOp.html" title="enum syn::UnOp">UnOp</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;),
@@ -71,7 +69,7 @@
     Index(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;),
     Paren(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;),
     Other(Other),
-}</pre><h2 id='variants' class='variants small-section-header'>
+}</pre></div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
 <span id="variant.Call" class="variant small-section-header"><a href="#variant.Call" class="anchor field"></a><span id='Call.v' class='invisible'><code>Call(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.ConstExpr.html" title="enum syn::ConstExpr">ConstExpr</a>&gt;)</code></span></span><div class='docblock'><p>A function call</p>
 <p>The first field resolves to the function itself,

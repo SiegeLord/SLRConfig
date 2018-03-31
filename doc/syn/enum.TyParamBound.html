@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,16 +55,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>syn</a>::<wbr><a class="enum" href=''>TyParamBound</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>syn</a>::<wbr><a class="enum" href=''>TyParamBound</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/syn/generics.rs.html#121-124' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum TyParamBound {
+               </span><a class='srclink' href='../src/syn/generics.rs.html#121-124' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum TyParamBound {
     Trait(<a class="struct" href="../syn/struct.PolyTraitRef.html" title="struct syn::PolyTraitRef">PolyTraitRef</a>,&nbsp;<a class="enum" href="../syn/enum.TraitBoundModifier.html" title="enum syn::TraitBoundModifier">TraitBoundModifier</a>),
     Region(<a class="struct" href="../syn/struct.Lifetime.html" title="struct syn::Lifetime">Lifetime</a>),
-}</pre><div class='docblock'><p>The AST represents all type param bounds as types.
+}</pre></div><div class='docblock'><p>The AST represents all type param bounds as types.
 <code>typeck::collect::compute_bounds</code> matches these against
 the &quot;special&quot; built-in traits (see <code>middle::lang_items</code>) and
 detects Copy, Send and Sync.</p>

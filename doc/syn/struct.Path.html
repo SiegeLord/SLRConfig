@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,16 +55,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>syn</a>::<wbr><a class="struct" href=''>Path</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>syn</a>::<wbr><a class="struct" href=''>Path</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/syn/ty.rs.html#59-65' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Path {
+               </span><a class='srclink' href='../src/syn/ty.rs.html#59-65' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct Path {
     pub global: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     pub segments: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../syn/struct.PathSegment.html" title="struct syn::PathSegment">PathSegment</a>&gt;,
-}</pre><div class='docblock'><p>A &quot;Path&quot; is essentially Rust's notion of a name.</p>
+}</pre></div><div class='docblock'><p>A &quot;Path&quot; is essentially Rust's notion of a name.</p>
 <p>It's represented as a sequence of identifiers,
 along with a bunch of supporting information.</p>
 <p>E.g. <code>std::cmp::PartialEq</code></p>

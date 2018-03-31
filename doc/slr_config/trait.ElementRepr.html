@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,16 +55,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>slr_config</a>::<wbr><a class="trait" href=''>ElementRepr</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>slr_config</a>::<wbr><a class="trait" href=''>ElementRepr</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/slr_config/element_repr.rs.html#9-15' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait ElementRepr {
+               </span><a class='srclink' href='../src/slr_config/element_repr.rs.html#9-15' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust trait'>pub trait ElementRepr {
     fn <a href='#tymethod.from_element' class='fnname'>from_element</a>&lt;'l&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;elem: &amp;<a class="struct" href="../slr_config/struct.ConfigElement.html" title="struct slr_config::ConfigElement">ConfigElement</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;src: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../slr_config/struct.Source.html" title="struct slr_config::Source">Source</a>&lt;'l&gt;&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../slr_config/struct.Error.html" title="struct slr_config::Error">Error</a>&gt;&gt;;
 <div class='item-spacer'></div>    fn <a href='#tymethod.to_element' class='fnname'>to_element</a>(&amp;self) -&gt; <a class="struct" href="../slr_config/struct.ConfigElement.html" title="struct slr_config::ConfigElement">ConfigElement</a>;
-}</pre><div class='docblock'><p>Describes a way to convert a type to a ConfigElement and back.</p>
+}</pre></div><div class='docblock'><p>Describes a way to convert a type to a ConfigElement and back.</p>
 </div>
             <h2 id='required-methods' class='small-section-header'>
               Required Methods<a href='#required-methods' class='anchor'></a>

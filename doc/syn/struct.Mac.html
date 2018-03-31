@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,16 +55,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>syn</a>::<wbr><a class="struct" href=''>Mac</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>syn</a>::<wbr><a class="struct" href=''>Mac</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/syn/mac.rs.html#10-13' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Mac {
+               </span><a class='srclink' href='../src/syn/mac.rs.html#10-13' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct Mac {
     pub path: <a class="struct" href="../syn/struct.Path.html" title="struct syn::Path">Path</a>,
     pub tts: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../syn/enum.TokenTree.html" title="enum syn::TokenTree">TokenTree</a>&gt;,
-}</pre><div class='docblock'><p>Represents a macro invocation. The Path indicates which macro
+}</pre></div><div class='docblock'><p>Represents a macro invocation. The Path indicates which macro
 is being invoked, and the vector of token-trees contains the source
 of the macro invocation.</p>
 <p>NB: the additional ident for a <code>macro_rules</code>-style macro is actually

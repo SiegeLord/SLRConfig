@@ -14,7 +14,7 @@
           id="mainThemeStyle">
     
     <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
     <script src="../storage.js"></script>
     
 
@@ -55,17 +55,15 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>slr_config</a>::<wbr><a class="enum" href=''>ConfigElementKind</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>slr_config</a>::<wbr><a class="enum" href=''>ConfigElementKind</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/slr_config/config_element.rs.html#27-35' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum ConfigElementKind {
+               </span><a class='srclink' href='../src/slr_config/config_element.rs.html#27-35' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum ConfigElementKind {
     Value(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
     Table(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/btree/map/struct.BTreeMap.html" title="struct alloc::btree::map::BTreeMap">BTreeMap</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="../slr_config/struct.ConfigElement.html" title="struct slr_config::ConfigElement">ConfigElement</a>&gt;),
     Array(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../slr_config/struct.ConfigElement.html" title="struct slr_config::ConfigElement">ConfigElement</a>&gt;),
-}</pre><div class='docblock'><p>The kind of the configuration element.</p>
+}</pre></div><div class='docblock'><p>The kind of the configuration element.</p>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
 <span id="variant.Value" class="variant small-section-header"><a href="#variant.Value" class="anchor field"></a><span id='Value.v' class='invisible'><code>Value(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>A simple value, containing a string.</p>

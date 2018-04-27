@@ -1,0 +1,11 @@
+var ALIASES = {};
+ALIASES['delete_me'] = {};
+ALIASES['quote'] = {};
+ALIASES['serde'] = {};
+ALIASES['serde_derive'] = {};
+ALIASES['serde_derive_internals'] = {};
+ALIASES['slr_config'] = {};
+ALIASES['slr_parser'] = {};
+ALIASES['syn'] = {};
+ALIASES['synom'] = {};
+ALIASES['unicode_xid'] = {};

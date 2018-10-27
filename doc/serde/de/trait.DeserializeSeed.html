@@ -12,13 +12,13 @@ buffer. Using <code>DeserializeSeed</code> instead makes this possible as in the
 example code below.</p>
 <p>The canonical API for stateless deserialization looks like this:</p>
 
-<pre class="rust rust-example-rendered">
-<span class="kw">fn</span> <span class="ident">func</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre>
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">fn</span> <span class="ident">func</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre></div>
 <p>Adjusting an API like this to support stateful deserialization is a matter
 of accepting a seed as input:</p>
 
-<pre class="rust rust-example-rendered">
-<span class="kw">fn</span> <span class="ident">func_seed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="ident">seed</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Value</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre>
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">fn</span> <span class="ident">func_seed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="ident">seed</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Value</span>, <span class="ident">Error</span><span class="op">&gt;</span></pre></div>
 <p>In practice the majority of deserialization is stateless. An API expecting a
 seed can be appeased by passing <code>std::marker::PhantomData</code> as a seed in the
 case of stateless deserialization.</p>
@@ -30,7 +30,7 @@ would like to allocate a single <code>Vec&lt;T&gt;</code> and then deserialize e
 into it. This requires stateful deserialization using the <code>DeserializeSeed</code>
 trait.</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 
@@ -114,7 +114,7 @@ trait.</p>
 }
 
 <span class="kw">let</span> <span class="ident">visitor</span> <span class="op">=</span> <span class="ident">FlattenedVecVisitor</span>(<span class="ident">PhantomData</span>);
-<span class="kw">let</span> <span class="ident">flattened</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize_seq</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;</pre>
+<span class="kw">let</span> <span class="ident">flattened</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize_seq</span>(<span class="ident">visitor</span>)<span class="question-mark">?</span>;</pre></div>
 </div>
             <h2 id='associated-types' class='small-section-header'>
               Associated Types<a href='#associated-types' class='anchor'></a>

@@ -5,7 +5,7 @@
 <div class='item-spacer'></div>    fn <a href='#tymethod.end' class='fnname'>end</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self::<a class="type" href="../../serde/ser/trait.SerializeTuple.html#associatedtype.Ok" title="type serde::ser::SerializeTuple::Ok">Ok</a>, Self::<a class="type" href="../../serde/ser/trait.SerializeTuple.html#associatedtype.Error" title="type serde::ser::SerializeTuple::Error">Error</a>&gt;;
 }</pre></div><div class='docblock'><p>Returned from <code>Serializer::serialize_tuple</code>.</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>::{<span class="ident">Serialize</span>, <span class="ident">Serializer</span>, <span class="ident">SerializeTuple</span>};
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">Serialize</span> <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>)
@@ -22,9 +22,9 @@
         <span class="ident">tup</span>.<span class="ident">serialize_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">2</span>)<span class="question-mark">?</span>;
         <span class="ident">tup</span>.<span class="ident">end</span>()
     }
-}</pre>
+}</pre></div>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>::{<span class="ident">Serialize</span>, <span class="ident">Serializer</span>, <span class="ident">SerializeTuple</span>};
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Serialize</span> <span class="kw">for</span> [<span class="ident">T</span>; <span class="number">16</span>]
@@ -39,7 +39,7 @@
         }
         <span class="ident">seq</span>.<span class="ident">end</span>()
     }
-}</pre>
+}</pre></div>
 </div>
             <h2 id='associated-types' class='small-section-header'>
               Associated Types<a href='#associated-types' class='anchor'></a>

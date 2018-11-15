@@ -47,54 +47,12 @@ with &quot;recursion limit reached&quot; when you compile. If it fails, bump up 
 recursion limit by adding <code>#![recursion_limit = &quot;128&quot;]</code> to your crate. An even
 higher limit may be necessary for especially large invocations.</p>
 </div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="macro" href="macro.quote.html"
-                                  title='macro quote::quote'>quote</a></td>
-                           <td class='docblock-short'>
-                                <p>The whole point.</p>
-
-                           </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ByteStr.html"
-                                  title='struct quote::ByteStr'>ByteStr</a></td>
-                           <td class='docblock-short'>
-                                <p>Wrap a <code>&amp;str</code> so it interpolates as a byte-string: <code>b&quot;abc&quot;</code>.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Hex.html"
-                                  title='struct quote::Hex'>Hex</a></td>
-                           <td class='docblock-short'>
-                                <p>Wrap an integer so it interpolates as a hexadecimal.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Ident.html"
-                                  title='struct quote::Ident'>Ident</a></td>
-                           <td class='docblock-short'>
-                                <p>An identifier that should be interpolated without quotes.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Tokens.html"
-                                  title='struct quote::Tokens'>Tokens</a></td>
-                           <td class='docblock-short'>
-                                <p>Tokens produced by a <code>quote!(...)</code> invocation.</p>
-
-                           </td>
-                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="trait" href="trait.ToTokens.html"
-                                  title='trait quote::ToTokens'>ToTokens</a></td>
-                           <td class='docblock-short'>
-                                <p>Types that can be interpolated inside a <code>quote!(...)</code> invocation.</p>
-
-                           </td>
-                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "quote";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
+<table><tr class='module-item'><td><a class="macro" href="macro.quote.html" title='quote::quote macro'>quote</a></td><td class='docblock-short'><p>The whole point.</p>
+</td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.ByteStr.html" title='quote::ByteStr struct'>ByteStr</a></td><td class='docblock-short'><p>Wrap a <code>&amp;str</code> so it interpolates as a byte-string: <code>b&quot;abc&quot;</code>.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Hex.html" title='quote::Hex struct'>Hex</a></td><td class='docblock-short'><p>Wrap an integer so it interpolates as a hexadecimal.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Ident.html" title='quote::Ident struct'>Ident</a></td><td class='docblock-short'><p>An identifier that should be interpolated without quotes.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Tokens.html" title='quote::Tokens struct'>Tokens</a></td><td class='docblock-short'><p>Tokens produced by a <code>quote!(...)</code> invocation.</p>
+</td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table><tr class='module-item'><td><a class="trait" href="trait.ToTokens.html" title='quote::ToTokens trait'>ToTokens</a></td><td class='docblock-short'><p>Types that can be interpolated inside a <code>quote!(...)</code> invocation.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "quote";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

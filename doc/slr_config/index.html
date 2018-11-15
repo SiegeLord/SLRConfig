@@ -43,74 +43,18 @@ around the creation and use of the <code>ConfigElement</code> type, like so:</p>
 }</pre></div>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use self::<a class="enum" href="../slr_config/enum.ConfigElementKind.html" title="enum slr_config::ConfigElementKind">ConfigElementKind</a>::*;</code></td></tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="macro" href="macro.slr_def.html"
-                                  title='macro slr_config::slr_def'>slr_def</a></td>
-                           <td class='docblock-short'>
-                                <p>A macro to define the compile-time schemas for configuration elements.
+<table><tr class='module-item'><td><a class="macro" href="macro.slr_def.html" title='slr_config::slr_def macro'>slr_def</a></td><td class='docblock-short'><p>A macro to define the compile-time schemas for configuration elements.
 You can use this macro to define structs and enums, like so:</p>
-
-                           </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ConfigElement.html"
-                                  title='struct slr_config::ConfigElement'>ConfigElement</a></td>
-                           <td class='docblock-short'>
-                                <p>A configuration element.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Error.html"
-                                  title='struct slr_config::Error'>Error</a></td>
-                           <td class='docblock-short'>
-                                <p>The error type used throughout this crate.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Source.html"
-                                  title='struct slr_config::Source'>Source</a></td>
-                           <td class='docblock-short'>
-                                <p>Annotated representation of the configuration source string.</p>
-
-                           </td>
-                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ConfigElementKind.html"
-                                  title='enum slr_config::ConfigElementKind'>ConfigElementKind</a></td>
-                           <td class='docblock-short'>
-                                <p>The kind of the configuration element.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ErrorKind.html"
-                                  title='enum slr_config::ErrorKind'>ErrorKind</a></td>
-                           <td class='docblock-short'>
-                                <p>An enum describing the kind of the error, to allow treating different
+</td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.ConfigElement.html" title='slr_config::ConfigElement struct'>ConfigElement</a></td><td class='docblock-short'><p>A configuration element.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Error.html" title='slr_config::Error struct'>Error</a></td><td class='docblock-short'><p>The error type used throughout this crate.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Source.html" title='slr_config::Source struct'>Source</a></td><td class='docblock-short'><p>Annotated representation of the configuration source string.</p>
+</td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table><tr class='module-item'><td><a class="enum" href="enum.ConfigElementKind.html" title='slr_config::ConfigElementKind enum'>ConfigElementKind</a></td><td class='docblock-short'><p>The kind of the configuration element.</p>
+</td></tr><tr class='module-item'><td><a class="enum" href="enum.ErrorKind.html" title='slr_config::ErrorKind enum'>ErrorKind</a></td><td class='docblock-short'><p>An enum describing the kind of the error, to allow treating different
 errors differenly.</p>
-
-                           </td>
-                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="trait" href="trait.ElementRepr.html"
-                                  title='trait slr_config::ElementRepr'>ElementRepr</a></td>
-                           <td class='docblock-short'>
-                                <p>Describes a way to convert a type to a ConfigElement and back.</p>
-
-                           </td>
-                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="fn" href="fn.to_element.html"
-                                  title='fn slr_config::to_element'>to_element</a></td>
-                           <td class='docblock-short'>
-                                <p>Serialize a value to a ConfigElement.</p>
-
-                           </td>
-                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "slr_config";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
+</td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table><tr class='module-item'><td><a class="trait" href="trait.ElementRepr.html" title='slr_config::ElementRepr trait'>ElementRepr</a></td><td class='docblock-short'><p>Describes a way to convert a type to a ConfigElement and back.</p>
+</td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.to_element.html" title='slr_config::to_element fn'>to_element</a></td><td class='docblock-short'><p>Serialize a value to a ConfigElement.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "slr_config";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

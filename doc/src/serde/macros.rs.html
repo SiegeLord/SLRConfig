@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.2/src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.82/src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -240,15 +240,13 @@
 <span id="240">240</span>
 <span id="241">241</span>
 <span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="comment">// Copyright 2017 Serde Developers</span>
-<span class="comment">//</span>
-<span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
-<span class="comment">// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
-<span class="comment">// option. This file may not be copied, modified, or distributed</span>
-<span class="comment">// except according to those terms.</span>
-
 <span class="comment">// Super explicit first paragraph because this shows up at the top level and</span>
 <span class="comment">// trips up people who are just looking for basic Serialize / Deserialize</span>
 <span class="comment">// documentation.</span>
@@ -274,21 +272,23 @@
 <span class="doccomment">/// #     type Error = value::Error;</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// #     fn deserialize_any&lt;V&gt;(self, _: V) -&gt; Result&lt;V::Value, Self::Error&gt;</span>
-<span class="doccomment">/// #         where V: Visitor&lt;&#39;de&gt;</span>
+<span class="doccomment">/// #     where</span>
+<span class="doccomment">/// #         V: Visitor&lt;&#39;de&gt;,</span>
 <span class="doccomment">/// #     {</span>
 <span class="doccomment">/// #         unimplemented!()</span>
 <span class="doccomment">/// #     }</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// #[inline]</span>
 <span class="doccomment">/// fn deserialize_bool&lt;V&gt;(self, visitor: V) -&gt; Result&lt;V::Value, Self::Error&gt;</span>
-<span class="doccomment">///     where V: Visitor&lt;&#39;de&gt;</span>
+<span class="doccomment">/// where</span>
+<span class="doccomment">///     V: Visitor&lt;&#39;de&gt;,</span>
 <span class="doccomment">/// {</span>
 <span class="doccomment">///     self.deserialize_any(visitor)</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// #     forward_to_deserialize_any! {</span>
-<span class="doccomment">/// #         i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes</span>
-<span class="doccomment">/// #         byte_buf option unit unit_struct newtype_struct seq tuple</span>
+<span class="doccomment">/// #         i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string</span>
+<span class="doccomment">/// #         bytes byte_buf option unit unit_struct newtype_struct seq tuple</span>
 <span class="doccomment">/// #         tuple_struct map struct enum identifier ignored_any</span>
 <span class="doccomment">/// #     }</span>
 <span class="doccomment">/// # }</span>
@@ -312,7 +312,8 @@
 <span class="doccomment">/// #   type Error = value::Error;</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">///     fn deserialize_any&lt;V&gt;(self, visitor: V) -&gt; Result&lt;V::Value, Self::Error&gt;</span>
-<span class="doccomment">///         where V: Visitor&lt;&#39;de&gt;</span>
+<span class="doccomment">///     where</span>
+<span class="doccomment">///         V: Visitor&lt;&#39;de&gt;,</span>
 <span class="doccomment">///     {</span>
 <span class="doccomment">///         /* ... */</span>
 <span class="doccomment">/// #       let _ = visitor;</span>
@@ -320,8 +321,8 @@
 <span class="doccomment">///     }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     forward_to_deserialize_any! {</span>
-<span class="doccomment">///         bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes</span>
-<span class="doccomment">///         byte_buf option unit unit_struct newtype_struct seq tuple</span>
+<span class="doccomment">///         bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string</span>
+<span class="doccomment">///         bytes byte_buf option unit unit_struct newtype_struct seq tuple</span>
 <span class="doccomment">///         tuple_struct map struct enum identifier ignored_any</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
@@ -348,16 +349,17 @@
 <span class="doccomment">/// #     type Error = value::Error;</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// #     fn deserialize_any&lt;W&gt;(self, visitor: W) -&gt; Result&lt;W::Value, Self::Error&gt;</span>
-<span class="doccomment">/// #         where W: Visitor&lt;&#39;q&gt;</span>
+<span class="doccomment">/// #     where</span>
+<span class="doccomment">/// #         W: Visitor&lt;&#39;q&gt;,</span>
 <span class="doccomment">/// #     {</span>
 <span class="doccomment">/// #         unimplemented!()</span>
 <span class="doccomment">/// #     }</span>
 <span class="doccomment">/// #</span>
 <span class="doccomment">/// forward_to_deserialize_any! {</span>
 <span class="doccomment">///     &lt;W: Visitor&lt;&#39;q&gt;&gt;</span>
-<span class="doccomment">///     bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes</span>
-<span class="doccomment">///     byte_buf option unit unit_struct newtype_struct seq tuple tuple_struct</span>
-<span class="doccomment">///     map struct enum identifier ignored_any</span>
+<span class="doccomment">///     bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string</span>
+<span class="doccomment">///     bytes byte_buf option unit unit_struct newtype_struct seq tuple</span>
+<span class="doccomment">///     tuple_struct map struct enum identifier ignored_any</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// #</span>
@@ -367,7 +369,7 @@
 <span class="doccomment">/// [`Deserializer`]: trait.Deserializer.html</span>
 <span class="doccomment">/// [`Visitor`]: de/trait.Visitor.html</span>
 <span class="doccomment">/// [`Deserializer::deserialize_any`]: trait.Deserializer.html#tymethod.deserialize_any</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="attribute">#[<span class="ident">macro_export</span>(<span class="ident">local_inner_macros</span>)]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">forward_to_deserialize_any</span> {
     (<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span>:<span class="ident">ident</span>: <span class="ident">Visitor</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">lifetime</span>:<span class="ident">tt</span><span class="op">&gt;&gt;</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func</span>:<span class="ident">ident</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> {
         $(<span class="macro">forward_to_deserialize_any_helper</span><span class="macro">!</span>{<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">lifetime</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">visitor</span><span class="op">&gt;</span>})<span class="op">*</span>
@@ -396,7 +398,7 @@
 }
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="attribute">#[<span class="ident">macro_export</span>(<span class="ident">local_inner_macros</span>)]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">forward_to_deserialize_any_helper</span> {
     (<span class="ident">bool</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
         <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_bool</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
@@ -413,6 +415,11 @@
     (<span class="ident">i64</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
         <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_i64</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
     };
+    (<span class="ident">i128</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
+        <span class="macro">serde_if_integer128</span><span class="macro">!</span> {
+            <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_i128</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
+        }
+    };
     (<span class="ident">u8</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
         <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_u8</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
     };
@@ -424,6 +431,11 @@
     };
     (<span class="ident">u64</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
         <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_u64</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
+    };
+    (<span class="ident">u128</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
+        <span class="macro">serde_if_integer128</span><span class="macro">!</span> {
+            <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_u128</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}
+        }
     };
     (<span class="ident">f32</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">ident</span><span class="op">&gt;</span>) <span class="op">=&gt;</span> {
         <span class="macro">forward_to_deserialize_any_method</span><span class="macro">!</span>{<span class="ident">deserialize_f32</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">l</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span><span class="op">&gt;</span>()}

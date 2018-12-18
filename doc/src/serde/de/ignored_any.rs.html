@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.2/src/de/ignored_any.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ignored_any.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.82/src/de/ignored_any.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ignored_any.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -213,18 +213,13 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="comment">// Copyright 2017 Serde Developers</span>
-<span class="comment">//</span>
-<span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
-<span class="comment">// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
-<span class="comment">// option. This file may not be copied, modified, or distributed</span>
-<span class="comment">// except according to those terms.</span>
-
 <span class="kw">use</span> <span class="ident">lib</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Visitor</span>, <span class="ident">SeqAccess</span>, <span class="ident">MapAccess</span>, <span class="ident">Error</span>};
+<span class="kw">use</span> <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span>, <span class="ident">MapAccess</span>, <span class="ident">SeqAccess</span>, <span class="ident">Visitor</span>};
 
 <span class="doccomment">/// An efficient way of discarding data from a deserializer.</span>
 <span class="doccomment">///</span>
@@ -236,7 +231,9 @@
 <span class="doccomment">/// use std::fmt;</span>
 <span class="doccomment">/// use std::marker::PhantomData;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// use serde::de::{self, Deserialize, DeserializeSeed, Deserializer, Visitor, SeqAccess, IgnoredAny};</span>
+<span class="doccomment">/// use serde::de::{</span>
+<span class="doccomment">///     self, Deserialize, DeserializeSeed, Deserializer, IgnoredAny, SeqAccess, Visitor,</span>
+<span class="doccomment">/// };</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// /// A seed that can be used to deserialize only the `n`th element of a sequence</span>
 <span class="doccomment">/// /// while efficiently discarding elements of any type before or after index `n`.</span>
@@ -261,16 +258,22 @@
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// impl&lt;&#39;de, T&gt; Visitor&lt;&#39;de&gt; for NthElement&lt;T&gt;</span>
-<span class="doccomment">///     where T: Deserialize&lt;&#39;de&gt;</span>
+<span class="doccomment">/// where</span>
+<span class="doccomment">///     T: Deserialize&lt;&#39;de&gt;,</span>
 <span class="doccomment">/// {</span>
 <span class="doccomment">///     type Value = T;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     fn expecting(&amp;self, formatter: &amp;mut fmt::Formatter) -&gt; fmt::Result {</span>
-<span class="doccomment">///         write!(formatter, &quot;a sequence in which we care about element {}&quot;, self.n)</span>
+<span class="doccomment">///         write!(</span>
+<span class="doccomment">///             formatter,</span>
+<span class="doccomment">///             &quot;a sequence in which we care about element {}&quot;,</span>
+<span class="doccomment">///             self.n</span>
+<span class="doccomment">///         )</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     fn visit_seq&lt;A&gt;(self, mut seq: A) -&gt; Result&lt;Self::Value, A::Error&gt;</span>
-<span class="doccomment">///         where A: SeqAccess&lt;&#39;de&gt;</span>
+<span class="doccomment">///     where</span>
+<span class="doccomment">///         A: SeqAccess&lt;&#39;de&gt;,</span>
 <span class="doccomment">///     {</span>
 <span class="doccomment">///         // Skip over the first `n` elements.</span>
 <span class="doccomment">///         for i in 0..self.n {</span>
@@ -298,19 +301,22 @@
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// impl&lt;&#39;de, T&gt; DeserializeSeed&lt;&#39;de&gt; for NthElement&lt;T&gt;</span>
-<span class="doccomment">///     where T: Deserialize&lt;&#39;de&gt;</span>
+<span class="doccomment">/// where</span>
+<span class="doccomment">///     T: Deserialize&lt;&#39;de&gt;,</span>
 <span class="doccomment">/// {</span>
 <span class="doccomment">///     type Value = T;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     fn deserialize&lt;D&gt;(self, deserializer: D) -&gt; Result&lt;Self::Value, D::Error&gt;</span>
-<span class="doccomment">///         where D: Deserializer&lt;&#39;de&gt;</span>
+<span class="doccomment">///     where</span>
+<span class="doccomment">///         D: Deserializer&lt;&#39;de&gt;,</span>
 <span class="doccomment">///     {</span>
 <span class="doccomment">///         deserializer.deserialize_seq(self)</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn example&lt;&#39;de, D&gt;(deserializer: D) -&gt; Result&lt;(), D::Error&gt;</span>
-<span class="doccomment">/// #     where D: Deserializer&lt;&#39;de&gt;</span>
+<span class="doccomment">/// # where</span>
+<span class="doccomment">/// #     D: Deserializer&lt;&#39;de&gt;,</span>
 <span class="doccomment">/// # {</span>
 <span class="doccomment">/// // Deserialize only the sequence element at index 3 from this deserializer.</span>
 <span class="doccomment">/// // The element at index 3 is required to be a string. Elements before and</span>

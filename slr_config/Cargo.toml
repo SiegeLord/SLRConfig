@@ -1,7 +1,7 @@
 [package]
 
 name = "slr_config"
-version = "0.0.17" #auto
+version = "0.0.18" #auto
 license = "LGPL-3.0"
 repository = "https://github.com/SiegeLord/SLRConfig"
 documentation = "http://siegelord.github.io/SLRConfig/doc/slr_config/index.html"
@@ -20,8 +20,8 @@ path = "src/slr_test.rs"
 [dependencies.slr_parser]
 
 path = "../slr_parser"
-version = "=0.0.17" #auto
+version = "=0.0.18" #auto
 
 [dependencies]
-serde = "=1.0.2"
-serde_derive = "=1.0.2"
+serde = "=1.0.82"
+serde_derive = "=1.0.82"

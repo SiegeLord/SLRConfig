@@ -10,36 +10,36 @@ around the creation and use of the <code>ConfigElement</code> type, like so:</p>
 
 <span class="kw">fn</span> <span class="ident">main</span>()
 {
-    <span class="comment">// Parse config element from value.</span>
-    <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = value&quot;</span>).<span class="ident">unwrap</span>();
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;value&quot;</span>);
+	<span class="comment">// Parse config element from value.</span>
+	<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = value&quot;</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;value&quot;</span>);
 
-    <span class="comment">// Create a new table and print it to a string.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
-    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;value&quot;</span>);
-    <span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;key&quot;</span>, <span class="ident">val</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">to_string</span>(), <span class="string">&quot;key = value\n&quot;</span>);
+	<span class="comment">// Create a new table and print it to a string.</span>
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_table</span>();
+	<span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ConfigElement</span>::<span class="ident">new_value</span>(<span class="string">&quot;value&quot;</span>);
+	<span class="ident">root</span>.<span class="ident">insert</span>(<span class="string">&quot;key&quot;</span>, <span class="ident">val</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">root</span>.<span class="ident">to_string</span>(), <span class="string">&quot;key = value\n&quot;</span>);
 
-    <span class="comment">// Compile-time schemas automate the above process in many situations.</span>
-    <span class="macro">slr_def</span><span class="macro">!</span>
-    {
-        <span class="kw">struct</span> <span class="ident">TestSchema</span>
-        {
-            <span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>,
-            <span class="ident">arr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[]
-        }
-    }
+	<span class="comment">// Compile-time schemas automate the above process in many situations.</span>
+	<span class="macro">slr_def</span><span class="macro">!</span>
+	{
+		<span class="kw">struct</span> <span class="ident">TestSchema</span>
+		{
+			<span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>,
+			<span class="ident">arr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[]
+		}
+	}
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">TestSchema</span>::<span class="ident">new</span>();
-    <span class="ident">schema</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = 5, arr = [1, 2]&quot;</span>).<span class="ident">unwrap</span>(), <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">key</span>, <span class="number">5</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>.<span class="ident">len</span>(), <span class="number">2</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">0</span>], <span class="number">1</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">1</span>], <span class="number">2</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">TestSchema</span>::<span class="ident">new</span>();
+	<span class="ident">schema</span>.<span class="ident">from_element</span>(<span class="kw-2">&amp;</span><span class="ident">ConfigElement</span>::<span class="ident">from_str</span>(<span class="string">&quot;key = 5, arr = [1, 2]&quot;</span>).<span class="ident">unwrap</span>(), <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">key</span>, <span class="number">5</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">0</span>], <span class="number">1</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schema</span>.<span class="ident">arr</span>[<span class="number">1</span>], <span class="number">2</span>);
 
-    <span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">schema</span>.<span class="ident">to_element</span>();
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;5&quot;</span>);
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;arr&quot;</span>].<span class="ident">as_array</span>().<span class="ident">unwrap</span>()[<span class="number">0</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;1&quot;</span>);
+	<span class="kw">let</span> <span class="ident">elem</span> <span class="op">=</span> <span class="ident">schema</span>.<span class="ident">to_element</span>();
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;key&quot;</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;5&quot;</span>);
+	<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">elem</span>.<span class="ident">as_table</span>().<span class="ident">unwrap</span>()[<span class="string">&quot;arr&quot;</span>].<span class="ident">as_array</span>().<span class="ident">unwrap</span>()[<span class="number">0</span>].<span class="ident">as_value</span>().<span class="ident">unwrap</span>(), <span class="string">&quot;1&quot;</span>);
 }</pre></div>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use self::<a class="enum" href="../slr_config/enum.ConfigElementKind.html" title="enum slr_config::ConfigElementKind">ConfigElementKind</a>::*;</code></td></tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>

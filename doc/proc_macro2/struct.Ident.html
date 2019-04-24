@@ -69,8 +69,8 @@ tokens, requires a <code>Span</code> to be specified at construction.</p>
 name. If you are not sure whether the string contains an identifier and
 need to handle an error case, use
 <a href="https://docs.rs/syn/0.15/syn/fn.parse_str.html"><code
-style="padding-right:0;">syn::parse_str</code></a><code
-style="padding-left:0;">::&lt;Ident&gt;</code>
+  style="padding-right:0;">syn::parse_str</code></a><code
+  style="padding-left:0;">::&lt;Ident&gt;</code>
 rather than <code>Ident::new</code>.</p>
 </div><h4 id='method.span' class="method"><code id='span.v'>pub fn <a href='#method.span' class='fnname'>span</a>(&amp;self) -&gt; <a class="struct" href="../proc_macro2/struct.Span.html" title="struct proc_macro2::Span">Span</a></code><a class='srclink' href='../src/proc_macro2/lib.rs.html#880-882' title='goto source code'>[src]</a></h4><div class='docblock'><p>Returns the span of this <code>Ident</code>.</p>
 </div><h4 id='method.set_span' class="method"><code id='set_span.v'>pub fn <a href='#method.set_span' class='fnname'>set_span</a>(&amp;mut self, span: <a class="struct" href="../proc_macro2/struct.Span.html" title="struct proc_macro2::Span">Span</a>)</code><a class='srclink' href='../src/proc_macro2/lib.rs.html#886-888' title='goto source code'>[src]</a></h4><div class='docblock'><p>Configures the span of this <code>Ident</code>, possibly changing its hygiene

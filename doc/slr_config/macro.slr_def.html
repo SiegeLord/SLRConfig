@@ -38,21 +38,21 @@ You can use this macro to define structs and enums, like so:</p>
 
 <span class="macro">slr_def</span><span class="macro">!</span>
 {
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span> <span class="comment">// Attributes supported.</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TestSchema</span>
-    {
-        <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>, <span class="comment">// The rhs assignments are initializer expressions.</span>
-        <span class="kw">pub</span> <span class="ident">arr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[]
-    }
+	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span> <span class="comment">// Attributes supported.</span>
+	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TestSchema</span>
+	{
+		<span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>, <span class="comment">// The rhs assignments are initializer expressions.</span>
+		<span class="kw">pub</span> <span class="ident">arr</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[]
+	}
 }
 
 <span class="macro">slr_def</span><span class="macro">!</span>
 {
-    <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TestEnum</span>
-    {
-        <span class="ident">VariantA</span>,
-        <span class="ident">VariantB</span>
-    }
+	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TestEnum</span>
+	{
+		<span class="ident">VariantA</span>,
+		<span class="ident">VariantB</span>
+	}
 }
 </pre></div>
 <p>The types declared by both invocations implement <code>ElementRepr</code>, and the struct

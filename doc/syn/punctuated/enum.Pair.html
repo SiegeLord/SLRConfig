@@ -3,7 +3,7 @@
     End(T),
 }</pre></div><div class='docblock'><p>A single syntax tree node of type <code>T</code> followed by its trailing punctuation
 of type <code>P</code> if any.</p>
-<p>Refer to the <a href="index.html">module documentation</a> for details about punctuated sequences.</p>
+<p>Refer to the <a href="../../syn/punctuated/index.html">module documentation</a> for details about punctuated sequences.</p>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
 <span id="variant.Punctuated" class="variant small-section-header"><a href="#variant.Punctuated" class="anchor field"></a><code id='Punctuated.v'>Punctuated(T,&nbsp;P)</code></span><span id="variant.End" class="variant small-section-header"><a href="#variant.End" class="anchor field"></a><code id='End.v'>End(T)</code></span><h2 id='methods' class='small-section-header'>Methods<a href='#methods' class='anchor'></a></h2><h3 id='impl' class='impl'><code class='in-band'>impl&lt;T, P&gt; <a class="enum" href="../../syn/punctuated/enum.Pair.html" title="enum syn::punctuated::Pair">Pair</a>&lt;T, P&gt;</code><a href='#impl' class='anchor'></a><a class='srclink' href='../../src/syn/punctuated.rs.html#726-775' title='goto source code'>[src]</a></h3><div class='impl-items'><h4 id='method.into_value' class="method"><code id='into_value.v'>pub fn <a href='#method.into_value' class='fnname'>into_value</a>(self) -&gt; T</code><a class='srclink' href='../../src/syn/punctuated.rs.html#729-733' title='goto source code'>[src]</a></h4><div class='docblock'><p>Extracts the syntax tree node from this punctuated pair, discarding the

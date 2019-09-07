@@ -14,31 +14,31 @@ feature.</em></p>
 <p>This type is a <a href="enum.Expr.html#syntax-tree-enums">syntax tree enum</a>.</p>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
-<span id="variant.Str" class="variant small-section-header"><a href="#variant.Str" class="anchor field"></a><code id='Str.v'>Str(<a class="struct" href="../syn/struct.LitStr.html" title="struct syn::LitStr">LitStr</a>)</code></span><div class='docblock'><p>A UTF-8 string literal: <code>&quot;foo&quot;</code>.</p>
+<div id="variant.Str" class="variant small-section-header"><a href="#variant.Str" class="anchor field"></a><code id='Str.v'>Str(<a class="struct" href="../syn/struct.LitStr.html" title="struct syn::LitStr">LitStr</a>)</code></div><div class='docblock'><p>A UTF-8 string literal: <code>&quot;foo&quot;</code>.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.ByteStr" class="variant small-section-header"><a href="#variant.ByteStr" class="anchor field"></a><code id='ByteStr.v'>ByteStr(<a class="struct" href="../syn/struct.LitByteStr.html" title="struct syn::LitByteStr">LitByteStr</a>)</code></span><div class='docblock'><p>A byte string literal: <code>b&quot;foo&quot;</code>.</p>
+</div><div id="variant.ByteStr" class="variant small-section-header"><a href="#variant.ByteStr" class="anchor field"></a><code id='ByteStr.v'>ByteStr(<a class="struct" href="../syn/struct.LitByteStr.html" title="struct syn::LitByteStr">LitByteStr</a>)</code></div><div class='docblock'><p>A byte string literal: <code>b&quot;foo&quot;</code>.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Byte" class="variant small-section-header"><a href="#variant.Byte" class="anchor field"></a><code id='Byte.v'>Byte(<a class="struct" href="../syn/struct.LitByte.html" title="struct syn::LitByte">LitByte</a>)</code></span><div class='docblock'><p>A byte literal: <code>b'f'</code>.</p>
+</div><div id="variant.Byte" class="variant small-section-header"><a href="#variant.Byte" class="anchor field"></a><code id='Byte.v'>Byte(<a class="struct" href="../syn/struct.LitByte.html" title="struct syn::LitByte">LitByte</a>)</code></div><div class='docblock'><p>A byte literal: <code>b'f'</code>.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Char" class="variant small-section-header"><a href="#variant.Char" class="anchor field"></a><code id='Char.v'>Char(<a class="struct" href="../syn/struct.LitChar.html" title="struct syn::LitChar">LitChar</a>)</code></span><div class='docblock'><p>A character literal: <code>'a'</code>.</p>
+</div><div id="variant.Char" class="variant small-section-header"><a href="#variant.Char" class="anchor field"></a><code id='Char.v'>Char(<a class="struct" href="../syn/struct.LitChar.html" title="struct syn::LitChar">LitChar</a>)</code></div><div class='docblock'><p>A character literal: <code>'a'</code>.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Int" class="variant small-section-header"><a href="#variant.Int" class="anchor field"></a><code id='Int.v'>Int(<a class="struct" href="../syn/struct.LitInt.html" title="struct syn::LitInt">LitInt</a>)</code></span><div class='docblock'><p>An integer literal: <code>1</code> or <code>1u16</code>.</p>
+</div><div id="variant.Int" class="variant small-section-header"><a href="#variant.Int" class="anchor field"></a><code id='Int.v'>Int(<a class="struct" href="../syn/struct.LitInt.html" title="struct syn::LitInt">LitInt</a>)</code></div><div class='docblock'><p>An integer literal: <code>1</code> or <code>1u16</code>.</p>
 <p>Holds up to 64 bits of data. Use <code>LitVerbatim</code> for any larger
 integer literal.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Float" class="variant small-section-header"><a href="#variant.Float" class="anchor field"></a><code id='Float.v'>Float(<a class="struct" href="../syn/struct.LitFloat.html" title="struct syn::LitFloat">LitFloat</a>)</code></span><div class='docblock'><p>A floating point literal: <code>1f64</code> or <code>1.0e10f64</code>.</p>
+</div><div id="variant.Float" class="variant small-section-header"><a href="#variant.Float" class="anchor field"></a><code id='Float.v'>Float(<a class="struct" href="../syn/struct.LitFloat.html" title="struct syn::LitFloat">LitFloat</a>)</code></div><div class='docblock'><p>A floating point literal: <code>1f64</code> or <code>1.0e10f64</code>.</p>
 <p>Must be finite. May not be infinte or NaN.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Bool" class="variant small-section-header"><a href="#variant.Bool" class="anchor field"></a><code id='Bool.v'>Bool(<a class="struct" href="../syn/struct.LitBool.html" title="struct syn::LitBool">LitBool</a>)</code></span><div class='docblock'><p>A boolean literal: <code>true</code> or <code>false</code>.</p>
+</div><div id="variant.Bool" class="variant small-section-header"><a href="#variant.Bool" class="anchor field"></a><code id='Bool.v'>Bool(<a class="struct" href="../syn/struct.LitBool.html" title="struct syn::LitBool">LitBool</a>)</code></div><div class='docblock'><p>A boolean literal: <code>true</code> or <code>false</code>.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>
-</div><span id="variant.Verbatim" class="variant small-section-header"><a href="#variant.Verbatim" class="anchor field"></a><code id='Verbatim.v'>Verbatim(<a class="struct" href="../syn/struct.LitVerbatim.html" title="struct syn::LitVerbatim">LitVerbatim</a>)</code></span><div class='docblock'><p>A raw token literal not interpreted by Syn, possibly because it
+</div><div id="variant.Verbatim" class="variant small-section-header"><a href="#variant.Verbatim" class="anchor field"></a><code id='Verbatim.v'>Verbatim(<a class="struct" href="../syn/struct.LitVerbatim.html" title="struct syn::LitVerbatim">LitVerbatim</a>)</code></div><div class='docblock'><p>A raw token literal not interpreted by Syn, possibly because it
 represents an integer larger than 64 bits.</p>
 <p><em>This type is available if Syn is built with the <code>&quot;derive&quot;</code> or
 <code>&quot;full&quot;</code> feature.</em></p>

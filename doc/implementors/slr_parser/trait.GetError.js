@@ -6,5 +6,4 @@ implementors["slr_parser"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

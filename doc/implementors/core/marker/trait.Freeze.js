@@ -10,5 +10,4 @@ implementors["syn"] = [{text:"impl Freeze for <a class=\"struct\" href=\"syn/str
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

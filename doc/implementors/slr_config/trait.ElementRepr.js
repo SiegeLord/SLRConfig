@@ -6,5 +6,4 @@ implementors["slr_config"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

@@ -33,18 +33,15 @@ fn main()
 		let tok = lexer.next();
 		match tok.as_ref()
 		{
-			Some(res) =>
+			Some(res) => match res.as_ref()
 			{
-				match res.as_ref()
+				Ok(tok) => println!("{:?}", tok.kind),
+				Err(err) =>
 				{
-					Ok(tok) => println!("{:?}", tok.kind),
-					Err(err) =>
-					{
-						println!("{}", err.text);
-						break;
-					}
+					println!("{}", err.text);
+					break;
 				}
-			}
+			},
 			None => break,
 		}
 	}

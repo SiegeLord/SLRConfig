@@ -5,26 +5,13 @@
 use lexer::{Error, Source, Span};
 use parser::ConfigString;
 
-pub trait GetError
+pub trait Visitor<'l>
 {
-	fn get_error(&self) -> Error;
-}
+	fn start_element(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>;
+	fn end_element(&mut self) -> Result<(), Error>;
 
-impl GetError for Error
-{
-	fn get_error(&self) -> Error
-	{
-		self.clone()
-	}
-}
-
-pub trait Visitor<'l, E: GetError>
-{
-	fn start_element(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), E>;
-	fn end_element(&mut self) -> Result<(), E>;
-
-	fn set_table(&mut self, src: &Source<'l>, span: Span) -> Result<(), E>;
-	fn set_array(&mut self, src: &Source<'l>, span: Span) -> Result<(), E>;
-	fn append_string(&mut self, src: &Source<'l>, string: ConfigString<'l>) -> Result<(), E>;
-	fn expand(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), E>;
+	fn set_table(&mut self, src: &Source<'l>, span: Span) -> Result<(), Error>;
+	fn set_array(&mut self, src: &Source<'l>, span: Span) -> Result<(), Error>;
+	fn append_string(&mut self, src: &Source<'l>, string: ConfigString<'l>) -> Result<(), Error>;
+	fn expand(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>;
 }

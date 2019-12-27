@@ -1,5 +1,3 @@
-
-
 use config_element::ConfigElement;
 use serde;
 use serde::ser::{self, Serialize};
@@ -20,12 +18,16 @@ impl SeqHelper
 {
 	fn new_array() -> Self
 	{
-		Self { element: ConfigElement::new_array() }
+		Self {
+			element: ConfigElement::new_array(),
+		}
 	}
 
 	fn new_table() -> Self
 	{
-		Self { element: ConfigElement::new_table() }
+		Self {
+			element: ConfigElement::new_table(),
+		}
 	}
 }
 
@@ -35,7 +37,8 @@ impl ser::SerializeSeq for SeqHelper
 	type Error = Error;
 
 	fn serialize_element<T>(&mut self, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert("", value.serialize(Serializer)?);
 		Ok(())
@@ -53,7 +56,8 @@ impl ser::SerializeTuple for SeqHelper
 	type Error = Error;
 
 	fn serialize_element<T>(&mut self, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert("", value.serialize(Serializer)?);
 		Ok(())
@@ -71,7 +75,8 @@ impl ser::SerializeTupleStruct for SeqHelper
 	type Error = Error;
 
 	fn serialize_field<T>(&mut self, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert("", value.serialize(Serializer)?);
 		Ok(())
@@ -89,7 +94,8 @@ impl ser::SerializeStruct for SeqHelper
 	type Error = Error;
 
 	fn serialize_field<T>(&mut self, key: &'static str, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert(key, value.serialize(Serializer)?);
 		Ok(())
@@ -124,14 +130,16 @@ impl ser::SerializeMap for MapHelper
 	type Error = Error;
 
 	fn serialize_key<T>(&mut self, key: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.key = Some(key.serialize(Serializer)?);
 		Ok(())
 	}
 
 	fn serialize_value<T>(&mut self, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		let key = self.key.take().unwrap();
 		let value = value.serialize(Serializer)?;
@@ -181,7 +189,8 @@ impl ser::SerializeTupleVariant for VariantHelper
 	type Error = Error;
 
 	fn serialize_field<T>(&mut self, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert("", value.serialize(Serializer)?);
 		Ok(())
@@ -201,7 +210,8 @@ impl ser::SerializeStructVariant for VariantHelper
 	type Error = Error;
 
 	fn serialize_field<T>(&mut self, key: &'static str, value: &T) -> Result<(), Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		self.element.insert(key, value.serialize(Serializer)?);
 		Ok(())
@@ -311,7 +321,8 @@ impl serde::Serializer for Serializer
 	}
 
 	fn serialize_some<T>(self, v: &T) -> Result<ConfigElement, Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		v.serialize(self)
 	}
@@ -326,20 +337,25 @@ impl serde::Serializer for Serializer
 		Ok(ConfigElement::new_value(""))
 	}
 
-	fn serialize_unit_variant(self, _name: &'static str, _index: u32, variant: &'static str) -> Result<ConfigElement, Error>
+	fn serialize_unit_variant(
+		self, _name: &'static str, _index: u32, variant: &'static str,
+	) -> Result<ConfigElement, Error>
 	{
 		Ok(ConfigElement::new_value(variant))
 	}
 
 	fn serialize_newtype_struct<T>(self, _name: &'static str, v: &T) -> Result<ConfigElement, Error>
-		where T: ?Sized + Serialize
+	where
+		T: ?Sized + Serialize,
 	{
 		v.serialize(self)
 	}
 
-	fn serialize_newtype_variant<T>(self, _name: &'static str, _variant_index: u32, variant: &'static str, value: &T)
-	                                -> Result<ConfigElement, Error>
-		where T: ?Sized + Serialize
+	fn serialize_newtype_variant<T>(
+		self, _name: &'static str, _variant_index: u32, variant: &'static str, value: &T,
+	) -> Result<ConfigElement, Error>
+	where
+		T: ?Sized + Serialize,
 	{
 		let mut ret = ConfigElement::new_table();
 		ret.insert(variant, value.serialize(Serializer)?);
@@ -361,8 +377,9 @@ impl serde::Serializer for Serializer
 		Ok(SeqHelper::new_array())
 	}
 
-	fn serialize_tuple_variant(self, _name: &'static str, _variant_index: u32, variant: &'static str, _len: usize)
-	                           -> Result<VariantHelper, Error>
+	fn serialize_tuple_variant(
+		self, _name: &'static str, _variant_index: u32, variant: &'static str, _len: usize,
+	) -> Result<VariantHelper, Error>
 	{
 		Ok(VariantHelper::new_array(variant))
 	}
@@ -377,8 +394,9 @@ impl serde::Serializer for Serializer
 		Ok(SeqHelper::new_table())
 	}
 
-	fn serialize_struct_variant(self, _name: &'static str, _variant_index: u32, variant: &'static str, _len: usize)
-	                            -> Result<VariantHelper, Error>
+	fn serialize_struct_variant(
+		self, _name: &'static str, _variant_index: u32, variant: &'static str, _len: usize,
+	) -> Result<VariantHelper, Error>
 	{
 		Ok(VariantHelper::new_table(variant))
 	}

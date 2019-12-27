@@ -2,16 +2,15 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-
 pub use self::ConfigElementKind::*;
 
-use slr_parser::{ConfigString, Error, ErrorKind, Printer, Source, Span, Visitor, parse_source};
+use slr_parser::{parse_source, ConfigString, Error, ErrorKind, Printer, Source, Span, Visitor};
 use std::collections::BTreeMap;
 use std::fmt::{self, Display, Formatter};
 use std::io;
 use std::mem;
 use std::path::Path;
-use std::str::{FromStr, from_utf8};
+use std::str::{from_utf8, FromStr};
 
 /// A configuration element.
 #[derive(Clone)]
@@ -69,7 +68,7 @@ impl ConfigElement
 	pub fn from_source<'l>(source: &mut Source<'l>) -> Result<ConfigElement, Error>
 	{
 		let mut root = ConfigElement::new_table();
-		try!(root.from_source_with_init(source));
+		root.from_source_with_init(source)?;
 		Ok(root)
 	}
 
@@ -83,13 +82,16 @@ impl ConfigElement
 	/// If an error occurs, the contents of this table are undefined. The source
 	/// will be reset by this operation, and must not be used with any spans
 	/// created from a previous lexing done with that source.
-	pub fn from_source_with_init<'l, 'm>(&mut self, source: &'m mut Source<'l>) -> Result<(), Error>
+	pub fn from_source_with_init<'l, 'm>(&mut self, source: &'m mut Source<'l>)
+		-> Result<(), Error>
 	{
 		assert!(self.as_table().is_some());
 		let mut root = ConfigElement::new_table();
 		mem::swap(&mut root, self);
 		let mut visitor = ConfigElementVisitor::new(root);
-		parse_source(source, &mut visitor).map(|_| { mem::swap(&mut visitor.extract_root(), self); })
+		parse_source(source, &mut visitor).map(|_| {
+			mem::swap(&mut visitor.extract_root(), self);
+		})
 	}
 
 	/// Updates the elements in this table with new values parsed from source.
@@ -226,19 +228,21 @@ impl ConfigElement
 	}
 
 	/// Outputs the string representation of this element into into a printer.
-	pub fn print<W: io::Write>(&self, name: Option<&str>, is_root: bool, printer: &mut Printer<W>) -> Result<(), io::Error>
+	pub fn print<W: io::Write>(
+		&self, name: Option<&str>, is_root: bool, printer: &mut Printer<W>,
+	) -> Result<(), io::Error>
 	{
 		match self.kind
 		{
-			Value(ref val) => try!(printer.value(name, &val)),
+			Value(ref val) => printer.value(name, &val)?,
 			Table(ref table) =>
 			{
-				try!(printer.start_table(name, is_root, table.is_empty()));
+				printer.start_table(name, is_root, table.is_empty())?;
 				for (k, v) in table
 				{
-					try!(v.print(Some(k), false, printer));
+					v.print(Some(k), false, printer)?;
 				}
-				try!(printer.end_table(is_root));
+				printer.end_table(is_root)?;
 			}
 			Array(ref array) =>
 			{
@@ -258,12 +262,12 @@ impl ConfigElement
 						_ => (),
 					}
 				}
-				try!(printer.start_array(name, one_line));
+				printer.start_array(name, one_line)?;
 				for v in array
 				{
-					try!(v.print(None, false, printer));
+					v.print(None, false, printer)?;
 				}
-				try!(printer.end_array());
+				printer.end_array()?;
 			}
 		}
 		Ok(())
@@ -277,16 +281,22 @@ impl Display for ConfigElement
 		let mut buf = vec![];
 		{
 			let mut printer = Printer::new(&mut buf);
-			try!(self.print(None, true, &mut printer).map_err(|_| fmt::Error));
+			self.print(None, true, &mut printer)
+				.map_err(|_| fmt::Error)?;
 		}
-		try!(write!(formatter, "{}", try!(from_utf8(&buf).map_err(|_| fmt::Error))));
+		write!(formatter, "{}", from_utf8(&buf).map_err(|_| fmt::Error)?)?;
 		Ok(())
 	}
 }
 
 fn visit_error<'l>(span: Span, source: &Source<'l>, msg: &str) -> Result<(), Error>
 {
-	Err(Error::from_span(span, Some(source), ErrorKind::ParseFailure, msg))
+	Err(Error::from_span(
+		span,
+		Some(source),
+		ErrorKind::ParseFailure,
+		msg,
+	))
 }
 
 struct ConfigElementVisitor
@@ -299,7 +309,9 @@ impl ConfigElementVisitor
 {
 	fn new(root: ConfigElement) -> ConfigElementVisitor
 	{
-		ConfigElementVisitor { stack: vec![("root".to_string(), root, true)] }
+		ConfigElementVisitor {
+			stack: vec![("root".to_string(), root, true)],
+		}
 	}
 
 	fn extract_root(mut self) -> ConfigElement
@@ -309,12 +321,15 @@ impl ConfigElementVisitor
 	}
 }
 
-impl<'l> Visitor<'l, Error> for ConfigElementVisitor
+impl<'l> Visitor<'l> for ConfigElementVisitor
 {
 	fn start_element(&mut self, _src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>
 	{
-		self.stack
-			.push((name.to_string(), ConfigElement::new_value("".to_string()), false));
+		self.stack.push((
+			name.to_string(),
+			ConfigElement::new_value("".to_string()),
+			false,
+		));
 		Ok(())
 	}
 
@@ -338,8 +353,14 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 			match elem.kind
 			{
 				Value(ref mut val) => string.append_to_string(val),
-				Table(_) => return visit_error(string.span, src, "Cannot append a string to a table"),
-				Array(_) => return visit_error(string.span, src, "Cannot append a string to an array"),
+				Table(_) =>
+				{
+					return visit_error(string.span, src, "Cannot append a string to a table")
+				}
+				Array(_) =>
+				{
+					return visit_error(string.span, src, "Cannot append a string to an array")
+				}
 			}
 		}
 		self.stack[stack_size - 1].2 = true;
@@ -400,7 +421,11 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 
 		if found_element.is_none()
 		{
-			return visit_error(span, src, &format!("Could not find an element named `{}`", name));
+			return visit_error(
+				span,
+				src,
+				&format!("Could not find an element named `{}`", name),
+			);
 		}
 		let found_element = found_element.unwrap();
 
@@ -410,15 +435,12 @@ impl<'l> Visitor<'l, Error> for ConfigElementVisitor
 		{
 			match self.stack[stack_size - 1].1.kind
 			{
-				Value(ref mut lhs_val) =>
+				Value(ref mut lhs_val) => match found_element.kind
 				{
-					match found_element.kind
-					{
-						Value(ref found_val) => lhs_val.push_str(found_val),
-						Table(_) => return visit_error(span, src, "Cannot append a table to a value"),
-						Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
-					}
-				}
+					Value(ref found_val) => lhs_val.push_str(found_val),
+					Table(_) => return visit_error(span, src, "Cannot append a table to a value"),
+					Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
+				},
 				Table(_) => return visit_error(span, src, "Cannot append to a table"),
 				Array(_) => return visit_error(span, src, "Cannot append to an array"),
 			}

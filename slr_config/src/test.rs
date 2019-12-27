@@ -2,12 +2,12 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use ErrorKind;
 use config_element::*;
 use de::from_element;
 use element_repr::*;
 use ser::to_element;
 use std::char;
+use ErrorKind;
 
 #[test]
 fn basic_test()
@@ -44,7 +44,10 @@ fn init_test()
 	let mut root = ConfigElement::new_table();
 	root.insert("za", ConfigElement::new_value("warudo"));
 	root.from_str_with_init("what = $za").unwrap();
-	assert_eq!(root.as_table().unwrap()["what"].as_value().unwrap(), "warudo");
+	assert_eq!(
+		root.as_table().unwrap()["what"].as_value().unwrap(),
+		"warudo"
+	);
 }
 
 #[test]
@@ -96,7 +99,10 @@ baz
 }
 "#;
 	let original = ConfigElement::from_str(src).unwrap();
-	assert_eq!(original.as_table().unwrap()["foo2"].as_value().unwrap(), "test");
+	assert_eq!(
+		original.as_table().unwrap()["foo2"].as_value().unwrap(),
+		"test"
+	);
 	let original_str = format!("{}", original);
 	let decoded = ConfigElement::from_str(&original_str).unwrap();
 	let encoded_str = format!("{}", decoded);
@@ -145,8 +151,8 @@ tab2
 	assert!(root["arr_test"].as_array().is_some());
 	assert!(root["tab_test"].as_table().is_some());
 	assert!(root["tab2"].as_table().unwrap()["val_test2"]
-	            .as_value()
-	            .is_some());
+		.as_value()
+		.is_some());
 }
 
 #[test]
@@ -211,8 +217,7 @@ fn to_element_test()
 #[test]
 fn slr_struct()
 {
-	slr_def!
-	{
+	slr_def! {
 		#[derive(Clone)]
 		struct Test
 		{
@@ -237,14 +242,18 @@ fn slr_struct()
 
 	let partial_test_elem = partial_test.to_element();
 	assert!(partial_test_elem.as_table().is_some());
-	assert_eq!(partial_test_elem.as_table().unwrap()["x"]
-	               .as_value()
-	               .unwrap(),
-	           "5");
-	assert_eq!(partial_test_elem.as_table().unwrap()["y"]
-	               .as_value()
-	               .unwrap(),
-	           "0");
+	assert_eq!(
+		partial_test_elem.as_table().unwrap()["x"]
+			.as_value()
+			.unwrap(),
+		"5"
+	);
+	assert_eq!(
+		partial_test_elem.as_table().unwrap()["y"]
+			.as_value()
+			.unwrap(),
+		"0"
+	);
 
 	let mut err_test = orig.clone();
 	let mut err_test_elem = ConfigElement::new_table();
@@ -256,8 +265,7 @@ fn slr_struct()
 #[test]
 fn slr_enum()
 {
-	slr_def!
-	{
+	slr_def! {
 		#[derive(Clone, PartialEq, Debug)]
 		enum Test
 		{
@@ -278,8 +286,8 @@ fn slr_enum()
 #[test]
 fn serde_test()
 {
-	use std::collections::HashMap;
 	use slr_parser::Source;
+	use std::collections::HashMap;
 	use std::path::Path;
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -299,7 +307,9 @@ fn serde_test()
 		Var1,
 		Var2(i32),
 		Var3
-		{ v: i32 },
+		{
+			v: i32,
+		},
 		Var4(i32, i32),
 	}
 

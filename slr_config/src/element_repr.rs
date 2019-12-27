@@ -9,7 +9,9 @@ use std::str::FromStr;
 pub trait ElementRepr
 {
 	/// Updates the contents of `self` based on values in the element.
-	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>;
+	fn from_element<'l>(
+		&mut self, elem: &ConfigElement, src: Option<&Source<'l>>,
+	) -> Result<(), Vec<Error>>;
 	/// Creates an element that represents the contents of `self`.
 	fn to_element(&self) -> ConfigElement;
 }
@@ -94,30 +96,42 @@ element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F);
 element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G);
 element_repr_tuple_impl!(a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H);
 
-macro_rules! element_repr_via_str_impl
-{
-	($t: ty) =>
-	{
+macro_rules! element_repr_via_str_impl {
+	($t: ty) => {
 		impl $crate::ElementRepr for $t
 		{
-			fn from_element<'l>(&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>) -> Result<(), Vec<$crate::Error>>
+			fn from_element<'l>(
+				&mut self, elem: &$crate::ConfigElement, src: Option<&$crate::Source<'l>>,
+			) -> Result<(), Vec<$crate::Error>>
 			{
 				match *elem.kind()
 				{
-					$crate::Value(ref val) =>
+					$crate::Value(ref val) => match <$t as FromStr>::from_str(&val)
 					{
-						match <$t as FromStr>::from_str(&val)
+						Ok(v) =>
 						{
-							Ok(v) =>
-							{
-								*self = v;
-								Ok(())
-							}
-							Err(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse '{}' as {}", val, stringify!($t)))])
+							*self = v;
+							Ok(())
 						}
+						Err(_) => Err(vec![$crate::Error::from_span(
+							elem.span(),
+							src,
+							$crate::ErrorKind::InvalidRepr,
+							&format!("Cannot parse '{}' as {}", val, stringify!($t)),
+						)]),
 					},
-					$crate::Table(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($t)))]),
-					$crate::Array(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($t)))]),
+					$crate::Table(_) => Err(vec![$crate::Error::from_span(
+						elem.span(),
+						src,
+						$crate::ErrorKind::InvalidRepr,
+						&format!("Cannot parse a table as {}", stringify!($t)),
+					)]),
+					$crate::Array(_) => Err(vec![$crate::Error::from_span(
+						elem.span(),
+						src,
+						$crate::ErrorKind::InvalidRepr,
+						&format!("Cannot parse an array as {}", stringify!($t)),
+					)]),
 				}
 			}
 
@@ -126,7 +140,7 @@ macro_rules! element_repr_via_str_impl
 				ConfigElement::new_value(self.to_string())
 			}
 		}
-	}
+	};
 }
 
 element_repr_via_str_impl!(i8);
@@ -144,7 +158,9 @@ element_repr_via_str_impl!(bool);
 
 impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 {
-	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
+	fn from_element<'l>(
+		&mut self, elem: &ConfigElement, src: Option<&Source<'l>>,
+	) -> Result<(), Vec<Error>>
 	{
 		match *elem.kind()
 		{
@@ -170,8 +186,18 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 					Err(errors)
 				}
 			}
-			Table(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a table as 'Vec<T>'")]),
-			Value(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'Vec<T>'")]),
+			Table(_) => Err(vec![Error::from_span(
+				elem.span(),
+				src,
+				ErrorKind::InvalidRepr,
+				"Cannot parse a table as 'Vec<T>'",
+			)]),
+			Value(_) => Err(vec![Error::from_span(
+				elem.span(),
+				src,
+				ErrorKind::InvalidRepr,
+				"Cannot parse a value as 'Vec<T>'",
+			)]),
 		}
 	}
 
@@ -190,10 +216,14 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 	}
 }
 
-impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> ElementRepr for HashMap<K, V>
-    where K::Err: ToString
+impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> ElementRepr
+	for HashMap<K, V>
+where
+	K::Err: ToString,
 {
-	fn from_element<'l>(&mut self, elem: &ConfigElement, src: Option<&Source<'l>>) -> Result<(), Vec<Error>>
+	fn from_element<'l>(
+		&mut self, elem: &ConfigElement, src: Option<&Source<'l>>,
+	) -> Result<(), Vec<Error>>
 	{
 		match *elem.kind()
 		{
@@ -204,14 +234,17 @@ impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> Elem
 
 				for (k, v) in map
 				{
-					let key: K = k.parse()
+					let key: K = k
+						.parse()
 						.map_err(|err: K::Err| {
-							         let err = err.to_string();
-							         errors.push(Error::from_span(elem.span(),
-							                                      src,
-							                                      ErrorKind::InvalidRepr,
-							                                      &format!("Cannot parse '{}' as 'K': {}", k, err)));
-							        })
+							let err = err.to_string();
+							errors.push(Error::from_span(
+								elem.span(),
+								src,
+								ErrorKind::InvalidRepr,
+								&format!("Cannot parse '{}' as 'K': {}", k, err),
+							));
+						})
 						.unwrap_or_default();
 					let mut val: V = Default::default();
 
@@ -230,8 +263,18 @@ impl<K: Eq + Hash + ToString + FromStr + Default, V: ElementRepr + Default> Elem
 					Err(errors)
 				}
 			}
-			Array(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse an array as 'HashMap<K, V>'")]),
-			Value(_) => Err(vec![Error::from_span(elem.span(), src, ErrorKind::InvalidRepr, "Cannot parse a value as 'HashMap<K, V>'")]),
+			Array(_) => Err(vec![Error::from_span(
+				elem.span(),
+				src,
+				ErrorKind::InvalidRepr,
+				"Cannot parse an array as 'HashMap<K, V>'",
+			)]),
+			Value(_) => Err(vec![Error::from_span(
+				elem.span(),
+				src,
+				ErrorKind::InvalidRepr,
+				"Cannot parse a value as 'HashMap<K, V>'",
+			)]),
 		}
 	}
 

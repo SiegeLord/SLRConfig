@@ -83,7 +83,7 @@ if args.build:
 	check_call(cargo_cmd('build'), cwd='slr_config')
 
 if args.format:
-	for crate in crate_list_wrapper:
+	for crate in crate_list:
 		check_call(cargo_cmd('fmt'), cwd=crate)
 
 if args.test:

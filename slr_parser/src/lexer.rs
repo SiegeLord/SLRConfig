@@ -99,7 +99,10 @@ impl Span
 {
 	pub fn new() -> Span
 	{
-		Span { start: usize::MAX, len: 0 }
+		Span {
+			start: usize::MAX,
+			len: 0,
+		}
 	}
 
 	pub fn is_valid(&self) -> bool
@@ -132,7 +135,10 @@ impl<'s> Token<'s>
 {
 	fn new(kind: TokenKind<'s>, span: Span) -> Token<'s>
 	{
-		Token { kind: kind, span: span }
+		Token {
+			kind: kind,
+			span: span,
+		}
 	}
 }
 
@@ -158,8 +164,7 @@ impl<'l> TokenKind<'l>
 	{
 		match *self
 		{
-			TokenKind::EscapedString(_) |
-			TokenKind::RawString(_) => true,
+			TokenKind::EscapedString(_) | TokenKind::RawString(_) => true,
 			_ => false,
 		}
 	}
@@ -167,8 +172,17 @@ impl<'l> TokenKind<'l>
 
 fn is_string_border(c: char) -> bool
 {
-	!c.is_whitespace() && c != '=' && c != '[' && c != ']' && c != '{' && c != '}' && c != '$' && c != ',' && c != '~' && c != '"' &&
-	c != '#'
+	!c.is_whitespace()
+		&& c != '='
+		&& c != '['
+		&& c != ']'
+		&& c != '{'
+		&& c != '}'
+		&& c != '$'
+		&& c != ','
+		&& c != '~'
+		&& c != '"'
+		&& c != '#'
 }
 
 fn is_string_middle(c: char) -> bool
@@ -298,7 +312,10 @@ impl<'l> Source<'l>
 		{
 			self.cur_pos - self.span_start
 		};
-		Span { start: self.span_start, len: len }
+		Span {
+			start: self.span_start,
+			len: len,
+		}
 	}
 
 	fn get_line_col_from_pos(&self, pos: usize) -> (usize, usize)
@@ -358,7 +375,8 @@ impl<'l> Iterator for Source<'l>
 
 /// A type handling the lexing.
 pub struct Lexer<'l, 's>
-	where 's: 'l
+where
+	's: 'l,
 {
 	source: &'l mut Source<'s>,
 	pub cur_token: Option<Result<Token<'s>, Error>>,
@@ -396,7 +414,10 @@ impl Error
 {
 	pub fn new(kind: ErrorKind, text: String) -> Error
 	{
-		Error { kind: kind, text: text }
+		Error {
+			kind: kind,
+			text: text,
+		}
 	}
 
 	fn from_pos<'l>(pos: usize, source: Option<&Source<'l>>, kind: ErrorKind, msg: &str) -> Error
@@ -417,8 +438,18 @@ impl Error
 				col_str.push('^');
 
 				let source_line = source_line.replace("\t", "    ");
-				Error::new(kind,
-				           format!("{}:{}:{}: error: {}\n{}\n{}\n", source.filename.display(), line + 1, col, msg, source_line, col_str))
+				Error::new(
+					kind,
+					format!(
+						"{}:{}:{}: error: {}\n{}\n{}\n",
+						source.filename.display(),
+						line + 1,
+						col,
+						msg,
+						source_line,
+						col_str
+					),
+				)
 			}
 			None => Error::new(kind, format!("error: {}\n", msg)),
 		}
@@ -435,7 +466,8 @@ impl Error
 				if span.is_valid()
 				{
 					let (start_line, start_col) = source.get_line_col_from_pos(span.start);
-					let (end_line, end_col) = source.get_line_col_from_pos(span.start + span.len - 1);
+					let (end_line, end_col) =
+						source.get_line_col_from_pos(span.start + span.len - 1);
 
 					let source_line = source.get_line(start_line);
 					let end_col = if start_line == end_line
@@ -467,20 +499,27 @@ impl Error
 					}
 
 					let source_line = source_line.replace("\t", "    ");
-					Error::new(kind,
-					           format!("{}:{}:{}-{}:{}: error: {}\n{}\n{}\n",
-					                   source.filename.display(),
-					                   start_line + 1,
-					                   start_col,
-					                   end_line + 1,
-					                   end_col,
-					                   msg,
-					                   source_line,
-					                   col_str))
+					Error::new(
+						kind,
+						format!(
+							"{}:{}:{}-{}:{}: error: {}\n{}\n{}\n",
+							source.filename.display(),
+							start_line + 1,
+							start_col,
+							end_line + 1,
+							end_col,
+							msg,
+							source_line,
+							col_str
+						),
+					)
 				}
 				else
 				{
-					Error::new(kind, format!("{}: error: {}\n", source.filename.display(), msg))
+					Error::new(
+						kind,
+						format!("{}: error: {}\n", source.filename.display(), msg),
+					)
 				}
 			}
 			None => Error::new(kind, format!("error: {}\n", msg)),
@@ -522,7 +561,12 @@ impl std::error::Error for Error
 
 fn lex_error<'l, T>(pos: usize, source: &Source<'l>, msg: &str) -> Result<T, Error>
 {
-	Err(Error::from_pos(pos, Some(source), ErrorKind::ParseFailure, msg))
+	Err(Error::from_pos(
+		pos,
+		Some(source),
+		ErrorKind::ParseFailure,
+		msg,
+	))
 }
 
 impl<'l, 's> Lexer<'l, 's>
@@ -587,9 +631,10 @@ impl<'l, 's> Lexer<'l, 's>
 	fn eat_string(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
 		//~ println!("naked: {}", self.source.cur_char);
-		if !self.source
-		        .cur_char
-		        .map_or(false, |c| is_string_border(c) || c == '\\')
+		if !self
+			.source
+			.cur_char
+			.map_or(false, |c| is_string_border(c) || c == '\\')
 		{
 			return None;
 		}
@@ -642,7 +687,11 @@ impl<'l, 's> Lexer<'l, 's>
 		if escape_next
 		{
 			/* Got EOF while trying to escape it... */
-			return Some(lex_error(end_pos, &self.source, "Unexpected EOF while parsing escape in string literal"));
+			return Some(lex_error(
+				end_pos,
+				&self.source,
+				"Unexpected EOF while parsing escape in string literal",
+			));
 		}
 
 		let contents = &self.source.source[start_pos..end_pos];
@@ -655,7 +704,8 @@ impl<'l, 's> Lexer<'l, 's>
 
 	fn eat_raw_string(&mut self) -> Option<Result<Token<'s>, Error>>
 	{
-		if self.source.cur_char != Some('"') && !(self.source.cur_char == Some('{') && self.source.next_char == Some('{'))
+		if self.source.cur_char != Some('"')
+			&& !(self.source.cur_char == Some('{') && self.source.next_char == Some('{'))
 		{
 			return None;
 		}
@@ -665,31 +715,29 @@ impl<'l, 's> Lexer<'l, 's>
 		{
 			match self.source.cur_char
 			{
-				Some(c) =>
+				Some(c) => match c
 				{
-					match c
+					'{' =>
 					{
-						'{' =>
-						{
-							num_leading_braces += 1;
-							self.source.bump();
-						}
-						'"' =>
-						{
-							self.source.bump();
-							break;
-						}
-						_ =>
-						{
-							return Some(lex_error(self.source.span_start,
-							                      &self.source,
-							                      r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#))
-						}
+						num_leading_braces += 1;
+						self.source.bump();
 					}
-				}
+					'"' =>
+					{
+						self.source.bump();
+						break;
+					}
+					_ =>
+					{
+						return Some(lex_error(
+							self.source.span_start,
+							&self.source,
+							r#"Unexpected character while parsing raw string literal (expected '{' or '"')"#,
+						))
+					}
+				},
 				None => break,
 			}
-
 		}
 
 		let start_pos = self.source.cur_pos;
@@ -733,17 +781,27 @@ impl<'l, 's> Lexer<'l, 's>
 
 		if self.source.cur_char.is_none()
 		{
-			Some(lex_error(self.source.span_start, &self.source, "Unterminated quoted string literal"))
+			Some(lex_error(
+				self.source.span_start,
+				&self.source,
+				"Unterminated quoted string literal",
+			))
 		}
 		else
 		{
 			if num_leading_braces == 0
 			{
-				Some(Ok(Token::new(TokenKind::EscapedString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+				Some(Ok(Token::new(
+					TokenKind::EscapedString(&self.source.source[start_pos..end_pos]),
+					self.source.get_span(),
+				)))
 			}
 			else
 			{
-				Some(Ok(Token::new(TokenKind::RawString(&self.source.source[start_pos..end_pos]), self.source.get_span())))
+				Some(Ok(Token::new(
+					TokenKind::RawString(&self.source.source[start_pos..end_pos]),
+					self.source.get_span(),
+				)))
 			}
 		}
 	}
@@ -780,7 +838,8 @@ impl<'l, 's> Lexer<'l, 's>
 			while self.skip_whitespace() || self.skip_comments()
 			{}
 			self.cur_token = self.next_token.take();
-			self.next_token = self.eat_raw_string()
+			self.next_token = self
+				.eat_raw_string()
 				.or_else(|| self.eat_char_tokens())
 				.or_else(|| self.eat_string());
 		}

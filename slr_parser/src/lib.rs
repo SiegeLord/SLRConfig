@@ -11,5 +11,5 @@ pub use visitor::*;
 
 mod lexer;
 mod parser;
-mod visitor;
 mod printer;
+mod visitor;

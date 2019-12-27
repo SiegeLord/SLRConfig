@@ -23,5 +23,5 @@ path = "../slr_parser"
 version = "=0.0.18" #auto
 
 [dependencies]
-serde = "=1.0.82"
-serde_derive = "=1.0.82"
+serde = "1.0.104"
+serde_derive = "1.0.104"

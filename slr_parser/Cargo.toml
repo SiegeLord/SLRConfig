@@ -18,4 +18,4 @@ name = "lexer_test"
 path = "src/lexer_test.rs"
 
 [dependencies.serde]
-version = "=1.0.82"
+version = "1.0.104"

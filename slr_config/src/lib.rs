@@ -8,9 +8,10 @@ around the creation and use of the `ConfigElement` type, like so:
 
 ~~~
 #[macro_use]
+extern crate serde_derive;
 extern crate slr_config;
 
-use slr_config::{ConfigElement, ElementRepr};
+use slr_config::{to_element, from_element, ConfigElement};
 use std::path::Path;
 
 fn main()
@@ -25,24 +26,25 @@ fn main()
 	root.insert("key", val);
 	assert_eq!(root.to_string(), "key = value\n");
 
-	// Compile-time schemas automate the above process in many situations.
-	slr_def!
+	// You can use Serde as well.
+	#[derive(Serialize, Deserialize)]
+	struct TestSchema
 	{
-		struct TestSchema
-		{
-			key: u32 = 0,
-			arr: Vec<u32> = vec![]
-		}
+		key: u32,
+		arr: Vec<u32>,
 	}
 
-	let mut schema = TestSchema::new();
-	schema.from_element(&ConfigElement::from_str("key = 5, arr = [1, 2]").unwrap(), None).unwrap();
+	let mut schema = TestSchema {
+		key: 0,
+		arr: vec![],
+	};
+	schema = from_element(&ConfigElement::from_str("key = 5, arr = [1, 2]").unwrap(), None).unwrap();
 	assert_eq!(schema.key, 5);
 	assert_eq!(schema.arr.len(), 2);
 	assert_eq!(schema.arr[0], 1);
 	assert_eq!(schema.arr[1], 2);
 
-	let elem = schema.to_element();
+	let elem = to_element(&schema).unwrap();
 	assert_eq!(elem.as_table().unwrap()["key"].as_value().unwrap(), "5");
 	assert_eq!(elem.as_table().unwrap()["arr"].as_array().unwrap()[0].as_value().unwrap(), "1");
 }
@@ -55,12 +57,9 @@ extern crate serde;
 
 pub use config_element::*;
 pub use de::from_element;
-pub use element_repr::*;
 pub use ser::to_element;
 pub use slr_parser::{Error, ErrorKind, Source};
 
-#[macro_use]
-mod element_repr;
 mod config_element;
 
 #[cfg(test)]

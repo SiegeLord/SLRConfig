@@ -4,10 +4,8 @@
 
 use config_element::*;
 use de::from_element;
-use element_repr::*;
 use ser::to_element;
 use std::char;
-use ErrorKind;
 
 #[test]
 fn basic_test()
@@ -157,142 +155,6 @@ tab2
 	assert!(root["tab2"].as_table().unwrap()["val_test2"]
 		.as_value()
 		.is_some());
-}
-
-#[test]
-fn from_element_test()
-{
-	use std::collections::HashMap;
-
-	let elem = ConfigElement::new_value("55");
-	let mut val: i32 = 0;
-	val.from_element(&elem, None).unwrap();
-	assert_eq!(val, 55);
-
-	let mut elem = ConfigElement::new_array();
-	elem.insert("", ConfigElement::new_value("55"));
-	let mut val: Vec<i32> = vec![];
-	val.from_element(&elem, None).unwrap();
-	assert_eq!(val[0], 55);
-
-	let mut elem = ConfigElement::new_array();
-	elem.insert("", ConfigElement::new_value("nan"));
-	let mut val: Vec<i32> = vec![];
-	let res = val.from_element(&elem, None);
-	assert!(res.is_err());
-	assert_eq!(res.unwrap_err().len(), 1);
-	assert_eq!(val[0], 0);
-
-	let mut elem = ConfigElement::new_array();
-	elem.insert("", ConfigElement::new_value("1"));
-	elem.insert("", ConfigElement::new_value("2.0"));
-	let mut val: (i32, f32) = (0, 0.0);
-	val.from_element(&elem, None).unwrap();
-	assert_eq!(val.0, 1);
-	assert_eq!(val.1, 2.0);
-
-	let mut elem = ConfigElement::new_table();
-	elem.insert("1", ConfigElement::new_value("2.0"));
-	let mut val: HashMap<i32, f32> = HashMap::new();
-	val.from_element(&elem, None).unwrap();
-	assert_eq!(val[&1], 2.0);
-}
-
-#[test]
-fn to_element_test()
-{
-	use std::collections::HashMap;
-
-	let val: (i32, f32) = (1, 2.0);
-	let elem = val.to_element();
-
-	let arr = elem.as_array().unwrap();
-	assert_eq!(arr.len(), 2);
-	assert_eq!(arr[0].as_value().unwrap(), "1");
-	assert_eq!(arr[1].as_value().unwrap(), "2");
-
-	let mut val: HashMap<i32, f32> = HashMap::new();
-	val.insert(1, 2.0);
-	let elem = val.to_element();
-	let tab = elem.as_table().unwrap();
-	assert_eq!(tab["1"].as_value().unwrap(), "2");
-}
-
-#[test]
-fn slr_struct()
-{
-	slr_def! {
-		#[derive(Clone)]
-		struct Test
-		{
-			x: i32 = 0,
-			y: i32 = 0
-		}
-	}
-	let orig = Test::new();
-
-	let mut empty_test = orig.clone();
-	let empty_test_elem = ConfigElement::new_table();
-	empty_test.from_element(&empty_test_elem, None).unwrap();
-	assert_eq!(empty_test.x, 0);
-	assert_eq!(empty_test.y, 0);
-
-	let mut partial_test = orig.clone();
-	let mut partial_test_elem = ConfigElement::new_table();
-	partial_test_elem.insert("x", ConfigElement::new_value("5"));
-	partial_test.from_element(&partial_test_elem, None).unwrap();
-	assert_eq!(partial_test.x, 5);
-	assert_eq!(partial_test.y, 0);
-
-	let mut tag_test = orig.clone();
-	let mut tag_test_elem = ConfigElement::new_tagged_table("tag".to_string());
-	tag_test_elem.insert("x", ConfigElement::new_value("5"));
-	tag_test.from_element(&tag_test_elem, None).unwrap();
-	assert_eq!(tag_test.x, 5);
-	assert_eq!(tag_test.y, 0);
-
-	let partial_test_elem = partial_test.to_element();
-	assert_eq!(partial_test_elem.tag().unwrap(), "Test");
-	assert!(partial_test_elem.as_table().is_some());
-	assert_eq!(
-		partial_test_elem.as_table().unwrap()["x"]
-			.as_value()
-			.unwrap(),
-		"5"
-	);
-	assert_eq!(
-		partial_test_elem.as_table().unwrap()["y"]
-			.as_value()
-			.unwrap(),
-		"0"
-	);
-
-	let mut err_test = orig.clone();
-	let mut err_test_elem = ConfigElement::new_table();
-	err_test_elem.insert("z", ConfigElement::new_value("5"));
-	let res = err_test.from_element(&err_test_elem, None).unwrap_err();
-	assert_eq!(res[0].kind, ErrorKind::UnknownField);
-}
-
-#[test]
-fn slr_enum()
-{
-	slr_def! {
-		#[derive(Clone, PartialEq, Debug)]
-		enum Test
-		{
-			A,
-			B
-		}
-	}
-	let mut test = Test::A;
-
-	let test_elem = ConfigElement::new_value("B");
-	test.from_element(&test_elem, None).unwrap();
-	assert_eq!(test, Test::B);
-
-	let test_elem = test.to_element();
-	assert_eq!(test_elem.as_value().unwrap(), "B");
 }
 
 #[test]

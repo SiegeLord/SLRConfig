@@ -165,6 +165,9 @@ fn serde_test()
 	use std::path::Path;
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	struct Unit;
+
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
 	struct B
 	{
 		a: i32,
@@ -181,6 +184,7 @@ fn serde_test()
 		h: (i32, i32),
 		g1: B,
 		g2: B,
+		i: Unit,
 	}
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -206,6 +210,7 @@ fn serde_test()
 		h: (1, 2),
 		g1: B { a: 1 },
 		g2: B { a: 2 },
+		i: Unit,
 	};
 
 	let elem = to_element(&v).unwrap();
@@ -240,6 +245,7 @@ fn serde_test()
 		{
 			a = 2
 		}
+		i = Unit
 	"#;
 	let mut src = Source::new(&Path::new("none"), &src_str);
 	let elem = ConfigElement::from_source(&mut src).unwrap();

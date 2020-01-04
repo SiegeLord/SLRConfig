@@ -664,11 +664,28 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		}
 	}
 
-	fn deserialize_unit_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value, Error>
+	fn deserialize_unit_struct<V>(self, name: &'static str, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		self.deserialize_unit(visitor)
+		if let Some(value) = self.element.as_value()
+		{
+			if value == name
+			{
+				visitor.visit_unit()
+			}
+			else
+			{
+				Err(self.error(&format!(
+					"Expected a value equal to '{}', got '{}'",
+					name, value
+				)))
+			}
+		}
+		else
+		{
+			Err(self.error(&format!("Expected a value equal to '{}'.", name)))
+		}
 	}
 
 	fn deserialize_newtype_struct<V>(
@@ -750,8 +767,7 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 			{
 				return Err(self.error(&format!(
 					"Cannot deserialize struct '{}' from a table with tag '{}'.",
-					name,
-					tag,
+					name, tag,
 				)));
 			}
 		}

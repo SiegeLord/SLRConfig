@@ -330,9 +330,9 @@ impl serde::Serializer for Serializer
 		Ok(ConfigElement::new_value(""))
 	}
 
-	fn serialize_unit_struct(self, _name: &'static str) -> Result<ConfigElement, Error>
+	fn serialize_unit_struct(self, name: &'static str) -> Result<ConfigElement, Error>
 	{
-		Ok(ConfigElement::new_value(""))
+		Ok(ConfigElement::new_value(name))
 	}
 
 	fn serialize_unit_variant(

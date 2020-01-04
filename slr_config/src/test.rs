@@ -70,6 +70,10 @@ arr1 = []
 arr3 = [a]
 arr2 = [[], {}]
 
+tag1 = a {}
+tag2 = a { a = 2 }
+tag3 = [a {}, b {}]
+
 foo2 = [a]
 
 foo2 = test
@@ -240,7 +244,15 @@ fn slr_struct()
 	assert_eq!(partial_test.x, 5);
 	assert_eq!(partial_test.y, 0);
 
+	let mut tag_test = orig.clone();
+	let mut tag_test_elem = ConfigElement::new_tagged_table("tag".to_string());
+	tag_test_elem.insert("x", ConfigElement::new_value("5"));
+	tag_test.from_element(&tag_test_elem, None).unwrap();
+	assert_eq!(tag_test.x, 5);
+	assert_eq!(tag_test.y, 0);
+
 	let partial_test_elem = partial_test.to_element();
+	assert_eq!(partial_test_elem.tag().unwrap(), "Test");
 	assert!(partial_test_elem.as_table().is_some());
 	assert_eq!(
 		partial_test_elem.as_table().unwrap()["x"]
@@ -291,6 +303,12 @@ fn serde_test()
 	use std::path::Path;
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	struct B
+	{
+		a: i32,
+	}
+
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
 	struct A
 	{
 		b: i32,
@@ -299,6 +317,8 @@ fn serde_test()
 		e: Vec<E>,
 		f: HashMap<i32, i32>,
 		h: (i32, i32),
+		g1: B,
+		g2: B,
 	}
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -322,6 +342,8 @@ fn serde_test()
 		e: vec![E::Var1, E::Var2(1), E::Var3 { v: 1 }, E::Var4(1, 2)],
 		f: f,
 		h: (1, 2),
+		g1: B { a: 1 },
+		g2: B { a: 2 },
 	};
 
 	let elem = to_element(&v).unwrap();
@@ -338,11 +360,9 @@ fn serde_test()
 			{
 				Var2 = 1
 			},
+			Var3
 			{
-				Var3
-				{
-					v = 1
-				}
+				v = 1
 			},
 			{
 				Var4 = [1, 2]
@@ -350,6 +370,14 @@ fn serde_test()
 		]
 		f = [[1, 2]]
 		h = [1, 2]
+		g1 = B
+		{
+			a = 1
+		}
+		g2
+		{
+			a = 2
+		}
 	"#;
 	let mut src = Source::new(&Path::new("none"), &src_str);
 	let elem = ConfigElement::from_source(&mut src).unwrap();

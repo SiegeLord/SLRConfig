@@ -1,4 +1,4 @@
-use config_element::{Array, ConfigElement, Table, Value};
+use config_element::{Array, ConfigElement, Table, TaggedTable, Value};
 use slr_parser::{Error, ErrorKind, Source};
 use std::collections::HashMap;
 use std::default::Default;
@@ -66,6 +66,7 @@ macro_rules! element_repr_tuple_impl
 						}
 					}
 					Table(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Cannot parse a table as a tuple")]),
+					TaggedTable(_, _) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Cannot parse a tagged table as a tuple")]),
 					Value(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, "Cannot parse a value as a tuple")]),
 				}
 			}
@@ -125,6 +126,12 @@ macro_rules! element_repr_via_str_impl {
 						src,
 						$crate::ErrorKind::InvalidRepr,
 						&format!("Cannot parse a table as {}", stringify!($t)),
+					)]),
+					$crate::TaggedTable(_, _) => Err(vec![$crate::Error::from_span(
+						elem.span(),
+						src,
+						$crate::ErrorKind::InvalidRepr,
+						&format!("Cannot parse a tagged table as {}", stringify!($t)),
 					)]),
 					$crate::Array(_) => Err(vec![$crate::Error::from_span(
 						elem.span(),
@@ -192,6 +199,12 @@ impl<T: ElementRepr + Default> ElementRepr for Vec<T>
 				ErrorKind::InvalidRepr,
 				"Cannot parse a table as 'Vec<T>'",
 			)]),
+			TaggedTable(_, _) => Err(vec![Error::from_span(
+				elem.span(),
+				src,
+				ErrorKind::InvalidRepr,
+				"Cannot parse a tagged table as 'Vec<T>'",
+			)]),
 			Value(_) => Err(vec![Error::from_span(
 				elem.span(),
 				src,
@@ -227,7 +240,7 @@ where
 	{
 		match *elem.kind()
 		{
-			Table(ref map) =>
+			Table(ref map) | TaggedTable(_, ref map) =>
 			{
 				let mut errors = vec![];
 				self.clear();
@@ -309,7 +322,7 @@ macro_rules! slr_def_struct_impl
 			{
 				match *elem.kind()
 				{
-					$crate::Table(ref table) =>
+					$crate::Table(ref table) | $crate::TaggedTable(_, ref table) =>
 					{
 						let mut errors = vec![];
 						for (k, v) in table
@@ -343,7 +356,7 @@ macro_rules! slr_def_struct_impl
 
 			fn to_element(&self) -> $crate::ConfigElement
 			{
-				let mut ret = $crate::ConfigElement::new_table();
+				let mut ret = $crate::ConfigElement::new_tagged_table(stringify!($name).to_string());
 				{
 					let tab = ret.as_table_mut().unwrap();
 					$(
@@ -389,6 +402,7 @@ macro_rules! slr_def_enum_impl
 						}
 					},
 					$crate::Table(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a table as {}", stringify!($name)))]),
+					$crate::TaggedTable(_, _) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse a tagged table as {}", stringify!($name)))]),
 					$crate::Array(_) => Err(vec![$crate::Error::from_span(elem.span(), src, $crate::ErrorKind::InvalidRepr, &format!("Cannot parse an array as {}", stringify!($name)))]),
 				}
 			}

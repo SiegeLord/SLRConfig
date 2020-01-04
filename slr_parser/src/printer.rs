@@ -152,6 +152,45 @@ impl<'l, W: io::Write> Printer<'l, W>
 		Ok(())
 	}
 
+	pub fn start_tagged_table(
+		&mut self, name: Option<&str>, tag: &str, is_root: bool, one_line: bool,
+	) -> Result<(), io::Error>
+	{
+		if is_root
+		{
+			self.in_root = true;
+			return Ok(());
+		}
+		self.start_value()?;
+		match name
+		{
+			Some(name) =>
+			{
+				self.write_string(name)?;
+				write!(self.writer, " = ")?;
+			}
+			_ => (),
+		}
+		self.write_string(tag)?;
+		if one_line
+		{
+			write!(self.writer, " ")?;
+		}
+		else
+		{
+			write!(self.writer, "\n")?;
+			self.write_indent()?;
+		}
+		write!(self.writer, "{{")?;
+
+		self.set_empty(false);
+		self.depth += 1;
+		self.in_array.push(false);
+		self.is_empty.push(true);
+		self.one_line.push(one_line);
+		Ok(())
+	}
+
 	pub fn end_array(&mut self) -> Result<(), io::Error>
 	{
 		if !self.one_line() && !self.is_empty()

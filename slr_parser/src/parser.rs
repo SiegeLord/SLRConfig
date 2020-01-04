@@ -179,7 +179,28 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		))
 	}
 
-	fn parse_table(&mut self) -> Result<bool, Error>
+	fn parse_tagged_table(&mut self) -> Result<bool, Error>
+	{
+		let tag = try_eof!(self.lexer.cur_token, Ok(false));
+		if !tag.kind.is_string()
+		{
+			return Ok(false);
+		}
+		let brace = try_eof!(self.lexer.next_token, Ok(false));
+		if brace.kind != TokenKind::LeftBrace
+		{
+			return Ok(false);
+		}
+		self.lexer.next();
+		self.visitor.set_tagged_table(
+			self.lexer.get_source(),
+			tag.span,
+			ConfigString::from_token(tag),
+		)?;
+		self.parse_table(true)
+	}
+
+	fn parse_table(&mut self, is_tagged: bool) -> Result<bool, Error>
 	{
 		let left_brace = try_eof!(self.lexer.cur_token, Ok(false));
 		if left_brace.kind != TokenKind::LeftBrace
@@ -187,8 +208,11 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 			return Ok(false);
 		}
 		self.lexer.next();
-		self.visitor
-			.set_table(self.lexer.get_source(), left_brace.span)?;
+		if !is_tagged
+		{
+			self.visitor
+				.set_table(self.lexer.get_source(), left_brace.span)?;
+		}
 		self.parse_table_contents()?;
 		let right_brace = try_eof!(
 			self.lexer.cur_token,
@@ -247,6 +271,10 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 				{
 					true
 				}
+				else if self.parse_tagged_table()?
+				{
+					true
+				}
 				else if self.parse_string_expr()?
 				{
 					true
@@ -263,7 +291,7 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 					return self.parse_error(token.span, "Expected '[' or a string");
 				}
 			}
-			else if self.parse_table()?
+			else if self.parse_table(false)?
 			{
 				true
 			}
@@ -339,13 +367,20 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		{
 			self.visitor
 				.start_element(self.lexer.get_source(), ConfigString::new())?;
-			self.parse_string_expr()?
+			if self.parse_tagged_table()?
+			{
+				true
+			}
+			else
+			{
+				self.parse_string_expr()?
+			}
 		}
 		else if token.kind == TokenKind::LeftBrace
 		{
 			self.visitor
 				.start_element(self.lexer.get_source(), ConfigString::new())?;
-			self.parse_table()?
+			self.parse_table(false)?
 		}
 		else if token.kind == TokenKind::LeftBracket
 		{
@@ -375,8 +410,7 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 				{
 					Some(span) =>
 					{
-						self
-							.parse_error(span, "Expected a string or '$' to follow, but got EOF")
+						self.parse_error(span, "Expected a string or '$' to follow, but got EOF")
 					}
 					None => Ok(false),
 				}

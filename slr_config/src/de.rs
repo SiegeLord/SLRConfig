@@ -416,6 +416,10 @@ impl<'de, 'src> de::EnumAccess<'de> for Deserializer<'de, 'src>
 				seed.deserialize(self)?,
 				VariantHelper::new(None, self.source, span),
 			)),
+			ConfigElementKind::TaggedTable(ref tag, _) => Ok((
+				seed.deserialize(HackStringDeserializer::new(&*tag))?,
+				VariantHelper::new(Some(self.element), self.source, span),
+			)),
 			ConfigElementKind::Table(ref table) =>
 			{
 				let mut iter = table.iter();
@@ -735,11 +739,22 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	}
 
 	fn deserialize_struct<V>(
-		self, _name: &'static str, _fields: &'static [&'static str], visitor: V,
+		self, name: &'static str, _fields: &'static [&'static str], visitor: V,
 	) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
+		if let Some(tag) = self.element.tag()
+		{
+			if tag != name
+			{
+				return Err(self.error(&format!(
+					"Cannot deserialize struct '{}' from a table with tag '{}'.",
+					name,
+					tag,
+				)));
+			}
+		}
 		if let Some(table) = self.element.as_table()
 		{
 			visitor.visit_map(MapHelper::new(table, self.source))

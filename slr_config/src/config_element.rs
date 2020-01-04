@@ -29,6 +29,9 @@ pub enum ConfigElementKind
 	Value(String),
 	/// A table, which is a mapping of strings to configuration elements.
 	Table(BTreeMap<String, ConfigElement>),
+	/// A tagged table, which is a mapping of strings to configuration elements
+	/// with a string tag.
+	TaggedTable(String, BTreeMap<String, ConfigElement>),
 	/// An array of configuration elements.
 	Array(Vec<ConfigElement>),
 }
@@ -40,6 +43,15 @@ impl ConfigElement
 	{
 		ConfigElement {
 			kind: Table(BTreeMap::new()),
+			span: Span::new(),
+		}
+	}
+
+	/// Creates a new empty tagged table.
+	pub fn new_tagged_table(tag: String) -> ConfigElement
+	{
+		ConfigElement {
+			kind: TaggedTable(tag, BTreeMap::new()),
 			span: Span::new(),
 		}
 	}
@@ -125,6 +137,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(ref table) => Some(table),
+			TaggedTable(_, ref table) => Some(table),
 			_ => None,
 		}
 	}
@@ -135,6 +148,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(table) => Some(table),
+			TaggedTable(_, table) => Some(table),
 			_ => None,
 		}
 	}
@@ -145,6 +159,7 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(ref mut table) => Some(table),
+			TaggedTable(_, ref mut table) => Some(table),
 			_ => None,
 		}
 	}
@@ -209,6 +224,24 @@ impl ConfigElement
 		}
 	}
 
+	pub fn tag(&self) -> Option<&String>
+	{
+		match self.kind
+		{
+			TaggedTable(ref tag, _) => Some(tag),
+			_ => None,
+		}
+	}
+
+	pub fn tag_mut(&mut self) -> Option<&mut String>
+	{
+		match self.kind
+		{
+			TaggedTable(ref mut tag, _) => Some(tag),
+			_ => None,
+		}
+	}
+
 	/// Insert an element into a table or an array. Panics if self is a value.
 	/// `name` is ignored if self is an array.
 	pub fn insert<T: ToString>(&mut self, name: T, elem: ConfigElement)
@@ -216,6 +249,10 @@ impl ConfigElement
 		match self.kind
 		{
 			Table(ref mut table) =>
+			{
+				table.insert(name.to_string(), elem);
+			}
+			TaggedTable(_, ref mut table) =>
 			{
 				table.insert(name.to_string(), elem);
 			}
@@ -238,6 +275,15 @@ impl ConfigElement
 			Table(ref table) =>
 			{
 				printer.start_table(name, is_root, table.is_empty())?;
+				for (k, v) in table
+				{
+					v.print(Some(k), false, printer)?;
+				}
+				printer.end_table(is_root)?;
+			}
+			TaggedTable(ref tag, ref table) =>
+			{
+				printer.start_tagged_table(name, tag, is_root, table.is_empty())?;
 				for (k, v) in table
 				{
 					v.print(Some(k), false, printer)?;
@@ -357,6 +403,14 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 				{
 					return visit_error(string.span, src, "Cannot append a string to a table")
 				}
+				TaggedTable(_, _) =>
+				{
+					return visit_error(
+						string.span,
+						src,
+						"Cannot append a string to a tagged table",
+					)
+				}
 				Array(_) =>
 				{
 					return visit_error(string.span, src, "Cannot append a string to an array")
@@ -371,6 +425,17 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 	{
 		let stack_size = self.stack.len();
 		self.stack[stack_size - 1].1 = ConfigElement::new_table();
+		self.stack[stack_size - 1].1.span = span;
+		self.stack[stack_size - 1].2 = true;
+		Ok(())
+	}
+
+	fn set_tagged_table(
+		&mut self, _src: &Source<'l>, span: Span, tag: ConfigString<'l>,
+	) -> Result<(), Error>
+	{
+		let stack_size = self.stack.len();
+		self.stack[stack_size - 1].1 = ConfigElement::new_tagged_table(tag.to_string());
 		self.stack[stack_size - 1].1.span = span;
 		self.stack[stack_size - 1].2 = true;
 		Ok(())
@@ -402,6 +467,10 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 			{
 				Value(_) => continue,
 				Table(ref table) =>
+				{
+					found_element = table.get(&name).map(|v| v.clone());
+				}
+				TaggedTable(_, ref table) =>
 				{
 					found_element = table.get(&name).map(|v| v.clone());
 				}
@@ -439,9 +508,17 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 				{
 					Value(ref found_val) => lhs_val.push_str(found_val),
 					Table(_) => return visit_error(span, src, "Cannot append a table to a value"),
+					TaggedTable(_, _) =>
+					{
+						return visit_error(span, src, "Cannot append a tagged table to a value")
+					}
 					Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
 				},
 				Table(_) => return visit_error(span, src, "Cannot append to a table"),
+				TaggedTable(_, _) =>
+				{
+					return visit_error(span, src, "Cannot append to a tagged table")
+				}
 				Array(_) => return visit_error(span, src, "Cannot append to an array"),
 			}
 		}

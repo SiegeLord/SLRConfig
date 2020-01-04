@@ -36,9 +36,9 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 <Expansion> ::= '$' <String>
 
 <Expr> ::= <String>
-       |   <Expansion>
-       |   <Expr> '~' <String>
-       |   <Expr> '~' <Expansion>
+        |  <Expansion>
+        |  <Expr> '~' <String>
+        |  <Expr> '~' <Expansion>
 
 ! Array
 
@@ -47,12 +47,14 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 <ArrayElement> ::= <Expr>
                 | <Table>
                 | <Array>
+                | <TaggedTable>
+                | <TaggedArray>
 
 <ArrayElements> ::= <ArrayElement>
                  |  <ArrayElements> ',' <ArrayElement>
 
 <ArrayContents> ::= <ArrayElements> <OptComma>
-                     |
+                 |
 ! Table
 
 <Table> ::= '{' <TableContents> '}'
@@ -60,10 +62,17 @@ RawString2 = '{{{"' {Raw String Chars}* '"}}}'
 <TableElement> ::= <String> <Table>
                 |  <String> '=' <Array>
                 |  <String> '=' <Expr>
+                |  <String> '=' <TaggedTable>
+                |  <String> '=' <TaggedArray>
 
 <TableElements> ::= <TableElement>
                  |  <TableElements> <OptComma> <TableElement>
 
 <TableContents> ::= <TableElements> <OptComma>
-                     |
+                 |
 
+! Tagged Array
+<TaggedArray> ::= <String> <Array>
+
+! Tagged Table
+<TaggedTable> ::= <String> <Table>

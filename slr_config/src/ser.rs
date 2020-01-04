@@ -23,10 +23,10 @@ impl SeqHelper
 		}
 	}
 
-	fn new_table() -> Self
+	fn new_tagged_table(name: &str) -> Self
 	{
 		Self {
-			element: ConfigElement::new_table(),
+			element: ConfigElement::new_tagged_table(name.to_string()),
 		}
 	}
 }
@@ -174,11 +174,11 @@ impl VariantHelper
 		}
 	}
 
-	fn new_table(variant: &'static str) -> Self
+	fn new_tagged_table(variant: &'static str) -> Self
 	{
 		Self {
 			variant: variant,
-			element: ConfigElement::new_table(),
+			element: ConfigElement::new_tagged_table(variant.to_string()),
 		}
 	}
 }
@@ -219,9 +219,7 @@ impl ser::SerializeStructVariant for VariantHelper
 
 	fn end(self) -> Result<ConfigElement, Error>
 	{
-		let mut ret = ConfigElement::new_table();
-		ret.insert(self.variant, self.element);
-		Ok(ret)
+		Ok(self.element)
 	}
 }
 
@@ -389,15 +387,15 @@ impl serde::Serializer for Serializer
 		Ok(MapHelper::new())
 	}
 
-	fn serialize_struct(self, _name: &'static str, _len: usize) -> Result<SeqHelper, Error>
+	fn serialize_struct(self, name: &'static str, _len: usize) -> Result<SeqHelper, Error>
 	{
-		Ok(SeqHelper::new_table())
+		Ok(SeqHelper::new_tagged_table(name))
 	}
 
 	fn serialize_struct_variant(
 		self, _name: &'static str, _variant_index: u32, variant: &'static str, _len: usize,
 	) -> Result<VariantHelper, Error>
 	{
-		Ok(VariantHelper::new_table(variant))
+		Ok(VariantHelper::new_tagged_table(variant))
 	}
 }

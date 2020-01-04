@@ -7,6 +7,10 @@ arr1 = []
 arr3 = [a]
 arr2 = [[], {}]
 
+tag1 = a {}
+tag2 = a { a = 2 }
+tag3 = [a {}, b {}]
+
 foo2 = [a]
 
 foo2 = test

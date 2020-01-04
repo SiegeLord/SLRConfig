@@ -375,10 +375,10 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 				{
 					Some(span) =>
 					{
-						return self
-							.parse_error(span, "Expected a string or '$' to follow, but got EOF");
+						self
+							.parse_error(span, "Expected a string or '$' to follow, but got EOF")
 					}
-					None => return Ok(false),
+					None => Ok(false),
 				}
 			);
 			if token.kind.is_string()

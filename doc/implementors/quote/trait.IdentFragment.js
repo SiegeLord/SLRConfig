@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["slr_parser"] = [];
+implementors["quote"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

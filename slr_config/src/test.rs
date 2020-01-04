@@ -72,6 +72,10 @@ tag1 = a {}
 tag2 = a { a = 2 }
 tag3 = [a {}, b {}]
 
+taga1 = a []
+taga2 = a [1, 2]
+taga3 = [a [1], b [2]]
+
 foo2 = [a]
 
 foo2 = test
@@ -168,6 +172,12 @@ fn serde_test()
 	struct Unit;
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	struct NewType(i32);
+
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
+	struct Tuple(i32, i32);
+
+	#[derive(Serialize, Deserialize, PartialEq, Debug)]
 	struct B
 	{
 		a: i32,
@@ -185,6 +195,10 @@ fn serde_test()
 		g1: B,
 		g2: B,
 		i: Unit,
+		j1: NewType,
+		j2: NewType,
+		k1: Tuple,
+		k2: Tuple,
 	}
 
 	#[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -211,32 +225,30 @@ fn serde_test()
 		g1: B { a: 1 },
 		g2: B { a: 2 },
 		i: Unit,
+		j1: NewType(1),
+		j2: NewType(2),
+		k1: Tuple(1, 1),
+		k2: Tuple(2, 2),
 	};
 
 	let elem = to_element(&v).unwrap();
 	println!("\n{}", elem);
 
-	// TODO: enum variants have a very ugly serialization format.
 	let src_str = r#"
 		b = 1
 		c = ""
 		d = 1
 		e =
 		[
-			Var1,
-			{
-				Var2 = 1
-			},
-			Var3
-			{
-				v = 1
-			},
-			{
-				Var4 = [1, 2]
-			}
+				Var1,
+				Var2 [1],
+				Var3
+				{
+					v = 1
+				},
+				Var4 [1, 2]
 		]
 		f = [[1, 2]]
-		h = [1, 2]
 		g1 = B
 		{
 			a = 1
@@ -245,10 +257,21 @@ fn serde_test()
 		{
 			a = 2
 		}
+		h = [1, 2]
 		i = Unit
+		j1 = [1]
+		j2 = NewType [2]
+		k1 = [1, 1]
+		k2 = Tuple [2, 2]
 	"#;
 	let mut src = Source::new(&Path::new("none"), &src_str);
-	let elem = ConfigElement::from_source(&mut src).unwrap();
+	let elem = ConfigElement::from_source(&mut src);
+	if let Err(ref err) = elem
+	{
+		println!("Error");
+		println!("{}", err.text);
+	}
+	let elem = elem.unwrap();
 
 	let v2 = from_element(&elem, Some(&src));
 

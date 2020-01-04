@@ -11,6 +11,10 @@ tag1 = a {}
 tag2 = a { a = 2 }
 tag3 = [a {}, b {}]
 
+taga1 = a []
+taga2 = a [1, 2]
+taga3 = [a [1], b [2]]
+
 foo2 = [a]
 
 foo2 = test

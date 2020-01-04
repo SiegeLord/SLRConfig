@@ -13,7 +13,7 @@ use std::path::Path;
 use std::str::{from_utf8, FromStr};
 
 /// A configuration element.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ConfigElement
 {
 	kind: ConfigElementKind,
@@ -22,7 +22,7 @@ pub struct ConfigElement
 
 // TODO: It's annoying that we lose the span information from Values and Table keys.
 /// The kind of the configuration element.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ConfigElementKind
 {
 	/// A simple value, containing a string.
@@ -34,6 +34,8 @@ pub enum ConfigElementKind
 	TaggedTable(String, BTreeMap<String, ConfigElement>),
 	/// An array of configuration elements.
 	Array(Vec<ConfigElement>),
+	/// An array of configuration elements with a string tag.
+	TaggedArray(String, Vec<ConfigElement>),
 }
 
 impl ConfigElement
@@ -69,7 +71,16 @@ impl ConfigElement
 	pub fn new_array() -> ConfigElement
 	{
 		ConfigElement {
-			kind: Array(Vec::new()),
+			kind: Array(vec![]),
+			span: Span::new(),
+		}
+	}
+
+	/// Creates a new tagged array.
+	pub fn new_tagged_array(tag: String) -> ConfigElement
+	{
+		ConfigElement {
+			kind: TaggedArray(tag, vec![]),
 			span: Span::new(),
 		}
 	}
@@ -136,8 +147,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Table(ref table) => Some(table),
-			TaggedTable(_, ref table) => Some(table),
+			Table(ref table) | TaggedTable(_, ref table) => Some(table),
 			_ => None,
 		}
 	}
@@ -147,8 +157,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Table(table) => Some(table),
-			TaggedTable(_, table) => Some(table),
+			Table(table) | TaggedTable(_, table) => Some(table),
 			_ => None,
 		}
 	}
@@ -158,8 +167,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Table(ref mut table) => Some(table),
-			TaggedTable(_, ref mut table) => Some(table),
+			Table(ref mut table) | TaggedTable(_, ref mut table) => Some(table),
 			_ => None,
 		}
 	}
@@ -199,7 +207,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(ref array) => Some(array),
+			Array(ref array) | TaggedArray(_, ref array) => Some(array),
 			_ => None,
 		}
 	}
@@ -209,7 +217,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(array) => Some(array),
+			Array(array) | TaggedArray(_, array) => Some(array),
 			_ => None,
 		}
 	}
@@ -219,7 +227,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(ref mut array) => Some(array),
+			Array(ref mut array) | TaggedArray(_, ref mut array) => Some(array),
 			_ => None,
 		}
 	}
@@ -228,7 +236,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			TaggedTable(ref tag, _) => Some(tag),
+			TaggedTable(ref tag, _) | TaggedArray(ref tag, _) => Some(tag),
 			_ => None,
 		}
 	}
@@ -237,7 +245,7 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			TaggedTable(ref mut tag, _) => Some(tag),
+			TaggedTable(ref mut tag, _) | TaggedArray(ref mut tag, _) => Some(tag),
 			_ => None,
 		}
 	}
@@ -248,15 +256,11 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Table(ref mut table) =>
+			Table(ref mut table) | TaggedTable(_, ref mut table) =>
 			{
 				table.insert(name.to_string(), elem);
 			}
-			TaggedTable(_, ref mut table) =>
-			{
-				table.insert(name.to_string(), elem);
-			}
-			Array(ref mut array) =>
+			Array(ref mut array) | TaggedArray(_, ref mut array) =>
 			{
 				array.push(elem);
 			}
@@ -297,7 +301,7 @@ impl ConfigElement
 				{
 					match v.kind
 					{
-						Table(ref table) =>
+						Table(ref table) | TaggedTable(_, ref table) =>
 						{
 							if !table.is_empty()
 							{
@@ -309,6 +313,31 @@ impl ConfigElement
 					}
 				}
 				printer.start_array(name, one_line)?;
+				for v in array
+				{
+					v.print(None, false, printer)?;
+				}
+				printer.end_array()?;
+			}
+			TaggedArray(ref tag, ref array) =>
+			{
+				let mut one_line = true;
+				for v in array
+				{
+					match v.kind
+					{
+						Table(ref table) | TaggedTable(_, ref table) =>
+						{
+							if !table.is_empty()
+							{
+								one_line = false;
+								break;
+							}
+						}
+						_ => (),
+					}
+				}
+				printer.start_tagged_array(name, tag, one_line)?;
 				for v in array
 				{
 					v.print(None, false, printer)?;
@@ -415,6 +444,14 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 				{
 					return visit_error(string.span, src, "Cannot append a string to an array")
 				}
+				TaggedArray(_, _) =>
+				{
+					return visit_error(
+						string.span,
+						src,
+						"Cannot append a string to a tagged array",
+					)
+				}
 			}
 		}
 		self.stack[stack_size - 1].2 = true;
@@ -450,6 +487,17 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 		Ok(())
 	}
 
+	fn set_tagged_array(
+		&mut self, _src: &Source<'l>, span: Span, tag: ConfigString<'l>,
+	) -> Result<(), Error>
+	{
+		let stack_size = self.stack.len();
+		self.stack[stack_size - 1].1 = ConfigElement::new_tagged_array(tag.to_string());
+		self.stack[stack_size - 1].1.span = span;
+		self.stack[stack_size - 1].2 = true;
+		Ok(())
+	}
+
 	fn expand(&mut self, src: &Source<'l>, name: ConfigString<'l>) -> Result<(), Error>
 	{
 		let mut found_element = None;
@@ -466,15 +514,11 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 			match elem.kind
 			{
 				Value(_) => continue,
-				Table(ref table) =>
+				Table(ref table) | TaggedTable(_, ref table) =>
 				{
 					found_element = table.get(&name).map(|v| v.clone());
 				}
-				TaggedTable(_, ref table) =>
-				{
-					found_element = table.get(&name).map(|v| v.clone());
-				}
-				Array(ref array) =>
+				Array(ref array) | TaggedArray(_, ref array) =>
 				{
 					found_element = <usize>::from_str(&name)
 						.ok()
@@ -513,6 +557,10 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 						return visit_error(span, src, "Cannot append a tagged table to a value")
 					}
 					Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
+					TaggedArray(_, _) =>
+					{
+						return visit_error(span, src, "Cannot append an tagged array to a value")
+					}
 				},
 				Table(_) => return visit_error(span, src, "Cannot append to a table"),
 				TaggedTable(_, _) =>
@@ -520,6 +568,10 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 					return visit_error(span, src, "Cannot append to a tagged table")
 				}
 				Array(_) => return visit_error(span, src, "Cannot append to an array"),
+				TaggedArray(_, _) =>
+				{
+					return visit_error(span, src, "Cannot append to a tagged array")
+				}
 			}
 		}
 		else

@@ -179,6 +179,27 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		))
 	}
 
+	fn parse_tagged_array(&mut self) -> Result<bool, Error>
+	{
+		let tag = try_eof!(self.lexer.cur_token, Ok(false));
+		if !tag.kind.is_string()
+		{
+			return Ok(false);
+		}
+		let bracket = try_eof!(self.lexer.next_token, Ok(false));
+		if bracket.kind != TokenKind::LeftBracket
+		{
+			return Ok(false);
+		}
+		self.lexer.next();
+		self.visitor.set_tagged_array(
+			self.lexer.get_source(),
+			tag.span,
+			ConfigString::from_token(tag),
+		)?;
+		self.parse_array(true)
+	}
+
 	fn parse_tagged_table(&mut self) -> Result<bool, Error>
 	{
 		let tag = try_eof!(self.lexer.cur_token, Ok(false));
@@ -267,7 +288,11 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 			if assign.kind == TokenKind::Assign
 			{
 				self.lexer.next();
-				if self.parse_array()?
+				if self.parse_array(false)?
+				{
+					true
+				}
+				else if self.parse_tagged_array()?
 				{
 					true
 				}
@@ -311,7 +336,7 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		Ok(ret)
 	}
 
-	fn parse_array(&mut self) -> Result<bool, Error>
+	fn parse_array(&mut self, is_tagged: bool) -> Result<bool, Error>
 	{
 		let left_bracket = try_eof!(self.lexer.cur_token, Ok(false));
 		if left_bracket.kind != TokenKind::LeftBracket
@@ -319,8 +344,11 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 			return Ok(false);
 		}
 		self.lexer.next();
-		self.visitor
-			.set_array(self.lexer.get_source(), left_bracket.span)?;
+		if !is_tagged
+		{
+			self.visitor
+				.set_array(self.lexer.get_source(), left_bracket.span)?;
+		}
 		self.parse_array_contents()?;
 		let right_bracket = try_eof!(
 			self.lexer.cur_token,
@@ -367,7 +395,11 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		{
 			self.visitor
 				.start_element(self.lexer.get_source(), ConfigString::new())?;
-			if self.parse_tagged_table()?
+			if self.parse_tagged_array()?
+			{
+				true
+			}
+			else if self.parse_tagged_table()?
 			{
 				true
 			}
@@ -386,7 +418,7 @@ impl<'l, 's, 'm, V: Visitor<'l>> Parser<'l, 's, 'm, V>
 		{
 			self.visitor
 				.start_element(self.lexer.get_source(), ConfigString::new())?;
-			self.parse_array()?
+			self.parse_array(false)?
 		}
 		else
 		{

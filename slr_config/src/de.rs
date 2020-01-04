@@ -254,7 +254,19 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 	{
 		if let Some(elem) = self.element
 		{
-			seed.deserialize(Deserializer::new(elem, self.source))
+			if let Some([elem]) = elem.as_array().map(|a| &a[..])
+			{
+				seed.deserialize(Deserializer::new(elem, self.source))
+			}
+			else
+			{
+				Err(Error::from_span(
+					self.span,
+					self.source,
+					ErrorKind::InvalidRepr,
+					"Expected a tagged array with a single element.",
+				))
+			}
 		}
 		else
 		{
@@ -262,7 +274,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 				self.span,
 				self.source,
 				ErrorKind::InvalidRepr,
-				"Expected a table with a single element.",
+				"Expected a tagged array with a single element.",
 			))
 		}
 	}
@@ -283,7 +295,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 					self.span,
 					self.source,
 					ErrorKind::InvalidRepr,
-					"Expected a table with a single array element.",
+					"Expected a tagged array.",
 				))
 			}
 		}
@@ -293,7 +305,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 				self.span,
 				self.source,
 				ErrorKind::InvalidRepr,
-				"Expected a table with a single array element.",
+				"Expected a tagged array.",
 			))
 		}
 	}
@@ -316,7 +328,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 					self.span,
 					self.source,
 					ErrorKind::InvalidRepr,
-					"Expected a table with a single table element.",
+					"Expected a tagged table.",
 				))
 			}
 		}
@@ -326,7 +338,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 				self.span,
 				self.source,
 				ErrorKind::InvalidRepr,
-				"Expected a table with a single table element.",
+				"Expected a tagged table.",
 			))
 		}
 	}
@@ -420,30 +432,11 @@ impl<'de, 'src> de::EnumAccess<'de> for Deserializer<'de, 'src>
 				seed.deserialize(HackStringDeserializer::new(&*tag))?,
 				VariantHelper::new(Some(self.element), self.source, span),
 			)),
-			ConfigElementKind::Table(ref table) =>
-			{
-				let mut iter = table.iter();
-				let ret = if let Some((k, v)) = iter.next()
-				{
-					Ok((
-						seed.deserialize(HackStringDeserializer::new(&*k))?,
-						VariantHelper::new(Some(v), self.source, span),
-					))
-				}
-				else
-				{
-					Err(self.error(&format!("Table needs to have exactly one element.")))
-				};
-				if ret.is_ok() && iter.next().is_some()
-				{
-					Err(self.error(&format!("Table needs to have exactly one element.")))
-				}
-				else
-				{
-					ret
-				}
-			}
-			_ => Err(self.error(&format!("Expected value or table."))),
+			ConfigElementKind::TaggedArray(ref tag, _) => Ok((
+				seed.deserialize(HackStringDeserializer::new(&*tag))?,
+				VariantHelper::new(Some(self.element), self.source, span),
+			)),
+			_ => Err(self.error(&format!("Expected value, tagged array or tagged table."))),
 		}
 	}
 }
@@ -689,12 +682,29 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	}
 
 	fn deserialize_newtype_struct<V>(
-		self, _name: &'static str, visitor: V,
+		self, name: &'static str, visitor: V,
 	) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_newtype_struct(self)
+		if let Some(tag) = self.element.tag()
+		{
+			if name != tag
+			{
+				return Err(self.error(&format!(
+					"Cannot deserialize struct '{}' from a table with tag '{}'.",
+					name, tag,
+				)));
+			}
+		}
+		if let Some([elem]) = self.element.as_array().map(|a| &a[..])
+		{
+			visitor.visit_newtype_struct(Deserializer::new(elem, self.source))
+		}
+		else
+		{
+			Err(self.error(&format!("Expected an array with 1 element.")))
+		}
 	}
 
 	fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value, Error>
@@ -733,11 +743,21 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	}
 
 	fn deserialize_tuple_struct<V>(
-		self, _name: &'static str, len: usize, visitor: V,
+		self, name: &'static str, len: usize, visitor: V,
 	) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
+		if let Some(tag) = self.element.tag()
+		{
+			if name != tag
+			{
+				return Err(self.error(&format!(
+					"Cannot deserialize struct '{}' from a table with tag '{}'.",
+					name, tag,
+				)));
+			}
+		}
 		self.deserialize_tuple(len, visitor)
 	}
 

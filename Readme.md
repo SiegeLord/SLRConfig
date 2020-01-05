@@ -3,12 +3,13 @@
 [![Build Status](https://travis-ci.org/SiegeLord/SLRConfig.png)](https://travis-ci.org/SiegeLord/SLRConfig)
 [![](http://meritbadge.herokuapp.com/slr_config)](https://crates.io/crates/slr_config)
 
-SLRConfig is a simple configuration format. It supports tables (mappings of
-strings to elements) and arrays of elements, where an element may be a string,
-an array or a table. Despite only supporting arrangements of strings, it's
-permissive syntax and a standard implementation that preserves the location of
-where each element was assigned allows the programmer to add support for any
-other type with the same quality of error messages as if it were built in.
+SLRConfig is a simple configuration format with a focus on readability and ease
+of editing. It supports tables (mappings of strings to elements) and arrays of
+elements, where an element may be a string, an array or a table. Despite only
+supporting arrangements of strings, it's permissive syntax and a standard
+implementation that preserves the location of where each element was assigned
+allows the programmer to add support for any other type with the same quality
+of error messages as if it were built in. See more motivation down below.
 
 ## Documentation
 
@@ -24,7 +25,9 @@ other type with the same quality of error messages as if it were built in.
 Here's a sample snippet. The details of the syntax are explained further below.
 
 ~~~
-# A comment.
+# This is a comment.
+# The implicit outer structure is a table, a mapping of string keys to string
+# values, as well as other collections.
 key = value
 statement = there's no need to quote the vast majority of characters
 "sometimes
@@ -32,20 +35,67 @@ you" = "need
 to"
 "you can always escape ☺
 " = you can always escape \u263a\n
+raw string for when you're tired of escaping = {{"embedded quote -> " <-"}}
+
+there is not builtin date format = 1970/01/01
+there are no bulltin integers = 1_000_000
+all values are strings = -1.5
+
 on = a, single = line
-just another string = -1.5
-raw string = {{"embedded quote -> " <-"}}
 
 table
 {
-	array = [a, b]
+	array = [a, { b = c }, [e]]
 }
 
-tagged_table = tag
+# Tagged variants of tables and arrays are particularly useful when serializing
+# structs and tuple/struct variants.
+tagged table = tag
 {
-   tagged_array = tag [1, 2]
+   tagged array = tag [1, 2]
 }
 ~~~
+
+## Motivation
+
+SLRConfig is the third evolution of my previous attempt at making configuration
+files, following [SLConfig](https://github.com/SiegeLord/SLConfig) and
+[DConfig](https://github.com/SiegeLord/DConfig). I always wanted a simple, human
+centric configuration format that was capable of expressing the hierarchical
+structure of my types. In this third attempt I cut away all that I deemed
+unnecessary:
+
+- There are no built in types except collections and strings. This was an
+  essential point, as I felt people are too eager to add native support for
+  types which creates an artificial divide between built-in and other types.
+  E.g. why is one particular date format supported and not another? Why only
+  date and not time? Why only 64 bit integers and not more? It's astonishing to
+  me how some languages claim to be minimal, but support N varieties of time
+  formats.
+
+  In SLRConfig, I simplified the syntax such that you can write many strings
+  without quotes. With a little bit of bookkeeping, I could defer the
+  interpretation of these strings to the user while letting them still track
+  where the strings originated for error reporting purposes.
+
+- As said above, I set things up such that quoting strings is rare. Strings
+  support spaces in them without a need to quote them. The reseved characters
+  are chosen such that writing down floating point numbers, dates, units
+  and other common type encodings also require no quoting.
+
+- Compared to SLConfig, I dropped support for file includes, complicated
+  variable expansions and docstrings. Those only seemed to complicate the
+  specification and implementation.
+
+I did add some less common features though:
+
+- Raw strings. I think they're just so useful for long text entry without
+  escapes being present everywhere.
+
+- Simple variable expansions. This is probably the most extraneous feature of
+  SLRConfig, but when it is useful it is hard to replicate. I'm happy to defer
+  to string substitution for include files, but variable expansion really has
+  to respect the syntax to be easy to use.
 
 ## Format description.
 
@@ -88,7 +138,7 @@ RawString2 = '{{{{"' {Raw String Chars}* '"}}}}'
 
 ### Comments
 
-Line comments are introduced using the `#`  character. Line comments can start
+Line comments are introduced using the `#` character. Line comments can start
 anywhere on a line and end at a newline (LF).
 
 ## Parser grammar and semantics
@@ -254,7 +304,7 @@ These are encoded by their names as strings.
 
 ### Newtype structs and variants
 
-These are encoded by a 1-element tagged arrays. The tag is the name of the
+These are encoded by 1-element tagged arrays. The tag is the name of the
 struct/variant, and the array element is the value.
 
 ### Tuple structs and variants

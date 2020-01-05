@@ -71,7 +71,6 @@
 <span id="71">71</span>
 <span id="72">72</span>
 <span id="73">73</span>
-<span id="74">74</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2014 by SiegeLord</span>
 <span class="comment">//</span>
@@ -83,9 +82,10 @@ around the creation and use of the `ConfigElement` type, like so:
 
 ~~~
 #[macro_use]
+extern crate serde_derive;
 extern crate slr_config;
 
-use slr_config::{ConfigElement, ElementRepr};
+use slr_config::{to_element, from_element, ConfigElement};
 use std::path::Path;
 
 fn main()
@@ -100,24 +100,25 @@ fn main()
 	root.insert(&quot;key&quot;, val);
 	assert_eq!(root.to_string(), &quot;key = value\n&quot;);
 
-	// Compile-time schemas automate the above process in many situations.
-	slr_def!
+	// You can use Serde as well.
+	#[derive(Serialize, Deserialize)]
+	struct TestSchema
 	{
-		struct TestSchema
-		{
-			key: u32 = 0,
-			arr: Vec&lt;u32&gt; = vec![]
-		}
+		key: u32,
+		arr: Vec&lt;u32&gt;,
 	}
 
-	let mut schema = TestSchema::new();
-	schema.from_element(&amp;ConfigElement::from_str(&quot;key = 5, arr = [1, 2]&quot;).unwrap(), None).unwrap();
+	let mut schema = TestSchema {
+		key: 0,
+		arr: vec![],
+	};
+	schema = from_element(&amp;ConfigElement::from_str(&quot;key = 5, arr = [1, 2]&quot;).unwrap(), None).unwrap();
 	assert_eq!(schema.key, 5);
 	assert_eq!(schema.arr.len(), 2);
 	assert_eq!(schema.arr[0], 1);
 	assert_eq!(schema.arr[1], 2);
 
-	let elem = schema.to_element();
+	let elem = to_element(&amp;schema).unwrap();
 	assert_eq!(elem.as_table().unwrap()[&quot;key&quot;].as_value().unwrap(), &quot;5&quot;);
 	assert_eq!(elem.as_table().unwrap()[&quot;arr&quot;].as_array().unwrap()[0].as_value().unwrap(), &quot;1&quot;);
 }
@@ -130,12 +131,9 @@ fn main()
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">config_element</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">de</span>::<span class="ident">from_element</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">element_repr</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">ser</span>::<span class="ident">to_element</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">slr_parser</span>::{<span class="ident">Error</span>, <span class="ident">ErrorKind</span>, <span class="ident">Source</span>};
 
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">mod</span> <span class="ident">element_repr</span>;
 <span class="kw">mod</span> <span class="ident">config_element</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>

@@ -40,6 +40,11 @@ table
 {
 	array = [a, b]
 }
+
+tagged_table = tag
+{
+   tagged_array = tag [1, 2]
+}
 ~~~
 
 ## Format description.
@@ -131,9 +136,9 @@ inside the string itself.
 <Expansion> ::= '$' <String>
 
 <Expr> ::= <String>
-         | <Expansion>
-         | <Expr> '~' <String>
-         | <Expr> '~' <Expansion>
+        |  <Expansion>
+        |  <Expr> '~' <String>
+        |  <Expr> '~' <Expansion>
 ~~~
 
 Table and array elements are assigned the results of expressions. An expression
@@ -146,25 +151,27 @@ assigned element. The elements are looked up by key from tables and by index
 the table/array that the element being assigned to is. If nothing was found,
 then a higher level table/array is examined, and so on. The element being
 looked up must be lexically prior in the source string to the element being
-assigned to. The element being assign to is never considered as an expansion
+assigned to. The element being assigned to is never considered as an expansion
 element.
 
 ### Tables
 
 ~~~
 <OptComma> ::= ','
-             |
+            |
 <Table> ::= '{' <TableContents> '}'
 
 <TableElement> ::= <String> <Table>
-                 | <String> '=' <Array>
-                 | <String> '=' <StringExpr>
+                |  <String> '=' <Array>
+                |  <String> '=' <Expr>
+                |  <String> '=' <TaggedTable>
+                |  <String> '=' <TaggedArray>
 
 <TableElements> ::= <TableElement>
-                  | <TableElements> <OptComma> <TableElement>
+                 |  <TableElements> <OptComma> <TableElement>
 
 <TableContents> ::= <TableElements> <OptComma>
-                  |
+                 |
 ~~~
 
 ### Arrays
@@ -172,13 +179,92 @@ element.
 ~~~
 <Array> ::= '[' <ArrayContents> ']'
 
-<ArrayElement> ::= <StringExpr>
-                 | <Table>
-                 | <Array>
+<ArrayElement> ::= <Expr>
+                |  <Table>
+                |  <Array>
+                |  <TaggedTable>
+                |  <TaggedArray>
 
 <ArrayElements> ::= <ArrayElement>
-                  | <ArrayElements> ',' <ArrayElement>
+                 |  <ArrayElements> ',' <ArrayElement>
 
 <ArrayContents> ::= <ArrayElements> <OptComma>
-                  |
+                 |
 ~~~
+
+### Tagged Tables
+
+~~~
+<TaggedTable> ::= <String> <Table>
+~~~
+
+Tagged tables are tables with a string tag attached to them. These are
+surprisingly useful for representing named types.
+
+### Tagged Array
+
+~~~
+<TaggedArray> ::= <String> <Array>
+~~~
+
+Tagged arrays are arrays with a string tag attached to them. These are
+surprisingly useful for representing named types.
+
+## Serde integration
+
+Here is how various Rust constructs are encoded in SLDConfig.
+
+### Numeric types
+
+These are encoded using their string representation as naked strings.
+
+### Boolean
+
+`true` is encoded as `true` and `false` is encoded as `false`.
+
+### Strings and characters
+
+Strings are encoded as escaped strings, and are automatically escaped.
+
+### Byte slices
+
+Bytes are encoded as an array of integers.
+
+### Slices and tuples
+
+These are encoded as arrays.
+
+### Maps
+
+These are encoded as arrays of 2-element arrays (key/value pairs). These are
+not encoded as tables because tables must have strings as their values, while
+Rust mappings don't need to be. In the future, we might relax this.
+
+### Option
+
+`Some` is encoded as the contained value and `None` is encoded as an empty string.
+
+### Units
+
+Units are encoded as an empty string.
+
+### Unit structs and variants
+
+These are encoded by their names as strings.
+
+### Newtype structs and variants
+
+These are encoded by a 1-element tagged arrays. The tag is the name of the
+struct/variant, and the array element is the value.
+
+### Tuple structs and variants
+
+These are encoded by a tagged arrays. The tag is the name of the
+struct/variant, and the array elements are the tuple elements. When
+deserializing tuple structs, a non-tagged array is also accepted.
+
+### Structs and struct variants
+
+These are encoded by a tagged tables. The tag is the name of the
+struct/variant, and the table elements are the struct elements. When
+deserializing tuple structs, a non-tagged table is also accepted.

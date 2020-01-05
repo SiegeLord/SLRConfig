@@ -212,7 +212,7 @@ surprisingly useful for representing named types.
 
 ## Serde integration
 
-Here is how various Rust constructs are encoded in SLDConfig.
+Here is how various Rust constructs are encoded in SLRConfig.
 
 ### Numeric types
 

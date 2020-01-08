@@ -29,12 +29,16 @@ Here's a sample snippet. The details of the syntax are explained further below.
 # The implicit outer structure is a table, a mapping of string keys to string
 # values, as well as other collections.
 key = value
+
 statement = there's no need to quote the vast majority of characters
+
 "sometimes
 you" = "need
 to"
+
 "you can always escape ☺
 " = you can always escape \u263a\n
+
 raw string for when you're tired of escaping = {{"embedded quote -> " <-"}}
 
 there is not builtin date format = 1970/01/01

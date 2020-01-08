@@ -32,8 +32,7 @@ key = value
 
 statement = there's no need to quote the vast majority of characters
 
-"sometimes
-you" = "need
+"sometimes, you" = "need
 to"
 
 "you can always escape ☺
@@ -41,7 +40,7 @@ to"
 
 raw string for when you're tired of escaping = {{"embedded quote -> " <-"}}
 
-there is not builtin date format = 1970/01/01
+there is no builtin date format = 1970/01/01
 there are no bulltin integers = 1_000_000
 all values are strings = -1.5
 

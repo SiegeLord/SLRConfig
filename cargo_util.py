@@ -81,16 +81,16 @@ if args.publish:
 			time.sleep(1. + i)
 
 if args.build:
-	check_call(cargo_cmd('build'), cwd='slr_config')
+	for crate in crate_list:
+		check_call(cargo_cmd('build'), cwd=crate)
 
 if args.format:
 	for crate in crate_list:
 		check_call(cargo_cmd('fmt'), cwd=crate)
 
 if args.test:
-	crates_no_examples = filter(lambda crate: crate != 'examples', crate_list)
-	for crate in crates_no_examples:
-		check_call(cargo_cmd('test') + ['-p', crate], cwd='slr_config')
+	for crate in crate_list:
+		check_call(cargo_cmd('test'), cwd=crate)
 
 if args.clean:
 	crates_and_doc = ['doc']
@@ -109,12 +109,22 @@ if args.doc:
 	print('Fixing up the search index')
 	found = False
 	for line in fileinput.input('doc/target/doc/search-index.js', inplace=1):
-		new_line = re.sub(r'searchIndex\["delete_me"\].*', '', line)
+		new_line = re.sub(r'"delete_me".*', r'\\', line)
 		if new_line != line:
 			found = True
-		print(new_line, end='')
+		else:
+			print(new_line, end='')
 	if not found:
 		raise Exception("Couldn't find the line in search-index.js!")
+	found = False
+	for line in fileinput.input('doc/target/doc/source-files.js', inplace=1):
+		new_line = re.sub(r'sourcesIndex\["delete_me"\].*', r'', line)
+		if new_line != line:
+			found = True
+		else:
+			print(new_line, end='')
+	if not found:
+		raise Exception("Couldn't find the line in source-files.js!")
 	print('Copying new CSS')
 	copy('doc/rustdoc.css', 'doc/target/doc/rustdoc.css')
 	copy('doc/light.css', 'doc/target/doc/light.css')

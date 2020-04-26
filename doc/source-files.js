@@ -1,5 +1,4 @@
 var N = null;var sourcesIndex = {};
-sourcesIndex["delete_me"] = {"name":"","files":["dummy.rs"]};
 sourcesIndex["proc_macro2"] = {"name":"","files":["fallback.rs","lib.rs","strnom.rs","wrapper.rs"]};
 sourcesIndex["quote"] = {"name":"","files":["ext.rs","format.rs","ident_fragment.rs","lib.rs","runtime.rs","spanned.rs","to_tokens.rs"]};
 sourcesIndex["serde"] = {"name":"","dirs":[{"name":"de","files":["from_primitive.rs","ignored_any.rs","impls.rs","mod.rs","utf8.rs","value.rs"]},{"name":"private","files":["de.rs","macros.rs","mod.rs","ser.rs"]},{"name":"ser","files":["impls.rs","impossible.rs","mod.rs"]}],"files":["export.rs","integer128.rs","lib.rs","macros.rs"]};

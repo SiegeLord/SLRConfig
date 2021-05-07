@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["delete_me","proc_macro2","quote","serde","serde_derive","slr_config","slr_parser","syn","unicode_xid"];

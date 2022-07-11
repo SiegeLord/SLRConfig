@@ -54,6 +54,7 @@ fn main()
 extern crate slr_parser;
 #[macro_use]
 extern crate serde;
+extern crate indexmap;
 
 pub use config_element::*;
 pub use de::from_element;

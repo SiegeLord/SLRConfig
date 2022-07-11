@@ -4,8 +4,8 @@
 
 pub use self::ConfigElementKind::*;
 
+use indexmap::IndexMap;
 use slr_parser::{parse_source, ConfigString, Error, ErrorKind, Printer, Source, Span, Visitor};
-use std::collections::BTreeMap;
 use std::fmt::{self, Display, Formatter};
 use std::io;
 use std::mem;
@@ -28,14 +28,18 @@ pub enum ConfigElementKind
 	/// A simple value, containing a string.
 	Value(String),
 	/// A table, which is a mapping of strings to configuration elements.
-	Table(BTreeMap<String, ConfigElement>),
+	Table(IndexMap<String, ConfigElement>),
 	/// A tagged table, which is a mapping of strings to configuration elements
 	/// with a string tag.
-	TaggedTable(String, BTreeMap<String, ConfigElement>),
+	TaggedTable(String, IndexMap<String, ConfigElement>),
 	/// An array of configuration elements.
 	Array(Vec<ConfigElement>),
 	/// An array of configuration elements with a string tag.
 	TaggedArray(String, Vec<ConfigElement>),
+	/// An array of configuration elements, printed with multiple lines.
+	MultiLineArray(Vec<ConfigElement>),
+	/// An array of configuration elements with a string tag, printed with multiple lines.
+	MultiLineTaggedArray(String, Vec<ConfigElement>),
 }
 
 impl ConfigElement
@@ -44,7 +48,7 @@ impl ConfigElement
 	pub fn new_table() -> ConfigElement
 	{
 		ConfigElement {
-			kind: Table(BTreeMap::new()),
+			kind: Table(IndexMap::new()),
 			span: Span::new(),
 		}
 	}
@@ -53,7 +57,7 @@ impl ConfigElement
 	pub fn new_tagged_table(tag: String) -> ConfigElement
 	{
 		ConfigElement {
-			kind: TaggedTable(tag, BTreeMap::new()),
+			kind: TaggedTable(tag, IndexMap::new()),
 			span: Span::new(),
 		}
 	}
@@ -81,6 +85,24 @@ impl ConfigElement
 	{
 		ConfigElement {
 			kind: TaggedArray(tag, vec![]),
+			span: Span::new(),
+		}
+	}
+
+	/// Creates a new multi-line array.
+	pub fn new_multi_line_array() -> ConfigElement
+	{
+		ConfigElement {
+			kind: MultiLineArray(vec![]),
+			span: Span::new(),
+		}
+	}
+
+	/// Creates a new multi-line tagged array.
+	pub fn new_multi_line_tagged_array(tag: String) -> ConfigElement
+	{
+		ConfigElement {
+			kind: MultiLineTaggedArray(tag, vec![]),
 			span: Span::new(),
 		}
 	}
@@ -143,7 +165,7 @@ impl ConfigElement
 	}
 
 	/// If this is a table, returns a pointer to its contents.
-	pub fn as_table(&self) -> Option<&BTreeMap<String, ConfigElement>>
+	pub fn as_table(&self) -> Option<&IndexMap<String, ConfigElement>>
 	{
 		match self.kind
 		{
@@ -153,7 +175,7 @@ impl ConfigElement
 	}
 
 	/// If this is a table, returns its contents.
-	pub fn into_table(self) -> Option<BTreeMap<String, ConfigElement>>
+	pub fn into_table(self) -> Option<IndexMap<String, ConfigElement>>
 	{
 		match self.kind
 		{
@@ -163,7 +185,7 @@ impl ConfigElement
 	}
 
 	/// If this is a table, returns a pointer to its contents.
-	pub fn as_table_mut(&mut self) -> Option<&mut BTreeMap<String, ConfigElement>>
+	pub fn as_table_mut(&mut self) -> Option<&mut IndexMap<String, ConfigElement>>
 	{
 		match self.kind
 		{
@@ -207,7 +229,10 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(ref array) | TaggedArray(_, ref array) => Some(array),
+			Array(ref array)
+			| TaggedArray(_, ref array)
+			| MultiLineArray(ref array)
+			| MultiLineTaggedArray(_, ref array) => Some(array),
 			_ => None,
 		}
 	}
@@ -217,7 +242,10 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(array) | TaggedArray(_, array) => Some(array),
+			Array(array)
+			| TaggedArray(_, array)
+			| MultiLineArray(array)
+			| MultiLineTaggedArray(_, array) => Some(array),
 			_ => None,
 		}
 	}
@@ -227,7 +255,10 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			Array(ref mut array) | TaggedArray(_, ref mut array) => Some(array),
+			Array(ref mut array)
+			| TaggedArray(_, ref mut array)
+			| MultiLineArray(ref mut array)
+			| MultiLineTaggedArray(_, ref mut array) => Some(array),
 			_ => None,
 		}
 	}
@@ -236,7 +267,9 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			TaggedTable(ref tag, _) | TaggedArray(ref tag, _) => Some(tag),
+			TaggedTable(ref tag, _)
+			| TaggedArray(ref tag, _)
+			| MultiLineTaggedArray(ref tag, _) => Some(tag),
 			_ => None,
 		}
 	}
@@ -245,7 +278,9 @@ impl ConfigElement
 	{
 		match self.kind
 		{
-			TaggedTable(ref mut tag, _) | TaggedArray(ref mut tag, _) => Some(tag),
+			TaggedTable(ref mut tag, _)
+			| TaggedArray(ref mut tag, _)
+			| MultiLineTaggedArray(ref mut tag, _) => Some(tag),
 			_ => None,
 		}
 	}
@@ -256,15 +291,18 @@ impl ConfigElement
 	{
 		match self.kind
 		{
+			Value(_) => panic!("Trying to insert an element into a value!"),
 			Table(ref mut table) | TaggedTable(_, ref mut table) =>
 			{
 				table.insert(name.to_string(), elem);
 			}
-			Array(ref mut array) | TaggedArray(_, ref mut array) =>
+			Array(ref mut array)
+			| TaggedArray(_, ref mut array)
+			| MultiLineArray(ref mut array)
+			| MultiLineTaggedArray(_, ref mut array) =>
 			{
 				array.push(elem);
 			}
-			_ => panic!("Trying to insert an element into a value!"),
 		}
 	}
 
@@ -338,6 +376,24 @@ impl ConfigElement
 					}
 				}
 				printer.start_tagged_array(name, tag, one_line)?;
+				for v in array
+				{
+					v.print(None, false, printer)?;
+				}
+				printer.end_array()?;
+			}
+			MultiLineArray(ref array) =>
+			{
+				printer.start_array(name, false)?;
+				for v in array
+				{
+					v.print(None, false, printer)?;
+				}
+				printer.end_array()?;
+			}
+			MultiLineTaggedArray(ref tag, ref array) =>
+			{
+				printer.start_tagged_array(name, tag, false)?;
 				for v in array
 				{
 					v.print(None, false, printer)?;
@@ -440,11 +496,11 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 						"Cannot append a string to a tagged table",
 					)
 				}
-				Array(_) =>
+				Array(_) | MultiLineArray(_) =>
 				{
 					return visit_error(string.span, src, "Cannot append a string to an array")
 				}
-				TaggedArray(_, _) =>
+				TaggedArray(_, _) | MultiLineTaggedArray(_, _) =>
 				{
 					return visit_error(
 						string.span,
@@ -518,7 +574,10 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 				{
 					found_element = table.get(&name).map(|v| v.clone());
 				}
-				Array(ref array) | TaggedArray(_, ref array) =>
+				Array(ref array)
+				| TaggedArray(_, ref array)
+				| MultiLineArray(ref array)
+				| MultiLineTaggedArray(_, ref array) =>
 				{
 					found_element = <usize>::from_str(&name)
 						.ok()
@@ -556,8 +615,11 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 					{
 						return visit_error(span, src, "Cannot append a tagged table to a value")
 					}
-					Array(_) => return visit_error(span, src, "Cannot append an array to a value"),
-					TaggedArray(_, _) =>
+					Array(_) | MultiLineArray(_) =>
+					{
+						return visit_error(span, src, "Cannot append an array to a value")
+					}
+					TaggedArray(_, _) | MultiLineTaggedArray(_, _) =>
 					{
 						return visit_error(span, src, "Cannot append an tagged array to a value")
 					}
@@ -567,8 +629,11 @@ impl<'l> Visitor<'l> for ConfigElementVisitor
 				{
 					return visit_error(span, src, "Cannot append to a tagged table")
 				}
-				Array(_) => return visit_error(span, src, "Cannot append to an array"),
-				TaggedArray(_, _) =>
+				Array(_) | MultiLineArray(_) =>
+				{
+					return visit_error(span, src, "Cannot append to an array")
+				}
+				TaggedArray(_, _) | MultiLineTaggedArray(_, _) =>
 				{
 					return visit_error(span, src, "Cannot append to a tagged array")
 				}

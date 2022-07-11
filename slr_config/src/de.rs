@@ -1,8 +1,7 @@
 use config_element::{ConfigElement, ConfigElementKind};
+use indexmap::IndexMap;
 use serde::de::{self, Deserialize, Visitor};
 use slr_parser::{Error, ErrorKind, Source, Span};
-use std::collections::btree_map;
-use std::collections::BTreeMap;
 use std::error;
 use std::str::FromStr;
 
@@ -146,7 +145,7 @@ impl<'de, 'src> de::MapAccess<'de> for SeqHelper<'de, 'src>
 
 struct MapHelper<'de, 'src: 'de>
 {
-	iter: btree_map::Iter<'de, String, ConfigElement>,
+	iter: indexmap::map::Iter<'de, String, ConfigElement>,
 	value: Option<&'de ConfigElement>,
 	source: Option<&'de Source<'src>>,
 }
@@ -154,7 +153,7 @@ struct MapHelper<'de, 'src: 'de>
 impl<'de, 'src> MapHelper<'de, 'src>
 {
 	fn new(
-		elements: &'de BTreeMap<String, ConfigElement>, source: Option<&'de Source<'src>>,
+		elements: &'de IndexMap<String, ConfigElement>, source: Option<&'de Source<'src>>,
 	) -> Self
 	{
 		Self {
@@ -402,8 +401,7 @@ impl<'de, 'src> Deserializer<'de, 'src>
 	{
 		if let Some(value) = self.element.as_value()
 		{
-			use std::error::Error;
-			<T as FromStr>::from_str(value).map_err(|e| self.error(e.description()))
+			<T as FromStr>::from_str(value).map_err(|e| self.error(&e.to_string()))
 		}
 		else
 		{
@@ -456,77 +454,99 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_bool(self.primitive("bool")?)
+		visitor
+			.visit_bool(self.primitive("bool")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_i8<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_i8(self.primitive("i8")?)
+		visitor
+			.visit_i8(self.primitive("i8")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_i16<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_i16(self.primitive("i16")?)
+		visitor
+			.visit_i16(self.primitive("i16")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_i32<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_i32(self.primitive("i32")?)
+		visitor
+			.visit_i32(self.primitive("i32")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_i64<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_i64(self.primitive("i64")?)
+		visitor
+			.visit_i64(self.primitive("i64")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_u8<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_u8(self.primitive("u8")?)
+		visitor
+			.visit_u8(self.primitive("u8")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_u16<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_u16(self.primitive("u16")?)
+		visitor
+			.visit_u16(self.primitive("u16")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_u32<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_u32(self.primitive("u32")?)
+		visitor
+			.visit_u32(self.primitive("u32")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_u64<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_u64(self.primitive("u64")?)
+		visitor
+			.visit_u64(self.primitive("u64")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_f32<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_f32(self.primitive("f32")?)
+		visitor
+			.visit_f32(self.primitive("f32")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_f64<V>(self, visitor: V) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
 	{
-		visitor.visit_f64(self.primitive("f64")?)
+		visitor
+			.visit_f64(self.primitive("f64")?)
+			.map_err(|e: Error| self.error(&e.to_string()))
 	}
 
 	fn deserialize_char<V>(self, visitor: V) -> Result<V::Value, Error>
@@ -536,7 +556,9 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		if let Some(value) = self.element.as_value()
 		{
 			let mut chars = value.chars();
-			let ret = visitor.visit_char(chars.next().unwrap());
+			let ret = visitor
+				.visit_char(chars.next().unwrap())
+				.map_err(|e: Error| self.error(&e.to_string()));
 			if chars.next().is_some()
 			{
 				Err(self.error(&format!("Can't parse '{}' a char.", value)))
@@ -558,7 +580,9 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	{
 		if let Some(value) = self.element.as_value()
 		{
-			visitor.visit_borrowed_str(value)
+			visitor
+				.visit_borrowed_str(value)
+				.map_err(|e: Error| self.error(&e.to_string()))
 		}
 		else
 		{
@@ -586,7 +610,9 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 				bytes.push(from_element(element, self.source)?);
 			}
 
-			visitor.visit_bytes(&bytes)
+			visitor
+				.visit_bytes(&bytes)
+				.map_err(|e: Error| self.error(&e.to_string()))
 		}
 		else
 		{
@@ -607,7 +633,9 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 				bytes.push(from_element(element, self.source)?);
 			}
 
-			visitor.visit_byte_buf(bytes)
+			visitor
+				.visit_byte_buf(bytes)
+				.map_err(|e: Error| self.error(&e.to_string()))
 		}
 		else
 		{

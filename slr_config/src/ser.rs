@@ -23,10 +23,10 @@ impl SeqHelper
 		}
 	}
 
-	fn new_tagged_array(tag: &str) -> Self
+	fn new_multi_line_tagged_array(tag: &str) -> Self
 	{
 		Self {
-			element: ConfigElement::new_tagged_array(tag.to_string()),
+			element: ConfigElement::new_multi_line_tagged_array(tag.to_string()),
 		}
 	}
 
@@ -126,7 +126,7 @@ impl MapHelper
 	{
 		Self {
 			key: None,
-			element: ConfigElement::new_array(),
+			element: ConfigElement::new_multi_line_array(),
 		}
 	}
 }
@@ -376,7 +376,7 @@ impl serde::Serializer for Serializer
 
 	fn serialize_tuple_struct(self, name: &'static str, _len: usize) -> Result<SeqHelper, Error>
 	{
-		Ok(SeqHelper::new_tagged_array(name))
+		Ok(SeqHelper::new_multi_line_tagged_array(name))
 	}
 
 	fn serialize_tuple_variant(

@@ -2,7 +2,7 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-pub use self::ConfigElementKind::*;
+pub use ConfigElementKind::*;
 
 use indexmap::IndexMap;
 use slr_parser::{parse_source, ConfigString, Error, ErrorKind, Printer, Source, Span, Visitor};

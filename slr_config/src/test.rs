@@ -2,9 +2,10 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use config_element::*;
-use de::from_element;
-use ser::to_element;
+use crate::config_element::*;
+use crate::de::from_element;
+use crate::ser::to_element;
+use serde_derive::{Deserialize, Serialize};
 use std::char;
 
 #[test]

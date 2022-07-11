@@ -1,8 +1,5 @@
 // This file is released into Public Domain.
 
-extern crate slr_config;
-extern crate slr_parser;
-
 use slr_config::ConfigElement;
 use slr_parser::Source;
 use std::env;

@@ -2,8 +2,8 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use lexer::{Error, Source, Span};
-use parser::ConfigString;
+use crate::lexer::{Error, Source, Span};
+use crate::parser::ConfigString;
 
 pub trait Visitor<'l>
 {

@@ -2,10 +2,10 @@
 //
 // All rights reserved. Distributed under LGPL 3.0. For full terms see the file LICENSE.
 
-use lexer::{Error, ErrorKind, Lexer, Source, Span, Token, TokenKind};
+use crate::lexer::{Error, ErrorKind, Lexer, Source, Span, Token, TokenKind};
+use crate::visitor::Visitor;
 use std::char;
 use std::u32;
-use visitor::Visitor;
 
 #[derive(Clone, Copy, Debug)]
 pub struct ConfigString<'l>
@@ -146,24 +146,24 @@ where
 macro_rules! get_token {
 	($tok: expr) => {
 		match $tok
-			{
+		{
 			Some(Ok(tok)) => Some(tok),
 			Some(Err(ref err)) =>
-				{
+			{
 				return Err(Error::new(err.kind, err.text.clone()));
-				}
-			None => None,
 			}
+			None => None,
+		}
 	};
 }
 
 macro_rules! try_eof {
 	($tok: expr, $err: expr) => {
 		match get_token!($tok)
-			{
+		{
 			Some(tok) => tok,
 			None => return $err,
-			}
+		}
 	};
 }
 

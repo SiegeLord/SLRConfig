@@ -8,6 +8,7 @@ documentation = "http://siegelord.github.io/SLRConfig/doc/slr_parser/index.html"
 keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
 description = "A simple configuration format. This crate contains the parser, see the slr_config crate for a more user-friendly API."
+edition = "2021"
 
 [lib]
 name = "slr_parser"

@@ -8,6 +8,7 @@ documentation = "http://siegelord.github.io/SLRConfig/doc/slr_config/index.html"
 keywords = ["configuration"]
 authors = [ "SiegeLord <slabode@aim.com>" ]
 description = "A simple configuration format"
+edition = "2021"
 
 [lib]
 name = "slr_config"

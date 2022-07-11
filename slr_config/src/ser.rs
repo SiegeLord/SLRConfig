@@ -1,4 +1,4 @@
-use config_element::ConfigElement;
+use crate::config_element::ConfigElement;
 use serde;
 use serde::ser::{self, Serialize};
 use slr_parser::Error;

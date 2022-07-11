@@ -1,4 +1,4 @@
-use config_element::{ConfigElement, ConfigElementKind};
+use crate::config_element::{ConfigElement, ConfigElementKind};
 use indexmap::IndexMap;
 use serde::de::{self, Deserialize, Visitor};
 use slr_parser::{Error, ErrorKind, Source, Span};
@@ -361,7 +361,7 @@ impl<'de> de::Deserializer<'de> for HackStringDeserializer<'de>
 		visitor.visit_borrowed_str(self.string)
 	}
 
-	forward_to_deserialize_any! {
+	serde::forward_to_deserialize_any! {
 		bool i8 i16 i32 i64 u8 u16 u32 u64 f32 f64 char str string bytes
 		byte_buf option unit unit_struct newtype_struct seq tuple
 		tuple_struct map struct enum identifier ignored_any

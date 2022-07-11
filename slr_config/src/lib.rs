@@ -51,21 +51,12 @@ fn main()
 ~~~
 */
 
-extern crate slr_parser;
-#[macro_use]
-extern crate serde;
-extern crate indexmap;
-
-pub use config_element::*;
-pub use de::from_element;
-pub use ser::to_element;
+pub use crate::config_element::*;
+pub use crate::de::from_element;
+pub use crate::ser::to_element;
 pub use slr_parser::{Error, ErrorKind, Source};
 
 mod config_element;
-
-#[cfg(test)]
-#[macro_use]
-extern crate serde_derive;
 
 #[cfg(test)]
 mod test;

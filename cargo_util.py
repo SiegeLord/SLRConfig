@@ -33,8 +33,8 @@ parser.add_argument('--num_retries', type=float, default=5, help='number of retr
 
 args = parser.parse_args()
 
-def cargo_cmd(command):
-	return ['cargo', command] + (['--verbose'] if args.verbose else [])
+def cargo_cmd(*command):
+	return ['cargo'] + list(command) + (['--verbose'] if args.verbose else [])
 
 if len(args.version) > 0:
 	crates_and_doc = ['doc']
@@ -91,6 +91,7 @@ if args.format:
 if args.test:
 	for crate in crate_list:
 		check_call(cargo_cmd('test'), cwd=crate)
+		check_call(cargo_cmd('fmt', '--check'), cwd=crate)
 
 if args.clean:
 	crates_and_doc = ['doc']

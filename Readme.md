@@ -1,6 +1,6 @@
 # SLRConfig
 
-[![Build Status](https://travis-ci.org/SiegeLord/SLRConfig.png)](https://travis-ci.org/SiegeLord/SLRConfig)
+![Build Status](https://github.com/SiegeLord/SLRConfig/actions/workflows/continuous-integration.yml/badge.svg)
 [![](http://meritbadge.herokuapp.com/slr_config)](https://crates.io/crates/slr_config)
 
 SLRConfig is a simple configuration format with a focus on readability and ease
@@ -13,7 +13,8 @@ of error messages as if it were built in. See more motivation down below.
 
 ## Documentation
 
-[Rust interface documentation](http://siegelord.github.io/SLRConfig/doc/slr_config/)
+* [slr_config](https://docs.rs/slr_config/latest/slr_config/)
+* [slr_parser](https://docs.rs/slr_parser/latest/slr_parser/)
 
 ## Packages
 

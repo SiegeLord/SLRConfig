@@ -291,7 +291,7 @@ These are encoded as arrays.
 ### Maps
 
 These are encoded as arrays of 2-element arrays (key/value pairs). These are
-not encoded as tables because tables must have strings as their values, while
+not encoded as tables because tables must have strings as their keys, while
 Rust mappings don't need to be. In the future, we might relax this.
 
 ### Option
@@ -321,4 +321,6 @@ deserializing tuple structs, a non-tagged array is also accepted.
 
 These are encoded by a tagged tables. The tag is the name of the
 struct/variant, and the table elements are the struct elements. When
-deserializing tuple structs, a non-tagged table is also accepted.
+deserializing tuple structs, a non-tagged table is also accepted. To allow for
+expansions, table elements with keys that don't correspond to fields of a
+struct/variant are ignored.

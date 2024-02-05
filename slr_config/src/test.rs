@@ -236,7 +236,8 @@ fn serde_test()
 	println!("\n{}", elem);
 
 	let src_str = r#"
-		b = 1
+		VAL = 1
+		b = $VAL
 		c = ""
 		d = 1
 		e =

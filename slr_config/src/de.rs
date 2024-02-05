@@ -148,17 +148,20 @@ struct MapHelper<'de, 'src: 'de>
 	iter: indexmap::map::Iter<'de, String, ConfigElement>,
 	value: Option<&'de ConfigElement>,
 	source: Option<&'de Source<'src>>,
+	fields: &'static [&'static str],
 }
 
 impl<'de, 'src> MapHelper<'de, 'src>
 {
 	fn new(
-		elements: &'de IndexMap<String, ConfigElement>, source: Option<&'de Source<'src>>,
+		elements: &'de IndexMap<String, ConfigElement>, fields: &'static [&'static str],
+		source: Option<&'de Source<'src>>,
 	) -> Self
 	{
 		Self {
 			iter: elements.iter(),
 			value: None,
+			fields: fields,
 			source: source,
 		}
 	}
@@ -172,15 +175,21 @@ impl<'de, 'src> de::MapAccess<'de> for MapHelper<'de, 'src>
 	where
 		K: de::DeserializeSeed<'de>,
 	{
-		let next = self.iter.next();
-		if let Some((k, v)) = next
+		loop
 		{
-			self.value = Some(v);
-			seed.deserialize(HackStringDeserializer::new(&*k)).map(Some)
-		}
-		else
-		{
-			Ok(None)
+			let next = self.iter.next();
+			if let Some((k, v)) = next
+			{
+				if self.fields.contains(&k.as_str())
+				{
+					self.value = Some(v);
+					return seed.deserialize(HackStringDeserializer::new(&*k)).map(Some);
+				}
+			}
+			else
+			{
+				return Ok(None);
+			}
 		}
 	}
 
@@ -310,7 +319,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 	}
 
 	fn struct_variant<V>(
-		self, _fields: &'static [&'static str], visitor: V,
+		self, fields: &'static [&'static str], visitor: V,
 	) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
@@ -319,7 +328,7 @@ impl<'de, 'src> de::VariantAccess<'de> for VariantHelper<'de, 'src>
 		{
 			if let Some(table) = elem.as_table()
 			{
-				visitor.visit_map(MapHelper::new(table, self.source))
+				visitor.visit_map(MapHelper::new(table, fields, self.source))
 			}
 			else
 			{
@@ -804,7 +813,7 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 	}
 
 	fn deserialize_struct<V>(
-		self, name: &'static str, _fields: &'static [&'static str], visitor: V,
+		self, name: &'static str, fields: &'static [&'static str], visitor: V,
 	) -> Result<V::Value, Error>
 	where
 		V: Visitor<'de>,
@@ -821,7 +830,7 @@ impl<'de, 'src> de::Deserializer<'de> for Deserializer<'de, 'src>
 		}
 		if let Some(table) = self.element.as_table()
 		{
-			visitor.visit_map(MapHelper::new(table, self.source))
+			visitor.visit_map(MapHelper::new(table, fields, self.source))
 		}
 		else
 		{
